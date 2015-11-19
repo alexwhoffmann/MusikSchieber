@@ -26,7 +26,6 @@ import ms5000.web.acusticid.AcoustID;
 import ms5000.web.acusticid.ChromaPrint;
 
 public class Test {
-    // init test Penis1243
 	/**
 	 * Path to the directory which will be imported
 	 */
