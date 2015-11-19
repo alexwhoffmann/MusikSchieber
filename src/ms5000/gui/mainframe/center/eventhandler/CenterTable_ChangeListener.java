@@ -15,10 +15,10 @@ import ms5000.musicfile.tag.MusicTag.Tags;
 
 public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 	private CenterTable table;
-	private final String missingCritical = "-fx-control-inner-background: rgb(255, 153, 153,1)";
-	private final String missingNonCritical = "-fx-control-inner-background: rgb(255, 255, 179,1)";
-	private final String missingWeak = "-fx-control-inner-background: rgb(255, 255, 229,1)";
-	private final String default_format = "-fx-control-inner-background: #ffffff";
+	private final static String missingCritical = "-fx-control-inner-background: rgb(255, 153, 153,1)";
+	private final static String missingNonCritical = "-fx-control-inner-background: rgb(255, 255, 179,1)";
+	private final static String missingWeak = "-fx-control-inner-background: rgb(255, 255, 229,1)";
+	private final static String default_format = "-fx-control-inner-background: #ffffff";
 
 	public CenterTable_ChangeListener(CenterTable table) {
 		this.table = table;
@@ -69,6 +69,8 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 			} catch (IOException e) {
 				CenterGridPane.setArtWorkImage(null);
 			}
+		} else {
+			CenterGridPane.setArtWorkImage(null);
 		}
 
 		setTextFieldColorProfile();
@@ -76,7 +78,9 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 
 	private void addMultipleEntryToDetails(MusicTag[] tags, ObservableList<Integer> observableList) {
 		refershTextFieldColorProfile();
+		OriginalState state = OriginalState.getInstance();
 
+		// Getting the entries that are the same
 		String album = getSameEntries(tags, Tags.ALBUM);
 		String artist = getSameEntries(tags, Tags.ARTIST);
 		String genre = getSameEntries(tags, Tags.GENRE);
@@ -87,7 +91,19 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		String comment = getSameEntries(tags, Tags.COMMENT);
 		String composer = getSameEntries(tags, Tags.COMPOSER);
 		String year = getSameEntries(tags, Tags.YEAR);
-
+		
+		// Writing the original state into a singleton, to determine what has changed
+		state.setAlbum(album);
+		state.setAlbum_artist(albumArtist);
+		state.setGenre(genre);
+		state.setArtist(artist);
+		state.setTitlesTotal(maxTitleNumber);
+		state.setDiscNumber(discNumber);
+		state.setComment(comment);
+		state.setComposer(composer);
+		state.setYear(year);
+		state.setTotalDiscNumber(maxDiscNumber);
+		
 		CenterGridPane.getTitlename_textField().setText("");
 		CenterGridPane.getTitleNumber_textField().setText("");
 
@@ -121,7 +137,7 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		return init;
 	}
 
-	private void setTextFieldColorProfile() {
+	public static void setTextFieldColorProfile() {
 		for (TextFieldKey key : TextFieldKey.values()) {
 			if (key == TextFieldKey.ARTIST || key == TextFieldKey.ALBUM || key == TextFieldKey.TITLENAME) {
 				if (BorderPane_CENTER.getCenterGridPane().getTextField(key).getText().equals("")) {
@@ -137,11 +153,10 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 					BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(missingWeak);
 				}
 			}
-
 		}
 	}
 
-	private void refershTextFieldColorProfile() {
+	public static void refershTextFieldColorProfile() {
 		for (TextFieldKey key : TextFieldKey.values()) {
 			if(BorderPane_CENTER.getCenterGridPane().getTextField(key) != null) {
 				BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(default_format);	
