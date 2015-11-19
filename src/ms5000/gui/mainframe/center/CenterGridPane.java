@@ -1,5 +1,10 @@
 package ms5000.gui.mainframe.center;
 
+import java.io.IOException;
+
+import org.jaudiotagger.tag.datatype.Artwork;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,9 +33,10 @@ public class CenterGridPane extends GridPane {
 	private Button openFolder;
 	private Button getInfo_Artist;
 	private Button getInfo_Album;
-	private Button save_Tag;
+	public static Button save_Tag;
 	
 	private static ImageView artWork_ImageView;
+	private static Artwork artworkTemp;
 	
 	// Tag informations
 	private static TextField titlename_textField;
@@ -325,12 +331,23 @@ public class CenterGridPane extends GridPane {
 		return totalDiscNumbers_textField;
 	}
 	
-	public static void setArtWorkImage(Image image) {
-		if (image == null) {
+	public static void setArtWorkImage(Artwork artWork) {
+		if (artWork == null) {
 			CenterGridPane.getArtwork_ImageView().setImage(artworkDefault);
+			artworkTemp = null;
 		} else {
-			CenterGridPane.getArtwork_ImageView().setImage(image);
+			try {
+				getArtwork_ImageView().setImage(SwingFXUtils.toFXImage(artWork.getImage(), null));
+				artworkTemp = artWork;
+			} catch (IOException e) {
+				CenterGridPane.getArtwork_ImageView().setImage(artworkDefault);
+				artworkTemp = null;
+			}
 		}
+	}
+	
+	public static Artwork getArtwork() {
+		return artworkTemp;
 	}
 	
 	public TextField getTextField(TextFieldKey key) {

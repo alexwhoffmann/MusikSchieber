@@ -1,11 +1,8 @@
 package ms5000.gui.mainframe.center.eventhandler;
 
-import java.io.IOException;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
@@ -64,11 +61,7 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		CenterGridPane.getFilePath_TextField().setText(tag.getMusicFile().getOriginalFilePath());
 
 		if (tag.getArtwork() != null) {
-			try {
-				CenterGridPane.getArtwork_ImageView().setImage(SwingFXUtils.toFXImage(tag.getArtwork().getImage(), null));
-			} catch (IOException e) {
-				CenterGridPane.setArtWorkImage(null);
-			}
+			CenterGridPane.setArtWorkImage(tag.getArtwork());
 		} else {
 			CenterGridPane.setArtWorkImage(null);
 		}
@@ -91,7 +84,7 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		String comment = getSameEntries(tags, Tags.COMMENT);
 		String composer = getSameEntries(tags, Tags.COMPOSER);
 		String year = getSameEntries(tags, Tags.YEAR);
-		
+
 		// Writing the original state into a singleton, to determine what has changed
 		state.setAlbum(album);
 		state.setAlbum_artist(albumArtist);
@@ -103,7 +96,7 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		state.setComposer(composer);
 		state.setYear(year);
 		state.setTotalDiscNumber(maxDiscNumber);
-		
+
 		CenterGridPane.getTitlename_textField().setText("");
 		CenterGridPane.getTitleNumber_textField().setText("");
 
@@ -121,11 +114,30 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		CenterGridPane.getArtist_textField().setText(artist);
 		CenterGridPane.getFilePath_TextField().setEditable(false);
 
-		CenterGridPane.setArtWorkImage(null);
+		if (album.equals("")) {
+			CenterGridPane.setArtWorkImage(null);
+		} else {
+			boolean thereIsArtwork = false;
+			int tagWithArtwork = 0;
+
+			for (int i = 0; i < tags.length; i++) {
+				if (tags[i].getArtwork() != null) {
+					thereIsArtwork = true;
+					tagWithArtwork = i;
+				}
+			}
+
+			if (thereIsArtwork) {
+				CenterGridPane.setArtWorkImage(tags[tagWithArtwork].getArtwork());
+			} else {
+				CenterGridPane.setArtWorkImage(null);
+			}
+
+		}
+
 	}
 
 	private String getSameEntries(MusicTag[] tags, Tags tagType) {
-		System.out.println(tags.length);
 		String init = tags[0].getString(tagType);
 
 		for (int i = 1; i < tags.length; i++) {

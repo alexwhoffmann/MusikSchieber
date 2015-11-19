@@ -167,7 +167,7 @@ public class TagUtils {
 	 */
 	public static String intToString(int number) {
 		if (number == 0) {
-			return "";
+			return "0";
 		} else {
 			return "" + number;
 		}

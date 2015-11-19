@@ -3,6 +3,8 @@ package ms5000.gui.mainframe.center.eventhandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.jaudiotagger.tag.datatype.Artwork;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -38,14 +40,16 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 				int year = parseInteger(centerGrid.getTextField(TextFieldKey.YEAR).getText());
 				
 				if (totalDiscs < discNumber) {
-					discNumberOk = false;
+					if ((totalDiscs != 0 && discNumber == 0) || (totalDiscs == 0 && discNumber != 0)) {
+						discNumberOk = false;
+					}
 				}
 
-				if (titelNumber > totalTitles && centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
-					titleNumberOk = false;
+				if (titelNumber > totalTitles) {
+					if((totalTitles != 0 && titelNumber == 0) && (totalTitles == 0 && titelNumber != 0)) {
+						titleNumberOk = false;
+					}
 				}
-				
-				
 				
 				if (checkNumbers(discNumber, totalDiscs, totalTitles, titelNumber, year) && discNumberOk && titleNumberOk) {
 					if (centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
@@ -77,6 +81,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		String comment = centerGrid.getTextField(TextFieldKey.COMMENT).getText();
 		String composer = centerGrid.getTextField(TextFieldKey.COMPOSER).getText();
 		String genre = centerGrid.getTextField(TextFieldKey.GENRE).getText();
+		Artwork artwork = CenterGridPane.getArtwork();
 		
 		OriginalState state = OriginalState.getInstance();
 		
@@ -120,6 +125,10 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 			
 			if(!state.getYear().equals("" + year)) {
 				centerTable.getItems().get(position.intValue()).setYear(year);
+			}
+			
+			if(artwork != null) {
+				centerTable.getItems().get(position.intValue()).setArtwork(artwork);;
 			}
 			
 			// determine new tag state

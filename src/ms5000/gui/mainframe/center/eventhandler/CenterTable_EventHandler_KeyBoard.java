@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import ms5000.gui.mainframe.Main_Frame;
+import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.musicfile.file.MusicFile;
@@ -30,6 +31,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 	private final String PROPERTIES = "properties/gui.properties";
 	private Properties properties;
 	private File lastImportedDir;
+	private static boolean controlPressed;
 	
 	public CenterTable_EventHandler_KeyBoard(CenterTable table) {
 		this.table = table;
@@ -40,6 +42,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 	@Override
 	public void handle(KeyEvent event) {
 		if(event.getCode() == KeyCode.INSERT) {
+			controlPressed = false;
 			final FileChooser chooser = new FileChooser();
 			chooser.setInitialDirectory(readProperties());
 			
@@ -59,8 +62,16 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 				}
 			}
 		} else if (event.getCode() == KeyCode.DELETE) {
+			controlPressed = false;
 			table.getItems().removeAll(table.getSelectionModel().getSelectedItems());
 			table.refresh();
+		} else if (event.getCode() == KeyCode.CONTROL) {
+			controlPressed = true;
+		} else if (controlPressed == true && event.getCode() == KeyCode.S) {
+			CenterGridPane.save_Tag.fire();
+			
+		} else {
+			controlPressed = false;
 		}
 	}
 	
