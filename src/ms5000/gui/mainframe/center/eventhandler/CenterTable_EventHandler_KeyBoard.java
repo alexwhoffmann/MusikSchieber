@@ -19,7 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import ms5000.gui.mainframe.Main_Frame;
-import ms5000.gui.mainframe.center.CenterGridPane;
+import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.musicfile.file.MusicFile;
@@ -68,7 +68,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 		} else if (event.getCode() == KeyCode.CONTROL) {
 			controlPressed = true;
 		} else if (controlPressed == true && event.getCode() == KeyCode.S) {
-			CenterGridPane.save_Tag.fire();
+			BorderPane_CENTER.getCenterGridPane().getButton_save_Tag().fire();
 			
 		} else {
 			controlPressed = false;

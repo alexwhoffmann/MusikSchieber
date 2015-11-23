@@ -9,25 +9,61 @@ import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
 import ms5000.gui.mainframe.top.HBox_TOP_RIGHT;
 
-
+/**
+ * Class with starts the application and shows the mainframe
+ */
 public class Main_Frame extends Application {
+	
+	/**
+	 * the primary stage of the frame
+	 */
 	private static Stage primaryStage;
+	
+	/**
+	 * HBox with holds the start and stop button
+	 */
 	private HBox_TOP_LEFT hBox_Left;
+	
+	/**
+	 * HBox with holds the import button
+	 */
 	private HBox_TOP_RIGHT hBox_Right;
+	
+	/**
+	 * BorderPane which holds the list and the detail view
+	 */
 	private BorderPane_CENTER borderPane_Center;
+	
+	/**
+	 * The root borderpane
+	 */
 	private static final BorderPane root = new BorderPane();;
+	
+	/**
+	 * The borderpane at the top
+	 */
 	private BorderPane top;
-	public final static double minFrameWidth = 1300; 
-	private static final Scene scene = new Scene(root,400,400);;
+	
+	/**
+	 * the minimal frame width
+	 */
+	private final static double minFrameWidth = 1300; 
+	
+	/**
+	 * the scene of the main frame
+	 */
+	private static final Scene scene = new Scene(root,400,400);
 	
 	@Override
+	/**
+	 * Shows the main frame
+	 */
 	public void start(Stage primaryStage) {
 		try {
 			//the root pane
 			Main_Frame.setPrimaryStage(primaryStage);
 			
 			//Main-Frame Settings
-			scene.getStylesheets().add(getClass().getResource("mainframe.css").toExternalForm());
 			primaryStage.setScene(scene);
 			
 			//Setting the inital size to screen size
@@ -56,26 +92,53 @@ public class Main_Frame extends Application {
 		}
 	}
 	
+	/**
+	 * Method to start the application
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
-
+	
+	/**
+	 * Method to return the primary stage of the mainframe
+	 * @return the primary stage 
+	 */
 	public static Stage getPrimaryStage() {
 		return primaryStage;
 	}
-
+	/**
+	 * Method to set the primary stage of the mainframe
+	 * 
+	 * @param primaryStage
+	 */
 	public static void setPrimaryStage(Stage primaryStage) {
 		Main_Frame.primaryStage = primaryStage;
 	}
 	
+	/**
+	 * Method to return the preferred frame width
+	 * 
+	 * @return the preferred frame with of the mainframe
+	 */
 	public static double getPrefFrameWidth() {
 		return Main_Frame.primaryStage.getWidth();
 	}
 
+	/**
+	 * Method to return the minimal frame width
+	 * 
+	 * @return the minimal frame with of the mainframe
+	 */
 	public static double getMinFrameWidth() {
 		return minFrameWidth;
 	}
-
+	
+	/**
+	 * Method to return the scene of the mainframe
+	 *
+	 * @return the scene
+	 */
 	public static Scene getScene() {
 		return scene;
 	}

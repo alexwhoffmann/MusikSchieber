@@ -12,7 +12,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -55,7 +54,7 @@ public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 	public void handle(MouseEvent event) {
 		if (event.getEventType().toString().equals("MOUSE_CLICKED")) {
 			if(!BorderPane_CENTER.getCentertable().getItems().isEmpty()) {
-				AddDialog addDialog = new AddDialog(Alert.AlertType.CONFIRMATION);
+				AddDialog addDialog = new AddDialog();
 				this.importMode = addDialog.getImportMode();
 			}
 			

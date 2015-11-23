@@ -15,24 +15,37 @@ import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.musicfile.tag.TagUtils;
 
+/**
+ * This class implements the main functionality of the button for saving the tag
+ * which is located in the grid pane on the right hand side of the frame
+ */
 public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<ActionEvent> {
+	
+	/**
+	 * The error strings
+	 */
 	private final String ERROR_NUMBERFORMAT_EXCEPTION = "Please enter numeric values!";
 	private final String ERROR_UNREALISTIC_NUMBERS = "Please choose realsitic entries!";
 	private final String ERROR_TITLENUMBER = "The Titlenumber should be smaller than the total titlenumber.";
 	private final String ERROR_DISCNUMBER = "The Discnumber should be smaller than the total discnumber.";
 	private final String ERROR_DISCNUMBER_TITLENUMBER = "Please check title- and discnumber.";
 	
+	/**
+	 * Handle the event when the buttons is pressed
+	 */
 	@Override
 	public void handle(ActionEvent event) {
 		CenterTable centerTable = BorderPane_CENTER.getCentertable();
 		CenterGridPane centerGrid = BorderPane_CENTER.getCenterGridPane();
 		
-		if (event.getEventType().toString().equals("ACTION") && centerTable.getSelectionModel().getSelectedIndices().size() > 0) {
-
+		// Checking whether a row is selected
+		if (event.getEventType().toString().equals("ACTION")
+				&& centerTable.getSelectionModel().getSelectedIndices().size() > 0) {
 			try {
 				boolean discNumberOk = true;
 				boolean titleNumberOk = true;
-
+				
+				// Checking whether the numeric entries are valid
 				int discNumber = parseInteger(centerGrid.getTextField(TextFieldKey.DISCNUMBER).getText());
 				int totalDiscs = parseInteger(centerGrid.getTextField(TextFieldKey.DISCNUMBER_TOTAL).getText());
 				int totalTitles = parseInteger(centerGrid.getTextField(TextFieldKey.TITLENUMBER_TOTAL).getText());
@@ -51,12 +64,14 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 					}
 				}
 				
+				// Calling different mehtods when one or more entries are selected
 				if (checkNumbers(discNumber, totalDiscs, totalTitles, titelNumber, year) && discNumberOk && titleNumberOk) {
 					if (centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
 						setEntriesSingle(centerTable, centerGrid, discNumber, totalDiscs, totalTitles, titelNumber,year);
 					} else if (centerTable.getSelectionModel().getSelectedIndices().size() > 1) {
 						setEntriesMultiple(centerTable, centerGrid, discNumber, totalTitles, totalDiscs, year);
 					}
+				// Error dialogs 	
 				} else if (!discNumberOk && !titleNumberOk) {
 					openErrorDialog(ERROR_DISCNUMBER_TITLENUMBER);
 				} else if (!discNumberOk) {
@@ -74,17 +89,32 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		}
 	}
 	
-	private void setEntriesMultiple(CenterTable centerTable, CenterGridPane centerGrid, int discNumber, int totalTitles, int totalDiscs, int year) {
+	/**
+	 * Method for saving the tags when multiple entries are selected
+	 * 
+	 * @param centerTable an instance of the center table to access the tag instances
+	 * @param centerGrid an instance of the center grid to access the values of the text fields
+	 * @param discNumber the checked disc number 
+	 * @param totalTitles the checked total title number
+	 * @param totalDiscs the checked total disc number
+	 * @param year the checked album year
+	 */
+	private void setEntriesMultiple(CenterTable centerTable, CenterGridPane centerGrid, int discNumber, int totalTitles,
+			int totalDiscs, int year) {
+		
 		String artist = centerGrid.getTextField(TextFieldKey.ARTIST).getText();
 		String album = centerGrid.getTextField(TextFieldKey.ALBUM).getText();
 		String albumArtist = centerGrid.getTextField(TextFieldKey.ALBUM_ARTIST).getText();
 		String comment = centerGrid.getTextField(TextFieldKey.COMMENT).getText();
 		String composer = centerGrid.getTextField(TextFieldKey.COMPOSER).getText();
 		String genre = centerGrid.getTextField(TextFieldKey.GENRE).getText();
-		Artwork artwork = CenterGridPane.getArtwork();
+		Artwork artwork = centerGrid.getArtwork();
 		
+		// Receiving the original state to determine which field has changed
 		OriginalState state = OriginalState.getInstance();
 		
+		// Iterating through the entries
+		// If an field was changed, it is getting stored in all instances
 		for(Integer position : centerTable.getSelectionModel().getSelectedIndices()) {
 			// Writing the entries
 			if (!state.getArtist().equals(artist)) {
@@ -128,7 +158,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 			}
 			
 			if(artwork != null) {
-				centerTable.getItems().get(position.intValue()).setArtwork(artwork);;
+				centerTable.getItems().get(position.intValue()).setArtwork(artwork);
 			}
 			
 			// determine new tag state
@@ -139,6 +169,17 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		centerTable.refresh();
 	}
 	
+	/**
+	 * Method to store the tag when only one entry is choosen
+	 * 
+	 * @param centerTable an instance of the center table to access the tag instances
+	 * @param centerGrid an instance of the center grid to access the values of the text fields
+	 * @param discNumber the checked disc number 
+	 * @param totalTitles the checked total title number
+	 * @param totalDiscs the checked total disc number
+	 * @param year the checked album year
+	 * @param titlenumber the checked title number
+	 */
 	private void setEntriesSingle(CenterTable centerTable, CenterGridPane centerGrid, int discNumber, int totalDiscs,
 			int totalTitles, int titelNumber, int year) {
 		// Writing the entries
@@ -166,6 +207,11 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		CenterTable_ChangeListener.setTextFieldColorProfile();
 	}
 	
+	/**
+	 * Method for opening the error dialog 
+	 * 
+	 * @param dialogText the error message which is displayed to the user
+	 */
 	private void openErrorDialog(String dialogText) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -175,6 +221,15 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Method for checking whether the numeric tag entries have valid values
+	 * @param discNumber
+	 * @param totalDiscs
+	 * @param totalTitles
+	 * @param titleNumber
+	 * @param year
+	 * @return boolean which indicates whether the numeric entries are valid 
+	 */
 	private boolean checkNumbers(int discNumber, int totalDiscs, int totalTitles, int titleNumber, int year) {
 		if (discNumber > 50 || discNumber < 0) {
 			return false;
@@ -201,6 +256,11 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		return true;
 	}
 	
+	/**
+	 * Returns the current year as string for checking the validity of year field
+	 * 
+	 * @return the current year as string
+	 */
 	private int getCurrentYear() {
 	    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy");
 	    Date now = new Date();
@@ -208,6 +268,13 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	    return Integer.parseInt(strDate);
 	}
 	
+	/**
+	 * Method for parsing an string to an integer
+	 * 
+	 * @param number the integer
+	 * @return the string as integer
+	 * @throws NumberFormatException gets thrown, if false entries are entered
+	 */
 	private int parseInteger(String number) throws NumberFormatException{
 		if (number.equals("")) {
 			return 0;

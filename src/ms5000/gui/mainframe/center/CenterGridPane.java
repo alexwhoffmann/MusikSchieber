@@ -16,41 +16,63 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.eventhandler.CenterGridPane_ButtonSave_EventHandler;
+import ms5000.gui.mainframe.center.eventhandler.Import_Artwork_EventHandler;
 
+/**
+ * This class implements the detail view on the right hand side of the main frame
+ *
+ */
 public class CenterGridPane extends GridPane {
-	public enum TextFieldKey {
-		TITLENAME,ALBUM,ARTIST,ALBUM_ARTIST,TITLENUMBER,TITLENUMBER_TOTAL,DISCNUMBER,DISCNUMBER_TOTAL,COMPOSER,COMMENT,GENRE,YEAR
-	}
 	
-	// General
+	/**
+	 * With this enum it is possible to iterate through the values of the textfields
+	 * in the detail view 
+	 */
+	public static enum TextFieldKey {
+		TITLENAME, ALBUM, ARTIST, ALBUM_ARTIST, TITLENUMBER, TITLENUMBER_TOTAL, 
+		DISCNUMBER, DISCNUMBER_TOTAL, COMPOSER, COMMENT, GENRE, YEAR
+	}
+
+	/**
+	 * The general information
+	 */
 	private Label tagInformation_Label;
-	private Label fileInformation_Label;
 	private Label artWork_Label;
 	
+	private Label fileInformation_Label;
 	private Label filePath_Label;
-	private static TextField filePath_TextField;
+	private TextField filePath_TextField;
 	
-	private Button openFolder;
-	private Button getInfo_Artist;
-	private Button getInfo_Album;
-	public static Button save_Tag;
+	/**
+	 * The buttons of the view
+	 */
+	private Button button_openFolder;
+	private Button button_getInfo_Artist;
+	private Button button_getInfo_Album;
+	private Button button_save_Tag;
+	private Button button_open_ImageFile;
 	
-	private static ImageView artWork_ImageView;
-	private static Artwork artworkTemp;
+	/**
+	 * Artwork
+	 */
+	private ImageView artWork_ImageView;
+	private Artwork artworkTemp;
 	
-	// Tag informations
-	private static TextField titlename_textField;
-	private static TextField artist_textField;
-	private static TextField genre_textField;
-	private static TextField album_textField;
-	private static TextField year_textField;
-	private static TextField titleNumber_textField;
-	private static TextField totalTitleNumbers_textField;
-	private static TextField albumArtist_textField;
-	private static TextField composer_textField;
-	private static TextField comment_textField;
-	private static TextField discNumber_textField;
-	private static TextField totalDiscNumbers_textField;
+	/**
+	 * Tag information textfields and labels
+	 */
+	private TextField titlename_textField;
+	private TextField artist_textField;
+	private TextField genre_textField;
+	private TextField album_textField;
+	private TextField year_textField;
+	private TextField titleNumber_textField;
+	private TextField totalTitleNumbers_textField;
+	private TextField albumArtist_textField;
+	private TextField composer_textField;
+	private TextField comment_textField;
+	private TextField discNumber_textField;
+	private TextField totalDiscNumbers_textField;
 
 	private Label titlename_Label;
 	private Label artist_Label;
@@ -58,28 +80,37 @@ public class CenterGridPane extends GridPane {
 	private Label genre_Label;
 	private Label year_Label;
 	private Label titleNumber_Label;
-	private Label  totalTitleNumbers_Label;
+	private Label totalTitleNumbers_Label;
 	private Label albumArtist_Label;
 	private Label composer_Label;
 	private Label comment_Label;
 	private Label discNumber_Label;
 	private Label totalDiscNumbers_Label;
 	
+	/**
+	 * Paths to the icon files and the correspondig image objects
+	 */
 	private final String openFolder_Image_Path = "file:icons/Folder_Open.png";
 	private final String getInfo_Image_Path = "file:icons/question_mark.png";
 	private final String save_Image_Path = "file:icons/save_icon.png";
+	private final String default_Image_Path = "file:icons/artwork_icon.png";
+	private final String open_File_Image_Path = "file:icons/load-image-icon.png";
 	private final Image getInfo_Image = new Image(getInfo_Image_Path);
 	private final Image openFolder_Image = new Image(openFolder_Image_Path);
 	private final Image save_Image = new Image (save_Image_Path);
+	private final Image open_File_Image = new Image (open_File_Image_Path);
+	private final Image artworkDefault = new Image(default_Image_Path);
 	
-	
-	// For Testing
-	private static final Image artworkDefault = new Image("file:icons/artwork_icon.png");
-	
+	/**
+	 * Initializes the grid pane
+	 */
 	public CenterGridPane() {
 		init();
 	}
-
+	
+	/**
+	 * Method used in the constructor to initialize the grid pane
+	 */
 	private void init() {
 		// Styling the grid pane
 		this.setHgap(15);
@@ -90,7 +121,7 @@ public class CenterGridPane extends GridPane {
 		this.setMinWidth(Main_Frame.getMinFrameWidth() / 2);
 		this.setMaxWidth(Main_Frame.getPrefFrameWidth() / 2);
 
-		// General
+		// General informations
 		tagInformation_Label = new Label("Tag-Information");
 		tagInformation_Label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
@@ -107,28 +138,37 @@ public class CenterGridPane extends GridPane {
 		filePath_TextField.setEditable(false);
 		filePath_TextField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 		
-		openFolder = new Button();
-		openFolder.setGraphic(new ImageView(openFolder_Image));
+		// The buttons
+		button_openFolder = new Button();
+		button_openFolder.setGraphic(new ImageView(openFolder_Image));
 		
-		save_Tag = new Button();
+		button_save_Tag = new Button();
+		button_save_Tag.setOnAction(new CenterGridPane_ButtonSave_EventHandler());
+		button_save_Tag.setGraphic(new ImageView(save_Image));
 		
-		save_Tag.setOnAction(new CenterGridPane_ButtonSave_EventHandler());
-		save_Tag.setGraphic(new ImageView(save_Image));
+		button_getInfo_Artist = new Button();
+		button_getInfo_Artist.setGraphic(new ImageView(getInfo_Image));
 		
+		button_getInfo_Album = new Button();
+		button_getInfo_Album.setGraphic(new ImageView(getInfo_Image));
+		
+		button_open_ImageFile = new Button();
+		button_open_ImageFile.setGraphic(new ImageView(open_File_Image));
+		button_open_ImageFile.setOnAction(new Import_Artwork_EventHandler());
+		
+		// Default image of the artwork view
 		artWork_ImageView = new ImageView(artworkDefault);
 		artWork_ImageView.setFitWidth(200);
 		artWork_ImageView.setPreserveRatio(true);
 		artWork_ImageView.setSmooth(true);
 		artWork_ImageView.setCache(true);
 		
-		// The TextFields
+		// The TextFields of the tag informations
 		titlename_textField = new TextField("");
 		titlename_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 
 		artist_textField = new TextField("");
 		artist_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-		getInfo_Artist = new Button();
-		getInfo_Artist.setGraphic(new ImageView(getInfo_Image));
 		
 		genre_textField = new TextField("");
 		genre_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
@@ -148,8 +188,6 @@ public class CenterGridPane extends GridPane {
 
 		album_textField = new TextField("");
 		album_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-		getInfo_Album = new Button();
-		getInfo_Album.setGraphic(new ImageView(getInfo_Image));
 		
 		albumArtist_textField = new TextField("");
 		albumArtist_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
@@ -170,7 +208,7 @@ public class CenterGridPane extends GridPane {
 		totalDiscNumbers_textField.setMinWidth(45);
 		totalDiscNumbers_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 
-		// The Labels
+		// The Labels for the tag information text fields
 		artist_Label = new Label("Artist:");
 		artist_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
@@ -206,10 +244,11 @@ public class CenterGridPane extends GridPane {
 
 		totalDiscNumbers_Label = new Label(" - ");
 		totalDiscNumbers_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-
+		
+		// Putting text fields and labels on to the grid pane
 		// Tag Information
 		CenterGridPane.setConstraints(tagInformation_Label, 1, 1, 2, 2);
-		CenterGridPane.setConstraints(save_Tag,3,1,1,2);
+		CenterGridPane.setConstraints(button_save_Tag,3,1,1,2);
 
 		// Titlename
 		CenterGridPane.setConstraints(titlename_Label, 1, 3);
@@ -218,12 +257,12 @@ public class CenterGridPane extends GridPane {
 		// Artist
 		CenterGridPane.setConstraints(artist_Label, 5, 3);
 		CenterGridPane.setConstraints(artist_textField, 6, 3, 2, 1);
-		CenterGridPane.setConstraints(getInfo_Artist, 8, 3);
+		CenterGridPane.setConstraints(button_getInfo_Artist, 8, 3);
 		
 		// Album
 		CenterGridPane.setConstraints(album_Label, 1, 4);
 		CenterGridPane.setConstraints(album_textField, 2, 4, 2, 1);
-		CenterGridPane.setConstraints(getInfo_Album, 4, 4);
+		CenterGridPane.setConstraints(button_getInfo_Album, 4, 4);
 		
 		// Year
 		CenterGridPane.setConstraints(year_Label, 5, 4);
@@ -257,128 +296,197 @@ public class CenterGridPane extends GridPane {
 		CenterGridPane.setConstraints(comment_Label, 1, 8);
 		CenterGridPane.setConstraints(comment_textField, 2, 8, 7, 1);
 		
-		CenterGridPane.setConstraints(artWork_Label,1,9, 8, 2);
+		// Artwork
+		CenterGridPane.setConstraints(artWork_Label,1,9, 1, 2);
 		CenterGridPane.setConstraints(artWork_ImageView,1,11,8,1);
-				
+		CenterGridPane.setConstraints(button_open_ImageFile,2,9,1,2);
+		
 		// File Information
 		CenterGridPane.setConstraints(fileInformation_Label, 1, 12, 8, 2);
 		CenterGridPane.setConstraints(filePath_Label, 1, 14);
 		CenterGridPane.setConstraints(filePath_TextField, 2, 14, 6, 1);
-		CenterGridPane.setConstraints(openFolder,8,14);
-
+		CenterGridPane.setConstraints(button_openFolder,8,14);
+		
+		// Adding the children to the pane
 		this.getChildren().addAll(titlename_Label, titlename_textField, artist_Label, artist_textField, album_Label,
 				album_textField, year_Label, year_textField, titleNumber_Label, titleNumber_textField,
 				totalTitleNumbers_textField, discNumber_Label, discNumber_textField, totalDiscNumbers_textField,
 				composer_Label, composer_textField, comment_textField, comment_Label, albumArtist_Label,
 				albumArtist_textField, genre_textField, genre_Label, totalTitleNumbers_Label, totalDiscNumbers_Label,
-				tagInformation_Label, fileInformation_Label, filePath_Label, filePath_TextField, openFolder,
-				getInfo_Artist, getInfo_Album,artWork_Label,artWork_ImageView,save_Tag);
+				tagInformation_Label, fileInformation_Label, filePath_Label, filePath_TextField, button_openFolder,
+				button_getInfo_Artist, button_getInfo_Album, artWork_Label, artWork_ImageView, button_save_Tag,
+				button_open_ImageFile);
 	}
 	
-	public static ImageView getArtwork_ImageView() {
-		return artWork_ImageView;
+	/**
+	 * Getter and Setter methods for this class
+	 */
+	
+	/**
+	 * @return Instance of the filepath textfield
+	 */
+	public TextField getFilePath_TextField() {
+		return filePath_TextField;
 	}
 	
-	public static TextField getArtist_textField() {
+	/**
+	 * @return Instance of the artist textfield
+	 */
+	public TextField getArtist_textField() {
 		return artist_textField;
 	}
 	
-	public static TextField getFilePath_TextField() {
-		return filePath_TextField;
-	}
-
-	public static TextField getTitlename_textField() {
+	/**
+	 * @return Instance of the titlename textfield
+	 */
+	public TextField getTitlename_textField() {
 		return titlename_textField;
 	}
-
-	public static TextField getGenre_textField() {
+	
+	/**
+	 * @return Instance of the genre textfield
+	 */
+	public TextField getGenre_textField() {
 		return genre_textField;
 	}
-
-	public static TextField getAlbum_textField() {
+	
+	/**
+	 * @return Instance of the album textfield
+	 */
+	public TextField getAlbum_textField() {
 		return album_textField;
 	}
-
-	public static TextField getYear_textField() {
+	
+	/**
+	 * @return Instance of the album year textfield
+	 */
+	public TextField getYear_textField() {
 		return year_textField;
 	}
-
-	public static TextField getTitleNumber_textField() {
+	
+	/**
+	 * @return Instance of the title number textfield
+	 */
+	public TextField getTitleNumber_textField() {
 		return titleNumber_textField;
 	}
-
-	public static TextField getTotalTitleNumbers_textField() {
+	
+	/**
+	 * @return Instance of the total title number textfield
+	 */
+	public TextField getTotalTitleNumbers_textField() {
 		return totalTitleNumbers_textField;
 	}
-
-	public static TextField getAlbumArtist_textField() {
+	
+	/**
+	 * @return Instance of the album artist textfield
+	 */
+	public TextField getAlbumArtist_textField() {
 		return albumArtist_textField;
 	}
-
-	public static TextField getComposer_textField() {
+	
+	/**
+	 * @return Instance of the composer textfield
+	 */
+	public TextField getComposer_textField() {
 		return composer_textField;
 	}
-
-	public static TextField getComment_textField() {
+	
+	/**
+	 * @return Instance of the comment textfield
+	 */
+	public TextField getComment_textField() {
 		return comment_textField;
 	}
-
-	public static TextField getDiscNumber_textField() {
+	
+	/**
+	 * @return Instance of the disc number textfield
+	 */
+	public TextField getDiscNumber_textField() {
 		return discNumber_textField;
 	}
-
-	public static TextField getTotalDiscNumbers_textField() {
+	
+	/**
+	 * @return Instance of the total disc number textfield
+	 */
+	public TextField getTotalDiscNumbers_textField() {
 		return totalDiscNumbers_textField;
 	}
 	
-	public static void setArtWorkImage(Artwork artWork) {
+	/**
+	 * @return Returns an instance of the temporarily stored artwork
+	 */
+	public Artwork getArtwork() {
+		return artworkTemp;
+	}
+	
+	/**
+	 * @return Returns an instace of the save tag button to enable short key usage
+	 */
+	public Button getButton_save_Tag() {
+		return button_save_Tag;
+	}
+	
+	
+	/**
+	 * Method for setting the artwork view to an image delivered through the
+	 * parameter artWork
+	 * 
+	 * @param artWork: Artwork which is used to set the artwork field
+	 */
+	public void setArtWorkImage(Artwork artWork) {
 		if (artWork == null) {
-			CenterGridPane.getArtwork_ImageView().setImage(artworkDefault);
+			this.artWork_ImageView.setImage(artworkDefault);
 			artworkTemp = null;
 		} else {
 			try {
-				getArtwork_ImageView().setImage(SwingFXUtils.toFXImage(artWork.getImage(), null));
+				this.artWork_ImageView.setImage(SwingFXUtils.toFXImage(artWork.getImage(), null));
 				artworkTemp = artWork;
 			} catch (IOException e) {
-				CenterGridPane.getArtwork_ImageView().setImage(artworkDefault);
+				this.artWork_ImageView.setImage(artworkDefault);
 				artworkTemp = null;
 			}
 		}
 	}
 	
-	public static Artwork getArtwork() {
-		return artworkTemp;
-	}
-	
+	/**
+	 * Method which delivers an instance of the textfield to the delivered key
+	 * Makes it possible to iterate through the textfields of the grid pane
+	 * 
+	 * @param key Enum TextFieldKey
+	 * @return instance of the corresponding text field
+	 */
 	public TextField getTextField(TextFieldKey key) {
 		switch (key) {
 		case ALBUM:
-			return CenterGridPane.getAlbum_textField();
+			return getAlbum_textField();
 		case TITLENAME:
-			return CenterGridPane.getTitlename_textField();
+			return getTitlename_textField();
 		case ARTIST:
-			return CenterGridPane.getArtist_textField();
+			return getArtist_textField();
 		case ALBUM_ARTIST:
-			return CenterGridPane.getAlbumArtist_textField();
+			return getAlbumArtist_textField();
 		case TITLENUMBER:
-			return CenterGridPane.getTitleNumber_textField();
+			return getTitleNumber_textField();
 		case TITLENUMBER_TOTAL:
-			return CenterGridPane.getTotalTitleNumbers_textField();
+			return getTotalTitleNumbers_textField();
 		case DISCNUMBER:
-			return CenterGridPane.getDiscNumber_textField();
+			return getDiscNumber_textField();
 		case DISCNUMBER_TOTAL:
-			return CenterGridPane.getTotalDiscNumbers_textField();
+			return getTotalDiscNumbers_textField();
 		case COMPOSER:
-			return CenterGridPane.getComposer_textField();
+			return getComposer_textField();
 		case COMMENT:
-			return CenterGridPane.getComment_textField();
+			return getComment_textField();
 		case YEAR:
-			return CenterGridPane.getYear_textField();
+			return getYear_textField();
 		case GENRE:
-			return CenterGridPane.getGenre_textField();
+			return getGenre_textField();
 
 		default:
 			return null;
 		}
 	}
+
+	
 }

@@ -15,22 +15,37 @@ import ms5000.gui.mainframe.center.eventhandler.CenterTable_EventHandler_KeyBoar
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.MusicTag.TagState;
 
+/**
+ * This class implements the main features of the table view 
+ *
+ */
 public class CenterTable extends TableView<MusicTag> {
+	/**
+	 * The columns 
+	 */
 	private TableColumn<MusicTag, String> artistCol;
 	private TableColumn<MusicTag, String> albumCol;
 	private TableColumn<MusicTag, String> trackCol;
 	private TableColumn<MusicTag, String> genreCol;
+	
+	/**
+	 * Path and image of the placeholder icon
+	 */
 	private final String placeholder_icon = "file:icons/green_music_icon_table.png";
+	private final Image placeHolder = new Image(placeholder_icon);
+	
+	/**
+	 * Strings to style the row's
+	 */
 	private final String missingCritical = "-fx-background-color: rgb(255, 153, 153,0.3)";
 	private final String missingNonCritical = "-fx-background-color: rgb(255, 255, 179,0.3)";
 	private final String missingWeak = "-fx-background-color: rgb(255, 255, 229,0.45)";
 	private final String duplicate = "-fx-background-color: rgb(179, 255, 179,0.3)";
 	
-	@SuppressWarnings({ "unchecked"})
+	
+	@SuppressWarnings("unchecked")
 	public CenterTable() {
 		// Setting the Columns
-		Image placeHolder = new Image(placeholder_icon);
-		
 		artistCol = new TableColumn<MusicTag, String>("Artist");
 		artistCol.setCellValueFactory(new PropertyValueFactory<MusicTag, String>("artist"));
 		setWidth(artistCol);
@@ -51,14 +66,16 @@ public class CenterTable extends TableView<MusicTag> {
 		setWidth(genreCol);
 		genreCol.setCellFactory(getCellFactory());
 		
+		// Adding the columns to the table
 		this.getColumns().addAll(artistCol, albumCol, trackCol, genreCol);
-		
 		
 		
 		// Setting the table properties
 		this.setColumnResizePolicy(CenterTable.CONSTRAINED_RESIZE_POLICY);
 		this.setPlaceholder(new ImageView(placeHolder));
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		
+		// Adding the event handlers
 		this.setOnKeyPressed(new CenterTable_EventHandler_KeyBoard(this));
 		CenterTable_EventHandler_DragNDrop dragAndDropHandler = new CenterTable_EventHandler_DragNDrop();
 		this.setOnDragOver(dragAndDropHandler);
@@ -66,7 +83,12 @@ public class CenterTable extends TableView<MusicTag> {
 		this.getSelectionModel().selectedItemProperty().addListener(new CenterTable_ChangeListener(this));
 		
 	}
-
+	
+	/**
+	 * Method to set the default width of the delivered column
+	 * 
+	 * @param col the column for which the width is set
+	 */
 	private void setWidth(TableColumn<MusicTag, String> col) {
 		col.setPrefWidth(Main_Frame.getPrefFrameWidth() / 8);
 		col.setMinWidth(Main_Frame.getMinFrameWidth() / 16);
@@ -74,20 +96,28 @@ public class CenterTable extends TableView<MusicTag> {
 		col.setResizable(true);
 	}
 	
+	/**
+	 * @return returns the instance of the center table
+	 */
 	public CenterTable getInstace() {
 		return this;
 	}
 	
-	public Callback<TableColumn<MusicTag, String>, TableCell<MusicTag, String>> getCellFactory() {
+	/**
+	 * Initializes and delivers an instance of the cell factory which is 
+	 * used to style the cells 
+	 * 
+	 * @return instance of the cell table factory
+	 */
+	private Callback<TableColumn<MusicTag, String>, TableCell<MusicTag, String>> getCellFactory() {
 		Callback<TableColumn<MusicTag, String>, TableCell<MusicTag, String>> cellFactory =
 		        new Callback<TableColumn<MusicTag, String>, TableCell<MusicTag, String>>() {
-		            @SuppressWarnings("rawtypes")
-					public TableCell call(TableColumn p) {
+		            
+					public TableCell<MusicTag, String> call(TableColumn<MusicTag, String> p) {
 		                TableCell<MusicTag, String> cell = new TableCell<MusicTag, String>() {
 		                    @Override
 		                    public void updateItem(String item, boolean empty) {
 		                        super.updateItem(item, empty);
-		                        
 		                        
 		                        if (!isEmpty() && this.getTableRow().getItem() != null) {
 		                        	MusicTag tag = ((MusicTag) this.getTableRow().getItem());

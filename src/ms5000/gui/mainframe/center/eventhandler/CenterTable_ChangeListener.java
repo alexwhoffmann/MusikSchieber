@@ -4,7 +4,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import ms5000.gui.mainframe.center.BorderPane_CENTER;
-import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.musicfile.tag.MusicTag;
@@ -26,9 +25,9 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		
 		if (table.getSelectionModel().getSelectedIndices().size() == 1) {
 			// Reverting changes made
-			CenterGridPane.getTitlename_textField().setEditable(true);
-			CenterGridPane.getTitleNumber_textField().setEditable(true);
-			CenterGridPane.getFilePath_TextField().setEditable(true);
+			BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setEditable(true);
+			BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setEditable(true);
+			BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setEditable(true);
 
 			addSingleEntryToDetails(table.getSelectionModel().getSelectedItem());
 		} else if (table.getSelectionModel().getSelectedIndices().size() > 1) {
@@ -39,31 +38,31 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		} else if (table.getSelectionModel().getSelectedIndices().get(0) == -1) {
 			refershTextFieldColorProfile();
 			clearTextFields();
-			CenterGridPane.setArtWorkImage(null);
+			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
 		}
 	}
 
 	private void addSingleEntryToDetails(MusicTag tag) {
 		refershTextFieldColorProfile();
 
-		CenterGridPane.getAlbum_textField().setText(tag.getAlbum());
-		CenterGridPane.getAlbumArtist_textField().setText(tag.getAlbumArtist());
-		CenterGridPane.getGenre_textField().setText(tag.getGenre());
-		CenterGridPane.getTitlename_textField().setText(tag.getTitlename());
-		CenterGridPane.getComposer_textField().setText(tag.getComposer());
-		CenterGridPane.getComment_textField().setText(tag.getComment());
-		CenterGridPane.getTitleNumber_textField().setText("" + tag.getTitlenumber());
-		CenterGridPane.getTotalTitleNumbers_textField().setText("" + tag.getTotal_titles());
-		CenterGridPane.getDiscNumber_textField().setText("" + tag.getDisc_number());
-		CenterGridPane.getTotalDiscNumbers_textField().setText("" + tag.getTotal_discs());
-		CenterGridPane.getYear_textField().setText("" + tag.getYear());
-		CenterGridPane.getArtist_textField().setText(tag.getArtist());
-		CenterGridPane.getFilePath_TextField().setText(tag.getMusicFile().getOriginalFilePath());
+		BorderPane_CENTER.getCenterGridPane().getAlbum_textField().setText(tag.getAlbum());
+		BorderPane_CENTER.getCenterGridPane().getAlbumArtist_textField().setText(tag.getAlbumArtist());
+		BorderPane_CENTER.getCenterGridPane().getGenre_textField().setText(tag.getGenre());
+		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setText(tag.getTitlename());
+		BorderPane_CENTER.getCenterGridPane().getComposer_textField().setText(tag.getComposer());
+		BorderPane_CENTER.getCenterGridPane().getComment_textField().setText(tag.getComment());
+		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setText("" + tag.getTitlenumber());
+		BorderPane_CENTER.getCenterGridPane().getTotalTitleNumbers_textField().setText("" + tag.getTotal_titles());
+		BorderPane_CENTER.getCenterGridPane().getDiscNumber_textField().setText("" + tag.getDisc_number());
+		BorderPane_CENTER.getCenterGridPane().getTotalDiscNumbers_textField().setText("" + tag.getTotal_discs());
+		BorderPane_CENTER.getCenterGridPane().getYear_textField().setText("" + tag.getYear());
+		BorderPane_CENTER.getCenterGridPane().getArtist_textField().setText(tag.getArtist());
+		BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setText(tag.getMusicFile().getOriginalFilePath());
 
 		if (tag.getArtwork() != null) {
-			CenterGridPane.setArtWorkImage(tag.getArtwork());
+			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(tag.getArtwork());
 		} else {
-			CenterGridPane.setArtWorkImage(null);
+			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
 		}
 
 		setTextFieldColorProfile();
@@ -97,25 +96,25 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		state.setYear(year);
 		state.setTotalDiscNumber(maxDiscNumber);
 
-		CenterGridPane.getTitlename_textField().setText("");
-		CenterGridPane.getTitleNumber_textField().setText("");
+		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setText("");
+		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setText("");
 
-		CenterGridPane.getAlbum_textField().setText(album);
-		CenterGridPane.getAlbumArtist_textField().setText(albumArtist);
-		CenterGridPane.getGenre_textField().setText(genre);
-		CenterGridPane.getTitlename_textField().setEditable(false);
-		CenterGridPane.getComposer_textField().setText(composer);
-		CenterGridPane.getComment_textField().setText(comment);
-		CenterGridPane.getTitleNumber_textField().setEditable(false);
-		CenterGridPane.getTotalTitleNumbers_textField().setText(maxTitleNumber);
-		CenterGridPane.getDiscNumber_textField().setText(discNumber);
-		CenterGridPane.getTotalDiscNumbers_textField().setText(maxDiscNumber);
-		CenterGridPane.getYear_textField().setText(year);
-		CenterGridPane.getArtist_textField().setText(artist);
-		CenterGridPane.getFilePath_TextField().setEditable(false);
+		BorderPane_CENTER.getCenterGridPane().getAlbum_textField().setText(album);
+		BorderPane_CENTER.getCenterGridPane().getAlbumArtist_textField().setText(albumArtist);
+		BorderPane_CENTER.getCenterGridPane().getGenre_textField().setText(genre);
+		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setEditable(false);
+		BorderPane_CENTER.getCenterGridPane().getComposer_textField().setText(composer);
+		BorderPane_CENTER.getCenterGridPane().getComment_textField().setText(comment);
+		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setEditable(false);
+		BorderPane_CENTER.getCenterGridPane().getTotalTitleNumbers_textField().setText(maxTitleNumber);
+		BorderPane_CENTER.getCenterGridPane().getDiscNumber_textField().setText(discNumber);
+		BorderPane_CENTER.getCenterGridPane().getTotalDiscNumbers_textField().setText(maxDiscNumber);
+		BorderPane_CENTER.getCenterGridPane().getYear_textField().setText(year);
+		BorderPane_CENTER.getCenterGridPane().getArtist_textField().setText(artist);
+		BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setEditable(false);
 
 		if (album.equals("")) {
-			CenterGridPane.setArtWorkImage(null);
+			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
 		} else {
 			boolean thereIsArtwork = false;
 			int tagWithArtwork = 0;
@@ -128,9 +127,9 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 			}
 
 			if (thereIsArtwork) {
-				CenterGridPane.setArtWorkImage(tags[tagWithArtwork].getArtwork());
+				BorderPane_CENTER.getCenterGridPane().setArtWorkImage(tags[tagWithArtwork].getArtwork());
 			} else {
-				CenterGridPane.setArtWorkImage(null);
+				BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
 			}
 
 		}
@@ -180,8 +179,7 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		for (TextFieldKey key : TextFieldKey.values()) {
 			if(BorderPane_CENTER.getCenterGridPane().getTextField(key) != null) {
 				BorderPane_CENTER.getCenterGridPane().getTextField(key).setText("");
-				BorderPane_CENTER.getCenterGridPane();
-				CenterGridPane.getFilePath_TextField().setText("");
+				BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setText("");
 			}
 		}
 	}
