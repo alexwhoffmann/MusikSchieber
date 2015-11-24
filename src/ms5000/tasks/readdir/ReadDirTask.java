@@ -45,7 +45,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 * ArrayList which stors the imported Files
 	 */
 	private ArrayList<File> readFiles = new ArrayList<File>();;
-	
+	private ObservableList<MusicTag> newTableEntries;
 	private List<File> readFiles_DND;
 
 	private ImportMode importMode;
@@ -206,7 +206,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 */
 	@SuppressWarnings("finally")
 	private ObservableList<MusicTag> importMusicFiles() throws InterruptedException {
-		ObservableList<MusicTag> newTableEntries = FXCollections.observableArrayList();
+		newTableEntries = FXCollections.observableArrayList();
 		ObservableList<MusicTag> musicFiles = FXCollections.observableArrayList();
 
 		// number of imported files
@@ -215,11 +215,14 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 		for (int i = 0; i < number_of_imported_files; i++) {
 			if (isCancelled()) {
 				try {
+					this.cancel();
 					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
+					System.out.println(importMode);
 					if (importMode != ImportMode.APPEND) {
 						BorderPane_CENTER.getCentertable().getItems().clear();
 						BorderPane_CENTER.getProgressBar().progressProperty().unbind();
 						BorderPane_CENTER.getProgressBar().setProgress(0);
+						BorderPane_CENTER.getCentertable().getItems().clear();
 					} else {
 						BorderPane_CENTER.getCentertable().getItems().removeAll(newTableEntries);
 						BorderPane_CENTER.getProgressBar().progressProperty().unbind();
@@ -311,5 +314,13 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	
 	private void closeLog() {
 		writer.close();
+	}
+
+	public ImportMode getImportMode() {
+		return importMode;
+	}
+
+	public ObservableList<MusicTag> getNewTableEntries() {
+		return newTableEntries;
 	}
 }

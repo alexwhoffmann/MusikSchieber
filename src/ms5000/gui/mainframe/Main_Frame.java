@@ -8,6 +8,8 @@ import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
 import ms5000.gui.mainframe.top.HBox_TOP_RIGHT;
+import ms5000.gui.mainframe.top.VBox_StatusSlider;
+import ms5000.gui.mainframe.top.VBox_VolumeSlider;
 
 /**
  * Class with starts the application and shows the mainframe
@@ -22,12 +24,12 @@ public class Main_Frame extends Application {
 	/**
 	 * HBox with holds the start and stop button
 	 */
-	private HBox_TOP_LEFT hBox_Left;
+	private static HBox_TOP_LEFT hBox_Left;
 	
 	/**
 	 * HBox with holds the import button
 	 */
-	private HBox_TOP_RIGHT hBox_Right;
+	private static HBox_TOP_RIGHT hBox_Right;
 	
 	/**
 	 * BorderPane which holds the list and the detail view
@@ -87,8 +89,10 @@ public class Main_Frame extends Application {
 			
 			//Setting the minimum size
 			Main_Frame.getPrimaryStage().setMinWidth(minFrameWidth);
-			BoderPane_TOP_CENTER.getStatusSlider().getSlider().setProgressBarWidth();
-			HBox_TOP_RIGHT.getVolumeSlider().getVolumeSlider().setProgressBarWidth();
+			
+			//Setting Sizes of components
+			VBox_StatusSlider.getSlider().setProgressBarWidth();
+			VBox_VolumeSlider.getVolumeSlider().setProgressBarWidth();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -143,5 +147,13 @@ public class Main_Frame extends Application {
 	 */
 	public static Scene getScene() {
 		return scene;
+	}
+
+	public static HBox_TOP_LEFT gethBox_Left() {
+		return hBox_Left;
+	}
+
+	public static HBox_TOP_RIGHT gethBox_Right() {
+		return hBox_Right;
 	}
 }

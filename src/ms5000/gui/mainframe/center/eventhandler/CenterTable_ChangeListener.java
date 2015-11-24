@@ -3,9 +3,14 @@ package ms5000.gui.mainframe.center.eventhandler;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import ms5000.audio.player.AudioPlayer;
+import ms5000.audio.player.PlayerStatus;
 import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
+import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
+import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
 import ms5000.gui.mainframe.center.CenterTable;
+import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.MusicTag.Tags;
 
@@ -28,18 +33,52 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 			BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setEditable(true);
 			BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setEditable(true);
 			BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setEditable(true);
-
 			addSingleEntryToDetails(table.getSelectionModel().getSelectedItem());
+			
+			updatePlayer(table.getSelectionModel().getSelectedItem().getMusicFile());
 		} else if (table.getSelectionModel().getSelectedIndices().size() > 1) {
+			disablePlayer();
 			MusicTag[] tags = new MusicTag[0];
 			tags = BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedItems().toArray(tags);
-			addMultipleEntryToDetails(tags,
-					BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices());
+			addMultipleEntryToDetails(tags,BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices());
 		} else if (table.getSelectionModel().getSelectedIndices().get(0) == -1) {
+			HBox_TOP_LEFT.getBtn_Start().setDisable(true);
+			HBox_TOP_LEFT.getBtn_Stop().setDisable(true);
+			disablePlayer();
 			refershTextFieldColorProfile();
 			clearTextFields();
 			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
 		}
+	}
+
+	private void updatePlayer(MusicFile musicFile) {
+		if (HBox_TOP_LEFT.getBtn_Stop().isDisable()) {
+			HBox_TOP_LEFT.getBtn_Stop().setDisable(false);
+		}
+		
+		HBox_TOP_LEFT.getBtn_Start().setDisable(false);
+		
+		if (AudioPlayer.getInstance().getMediaPlayer() != null) {
+			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.READY) {
+				AudioPlayer.getInstance().stop();
+			}
+		}
+		
+		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
+		AudioPlayer.getInstance().setMedia(musicFile);
+	}
+	
+	private void disablePlayer() {
+		if (AudioPlayer.getInstance().getMediaPlayer() != null) {
+			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.READY) {
+				AudioPlayer.getInstance().stop();
+			}
+		}
+		HBox_TOP_LEFT.getBtn_Stop().setDisable(true);
+		HBox_TOP_LEFT.getBtn_Start().setDisable(true);
+		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
+		AudioPlayer.getInstance().setMedia(null);
+		AudioPlayer.getInstance().setStatus(PlayerStatus.NOMEDIAFILE);
 	}
 
 	private void addSingleEntryToDetails(MusicTag tag) {

@@ -40,7 +40,6 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 		this.setRight(box_TimeLeft);
 		this.setId("border-pane");
 		
-		//this.setStyle("-fx-background-color:#999999");
 	}
 	
 	public static VBox_StatusSlider getStatusSlider() {

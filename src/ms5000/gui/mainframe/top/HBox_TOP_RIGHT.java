@@ -9,7 +9,7 @@ import javafx.scene.shape.Rectangle;
 import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler;
 
 public class HBox_TOP_RIGHT extends HBox{
-	private Button btn_import_data;
+	private static Button btn_import_data;
 	private final String icon_button_add_disabled_path = "file:icons/Add_Disabled.png";
 	private final Image icon_button_add_disabled;
 	private final double icon_length = 23;
@@ -25,9 +25,11 @@ public class HBox_TOP_RIGHT extends HBox{
 		btn_import_data.setMinSize(2*icon_length, 2*icon_length);
 		btn_import_data.setMaxSize(2*icon_length, 2*icon_length);
 		
-		btn_import_data.setOnMouseEntered(new ButtonAdd_EventHandler(btn_import_data));
-		btn_import_data.setOnMouseExited(new ButtonAdd_EventHandler(btn_import_data));
-		btn_import_data.setOnMouseClicked(new ButtonAdd_EventHandler(btn_import_data));
+		ButtonAdd_EventHandler eventHandler = new ButtonAdd_EventHandler();
+		
+		btn_import_data.setOnMouseEntered(eventHandler);
+		btn_import_data.setOnMouseExited(eventHandler);
+		btn_import_data.setOnMouseClicked(eventHandler);
 		
 		volumeSlider = new VBox_VolumeSlider();
 		this.getChildren().add(volumeSlider);
@@ -40,5 +42,9 @@ public class HBox_TOP_RIGHT extends HBox{
 	
 	public static VBox_VolumeSlider getVolumeSlider() {
 		return volumeSlider;
+	}
+
+	public static Button getBtn_import_data() {
+		return btn_import_data;
 	}
 }

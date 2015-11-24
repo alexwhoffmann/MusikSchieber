@@ -25,7 +25,6 @@ public class VBox_StatusSlider extends VBox{
 		progress_slider.setMinWidth(500);
 		progress_slider.sliderValueProperty().addListener(new Slider_ValueChange_Listener(progress_slider.getSlider()));
 		
-		
 		this.getChildren().add(status_text);
 		this.getChildren().add(progress_slider);
 		
