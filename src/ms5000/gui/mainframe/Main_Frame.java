@@ -87,6 +87,8 @@ public class Main_Frame extends Application {
 			
 			//Setting the minimum size
 			Main_Frame.getPrimaryStage().setMinWidth(minFrameWidth);
+			BoderPane_TOP_CENTER.getStatusSlider().getSlider().setProgressBarWidth();
+			HBox_TOP_RIGHT.getVolumeSlider().getVolumeSlider().setProgressBarWidth();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

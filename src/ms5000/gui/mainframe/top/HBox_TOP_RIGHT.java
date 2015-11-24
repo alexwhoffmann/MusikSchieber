@@ -10,9 +10,10 @@ import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler;
 
 public class HBox_TOP_RIGHT extends HBox{
 	private Button btn_import_data;
-	private static final String icon_button_add_disabled_path = "file:icons/Add_Disabled.png";
-	private Image icon_button_add_disabled;
-	private static final double icon_length = 23;
+	private final String icon_button_add_disabled_path = "file:icons/Add_Disabled.png";
+	private final Image icon_button_add_disabled;
+	private final double icon_length = 23;
+	private static VBox_VolumeSlider volumeSlider;
 	
 	public HBox_TOP_RIGHT() {
 		btn_import_data = new Button();
@@ -28,12 +29,16 @@ public class HBox_TOP_RIGHT extends HBox{
 		btn_import_data.setOnMouseExited(new ButtonAdd_EventHandler(btn_import_data));
 		btn_import_data.setOnMouseClicked(new ButtonAdd_EventHandler(btn_import_data));
 		
-		
-		this.getChildren().add(new VBox_VolumeSlider());
+		volumeSlider = new VBox_VolumeSlider();
+		this.getChildren().add(volumeSlider);
 		this.getChildren().add(btn_import_data);
 		
 		this.setPadding(new Insets(37, 12, 15, 12));
 		this.setSpacing(10);
 		this.setStyle("-fx-background-color:#5A5A5A");
+	}
+	
+	public static VBox_VolumeSlider getVolumeSlider() {
+		return volumeSlider;
 	}
 }

@@ -8,8 +8,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import ms5000.audio.player.AudioPlayer;
+import ms5000.gui.mainframe.center.BorderPane_CENTER;
+import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.gui.mainframe.top.Button_Start;
 import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler.TaskStatus;
+import ms5000.musicfile.file.MusicFile;
 
 public class ButtonStartStop_EventHandler implements EventHandler<MouseEvent>{
 	private static final String icon_button_start_disabled_path = "file:icons/Play_Disabled.png";
@@ -49,6 +53,11 @@ public class ButtonStartStop_EventHandler implements EventHandler<MouseEvent>{
 		if (event.getEventType().toString().equals("MOUSE_CLICKED")) {
 			if(buttonName.equals("Start")) {
 				changeButtonIcon_PlayPressed(button);
+				
+				if (BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices().size() == 1) {
+					playTune(BorderPane_CENTER.getCentertable().getSelectionModel()
+							.getSelectedItem().getMusicFile());
+				}
 			} else if (buttonName.equals("Stop")) {
 				if(ButtonAdd_EventHandler.getTaskStatus() == TaskStatus.RUNNING || ButtonAdd_EventHandler.getTaskStatus() == TaskStatus.SCHEDULED) {
 					ButtonAdd_EventHandler.setTaskStatus(null);
@@ -60,6 +69,13 @@ public class ButtonStartStop_EventHandler implements EventHandler<MouseEvent>{
 		}
 	}
 	
+	private void playTune(MusicFile musicFile) {
+		AudioPlayer.getInstance().setMedia(musicFile);
+		AudioPlayer.getInstance().play();
+		
+		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Playing: " + musicFile.getTag().getArtist() + " - " + musicFile.getTag().getTitlename());
+	}
+
 	private void changeButtonIcon_Rollover(String button_name, Button button, String eventType) {
 		if (eventType.equals("MOUSE_ENTERED")) {
 			if(buttonName.equals("Start")) {

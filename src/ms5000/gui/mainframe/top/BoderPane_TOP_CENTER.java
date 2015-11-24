@@ -8,18 +8,21 @@ import javafx.scene.layout.VBox;
 
 public class BoderPane_TOP_CENTER extends BorderPane {
 	
-	private TextField timeToGO;
-	private TextField timeLeft;
+	private static TextField timeToGO;
+	private static TextField timeLeft;
 	private VBox box_TimeToGo;
 	private VBox box_TimeLeft;
 	private static VBox_StatusSlider statusSlider;
 	
 	public BoderPane_TOP_CENTER() {
+		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_borderpane_top_center.css").toExternalForm());
 		
-		timeToGO = new TextField("-10:00");
-		timeLeft = new TextField("-10:00");
+		timeToGO = new TextField();
+		timeLeft = new TextField();
 		timeToGO.setMaxSize(50, 15);
+		timeToGO.setEditable(false);
 		timeLeft.setMaxSize(50, 15);
+		timeLeft.setEditable(false);
 		statusSlider = new VBox_StatusSlider();
 		
 		box_TimeToGo = new VBox();
@@ -35,10 +38,20 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 		this.setCenter(statusSlider);
 		this.setLeft(box_TimeToGo);
 		this.setRight(box_TimeLeft);
-		this.setStyle("-fx-background-color:#999999");
+		this.setId("border-pane");
+		
+		//this.setStyle("-fx-background-color:#999999");
 	}
 	
 	public static VBox_StatusSlider getStatusSlider() {
 		return statusSlider;
+	}
+	
+	public static TextField getTimeToGO() {
+		return timeToGO;
+	}
+
+	public static TextField getTimeLeft() {
+		return timeLeft;
 	}
 }
