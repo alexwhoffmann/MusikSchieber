@@ -80,7 +80,7 @@ public class CenterTable extends TableView<MusicTag> {
 		CenterTable_EventHandler_DragNDrop dragAndDropHandler = new CenterTable_EventHandler_DragNDrop();
 		this.setOnDragOver(dragAndDropHandler);
 		this.setOnDragDropped(dragAndDropHandler);
-		this.getSelectionModel().selectedItemProperty().addListener(new CenterTable_ChangeListener(this));
+		this.getSelectionModel().selectedItemProperty().addListener(new CenterTable_ChangeListener());
 		
 	}
 	
@@ -95,14 +95,7 @@ public class CenterTable extends TableView<MusicTag> {
 		col.setMaxWidth(Main_Frame.getPrefFrameWidth() / 8);
 		col.setResizable(true);
 	}
-	
-	/**
-	 * @return returns the instance of the center table
-	 */
-	public CenterTable getInstace() {
-		return this;
-	}
-	
+
 	/**
 	 * Initializes and delivers an instance of the cell factory which is 
 	 * used to style the cells 

@@ -1,4 +1,4 @@
-package ms5000.gui.dialogs.adddialog;
+package ms5000.gui.dialogs;
 
 import java.util.Optional;
 

@@ -11,8 +11,8 @@ import ms5000.audio.player.AudioPlayer;
 import ms5000.audio.player.PlayerStatus;
 import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
-import ms5000.gui.mainframe.top.Button_Start;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
+import ms5000.gui.mainframe.top.buttons.Button_Start;
 import ms5000.musicfile.tag.MusicTag;
 
 public class ButtonStartStop_EventHandler implements EventHandler<ActionEvent>{
@@ -51,8 +51,6 @@ public class ButtonStartStop_EventHandler implements EventHandler<ActionEvent>{
 	}
 	
 	private void playTune() {
-		MusicTag tag = BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedItem();
-		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Playing: " + tag.getArtist() + " - " + tag.getTitlename());
 		AudioPlayer.getInstance().play();
 	}
 	

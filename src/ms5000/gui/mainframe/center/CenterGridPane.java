@@ -28,7 +28,7 @@ public class CenterGridPane extends GridPane {
 	 * With this enum it is possible to iterate through the values of the textfields
 	 * in the detail view 
 	 */
-	public static enum TextFieldKey {
+	public enum TextFieldKey {
 		TITLENAME, ALBUM, ARTIST, ALBUM_ARTIST, TITLENUMBER, TITLENUMBER_TOTAL, 
 		DISCNUMBER, DISCNUMBER_TOTAL, COMPOSER, COMMENT, GENRE, YEAR
 	}
@@ -100,6 +100,18 @@ public class CenterGridPane extends GridPane {
 	private final Image save_Image = new Image (save_Image_Path);
 	private final Image open_File_Image = new Image (open_File_Image_Path);
 	private final Image artworkDefault = new Image(default_Image_Path);
+	
+	/**
+	 * The default format for the text fields
+	 */
+	private final String default_format = "-fx-control-inner-background: #ffffff";
+	
+	/**
+	 * The formats for the different cases 
+	 */
+	private final String missingCritical = "-fx-control-inner-background: rgb(255, 153, 153,1)";
+	private final String missingNonCritical = "-fx-control-inner-background: rgb(255, 255, 179,1)";
+	private final String missingWeak = "-fx-control-inner-background: rgb(255, 255, 229,1)";
 	
 	/**
 	 * Initializes the grid pane
@@ -487,6 +499,69 @@ public class CenterGridPane extends GridPane {
 			return null;
 		}
 	}
-
+	
+	/**
+	 * Method to refresh the color profile of the detail view
+	 */
+	public void refershTextFieldColorProfile() {
+		for (TextFieldKey key : TextFieldKey.values()) {
+			if(this.getTextField(key) != null) {
+				this.getTextField(key).setStyle(default_format);	
+			}
+		}
+	}
+	
+	/**
+	 * Method to clear the text fields in the detail view
+	 */
+	public void clearTextFields() {
+		for (TextFieldKey key : TextFieldKey.values()) {
+			if(this.getTextField(key) != null) {
+				this.getTextField(key).setText("");
+				this.getFilePath_TextField().setText("");
+			}
+		}
+	}
+	
+	/**
+	 * Method to enable certain text fields
+	 */
+	public void enableTextFields() {
+		this.getTitlename_textField().setEditable(true);
+		this.getTitleNumber_textField().setEditable(true);
+		this.getFilePath_TextField().setEditable(true);
+	}
+	
+	/**
+	 * Method to disable certain text fields
+	 */
+	public void disableTextFields() {
+		this.getTitlename_textField().setEditable(false);
+		this.getTitleNumber_textField().setEditable(false);
+		this.getFilePath_TextField().setEditable(false);
+	}
+	
+	/**
+	 * Method to set the color profile for the detail view
+	 */
+	public void setTextFieldColorProfile() {
+		
+		for (TextFieldKey key : TextFieldKey.values()) {
+			if (key == TextFieldKey.ARTIST || key == TextFieldKey.ALBUM || key == TextFieldKey.TITLENAME) {
+				if (this.getTextField(key).getText().equals("")) {
+					this.getTextField(key).setStyle(missingCritical);
+				}
+			} else if (key == TextFieldKey.TITLENUMBER || key == TextFieldKey.TITLENUMBER_TOTAL) {
+				if (this.getTextField(key).getText().equals("0")) {
+					this.getTextField(key).setStyle(missingNonCritical);
+				}
+			} else if (key == TextFieldKey.YEAR || key == TextFieldKey.ALBUM_ARTIST) {
+				if (this.getTextField(key).getText().equals("")
+						|| this.getTextField(key).getText().equals("0")) {
+					this.getTextField(key).setStyle(missingWeak);
+				}
+			}
+		}
+	}
 	
 }

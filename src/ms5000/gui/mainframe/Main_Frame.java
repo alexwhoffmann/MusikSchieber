@@ -34,7 +34,7 @@ public class Main_Frame extends Application {
 	/**
 	 * BorderPane which holds the list and the detail view
 	 */
-	private BorderPane_CENTER borderPane_Center;
+	private static BorderPane_CENTER borderPane_Center;
 	
 	/**
 	 * The root borderpane
@@ -55,6 +55,11 @@ public class Main_Frame extends Application {
 	 * the scene of the main frame
 	 */
 	private static final Scene scene = new Scene(root,400,400);
+	
+	/**
+	 * The instance of the Border Pane in the top
+	 */
+	private static BoderPane_TOP_CENTER borderPaneTopCenter;
 	
 	@Override
 	/**
@@ -78,7 +83,9 @@ public class Main_Frame extends Application {
 			hBox_Right = new HBox_TOP_RIGHT();
 			top.setLeft(hBox_Left);
 			top.setRight(hBox_Right);
-			top.setCenter(new BoderPane_TOP_CENTER());
+			
+			borderPaneTopCenter = new BoderPane_TOP_CENTER();
+			top.setCenter(borderPaneTopCenter);
 			
 			//Show the Frame
 			primaryStage.show();
@@ -148,12 +155,40 @@ public class Main_Frame extends Application {
 	public static Scene getScene() {
 		return scene;
 	}
-
+	
+	/**
+	 * Method to return the instance of the HBox in the top left side
+	 * 
+	 * @return the instance of the HBox_TOP_LEFT
+	 */
 	public static HBox_TOP_LEFT gethBox_Left() {
 		return hBox_Left;
 	}
 
+	/**
+	 * Method to return the instance of the HBox in the top right side
+	 * 
+	 * @return the instance of the HBox_TOP_Right
+	 */
 	public static HBox_TOP_RIGHT gethBox_Right() {
 		return hBox_Right;
+	}
+
+	/**
+	 * Method to return an instance of the border pane in the top
+	 * 
+	 * @return an instance of the borderPane in the top
+	 */
+	public static BoderPane_TOP_CENTER getBorderPaneTopCenter() {
+		return borderPaneTopCenter;
+	}
+	
+	/**
+	 * Method to return an instance of the border pane in the center
+	 * 
+	 * @return an instance of the borderPane in the center
+	 */
+	public static BorderPane_CENTER getBorderPane_Center() {
+		return borderPane_Center;
 	}
 }

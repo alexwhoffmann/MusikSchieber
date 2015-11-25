@@ -1,4 +1,4 @@
-package ms5000.gui.mainframe.top;
+package ms5000.gui.mainframe.top.buttons;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;

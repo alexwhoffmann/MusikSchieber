@@ -14,22 +14,22 @@ public class BorderPane_CENTER extends BorderPane{
 	/**
 	 * the progress bar
 	 */
-	private final static ProgressBar progressBar = new ProgressBar(0);
+	private final ProgressBar progressBar = new ProgressBar(0);
 	
 	/**
 	 * the width of the border pane
 	 */
-	private static double width;
+	private double width;
 	
 	/**
 	 * the center table which holds the music file entries
 	 */
-	private static final CenterTable centerTable = new CenterTable();
+	private final CenterTable centerTable = new CenterTable();
 	
 	/**
 	 * the detail view to each entry
 	 */
-	private static final CenterGridPane centerGridPane = new CenterGridPane();
+	private final CenterGridPane centerGridPane = new CenterGridPane();
 	
 	/**
 	 * instantiates the borderPane
@@ -56,7 +56,7 @@ public class BorderPane_CENTER extends BorderPane{
 	 * 
 	 * @return the progress bar
 	 */
-	public static ProgressBar getProgressBar() {
+	public ProgressBar getProgressBar() {
 		return progressBar;
 	}
 	
@@ -65,7 +65,7 @@ public class BorderPane_CENTER extends BorderPane{
 	 *  
 	 * @return the width
 	 */
-	public static double getWidthOfPane() {
+	public double getWidthOfPane() {
 		return width;
 	}
 	
@@ -74,7 +74,7 @@ public class BorderPane_CENTER extends BorderPane{
 	 *  
 	 * @return the instance of the center table
 	 */
-	public static CenterTable getCentertable() {
+	public CenterTable getCentertable() {
 		return centerTable;
 	}
 	
@@ -83,7 +83,7 @@ public class BorderPane_CENTER extends BorderPane{
 	 * 
 	 * @return the instance of the center grid pane
 	 */
-	public static CenterGridPane getCenterGridPane() {
+	public CenterGridPane getCenterGridPane() {
 		return centerGridPane;
 	}
 	

@@ -6,8 +6,8 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import ms5000.gui.mainframe.top.Button_Start;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
+import ms5000.gui.mainframe.top.buttons.Button_Start;
 
 public class ButtonStartStop_MouseEventHandler implements EventHandler<MouseEvent>{
 	private final String icon_button_start_disabled_path = "file:icons/Play_Disabled.png";

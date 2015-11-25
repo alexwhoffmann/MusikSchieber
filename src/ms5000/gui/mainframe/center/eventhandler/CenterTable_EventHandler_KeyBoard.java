@@ -19,9 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import ms5000.gui.mainframe.Main_Frame;
-import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.center.CenterTable;
-import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.file.MusicFileType;
 
@@ -58,7 +56,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 				} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 						| InvalidAudioFrameException e) {
 					// TODO Auto-generated catch block
-					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Faild to import: " + selectedFile.getName());
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + selectedFile.getName());
 				}
 			}
 		} else if (event.getCode() == KeyCode.DELETE) {
@@ -68,7 +66,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 		} else if (event.getCode() == KeyCode.CONTROL) {
 			controlPressed = true;
 		} else if (controlPressed == true && event.getCode() == KeyCode.S) {
-			BorderPane_CENTER.getCenterGridPane().getButton_save_Tag().fire();
+			Main_Frame.getBorderPane_Center().getCenterGridPane().getButton_save_Tag().fire();
 			
 		} else {
 			controlPressed = false;

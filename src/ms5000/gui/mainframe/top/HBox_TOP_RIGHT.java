@@ -1,32 +1,19 @@
 package ms5000.gui.mainframe.top;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
+import ms5000.gui.mainframe.top.buttons.Button_Add;
 import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler;
 
 public class HBox_TOP_RIGHT extends HBox{
-	private static Button btn_import_data;
-	private final String icon_button_add_disabled_path = "file:icons/Add_Disabled.png";
-	private final Image icon_button_add_disabled;
-	private final double icon_length = 23;
+	private Button_Add btn_import_data;
 	private static VBox_VolumeSlider volumeSlider;
 	
 	public HBox_TOP_RIGHT() {
-		btn_import_data = new Button();
-		icon_button_add_disabled = new Image(icon_button_add_disabled_path);
-		btn_import_data.setStyle("-fx-focus-color: transparent;");
-		btn_import_data.setStyle("-fx-background-color: transparent;");
-		btn_import_data.setGraphic(new ImageView(icon_button_add_disabled));
-		btn_import_data.setShape(new Rectangle(icon_length,icon_length));
-		btn_import_data.setMinSize(2*icon_length, 2*icon_length);
-		btn_import_data.setMaxSize(2*icon_length, 2*icon_length);
 		
 		ButtonAdd_EventHandler eventHandler = new ButtonAdd_EventHandler();
 		
+		btn_import_data = new Button_Add();
 		btn_import_data.setOnMouseEntered(eventHandler);
 		btn_import_data.setOnMouseExited(eventHandler);
 		btn_import_data.setOnMouseClicked(eventHandler);
@@ -44,7 +31,7 @@ public class HBox_TOP_RIGHT extends HBox{
 		return volumeSlider;
 	}
 
-	public static Button getBtn_import_data() {
+	public Button_Add getBtn_import_data() {
 		return btn_import_data;
 	}
 }

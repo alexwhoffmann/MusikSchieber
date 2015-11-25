@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 
 public class BoderPane_TOP_CENTER extends BorderPane {
 	
-	private static TextField timeToGO;
-	private static TextField timeLeft;
+	private TextField timeToGO;
+	private TextField timeLeft;
 	private VBox box_TimeToGo;
 	private VBox box_TimeLeft;
 	private static VBox_StatusSlider statusSlider;
@@ -42,15 +42,26 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 		
 	}
 	
-	public static VBox_StatusSlider getStatusSlider() {
+	public VBox_StatusSlider getStatusSlider() {
 		return statusSlider;
 	}
 	
-	public static TextField getTimeToGO() {
+	public TextField getTimeToGO() {
 		return timeToGO;
 	}
 
-	public static TextField getTimeLeft() {
+	public TextField getTimeLeft() {
 		return timeLeft;
+	}
+	
+	public void resetStatusFields() {
+		this.getStatusSlider().setStatusText("");
+		this.timeLeft.setText("");
+		this.timeToGO.setText("");
+	}
+	
+	public void setTimeFields(String timeToGo, String timeLeft) {
+		this.timeLeft.setText(timeLeft);
+		this.timeToGO.setText(timeToGo);
 	}
 }

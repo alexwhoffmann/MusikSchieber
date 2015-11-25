@@ -14,8 +14,6 @@ import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import ms5000.gui.mainframe.Main_Frame;
-import ms5000.gui.mainframe.center.BorderPane_CENTER;
-import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 
 public class Import_Artwork_EventHandler implements EventHandler<ActionEvent> {
 	
@@ -27,7 +25,7 @@ public class Import_Artwork_EventHandler implements EventHandler<ActionEvent> {
 	
 	@Override
 	public void handle(ActionEvent arg0) {
-		if(BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices().size() > 0) {
+		if(Main_Frame.getBorderPane_Center().getCentertable().getSelectionModel().getSelectedIndices().size() > 0) {
 			File artwork_file = openFileChooser();
 			Artwork artwork;
 			
@@ -35,19 +33,19 @@ public class Import_Artwork_EventHandler implements EventHandler<ActionEvent> {
 				artwork = Artwork.createArtworkFromFile(artwork_file);
 				
 				if (artwork != null) {
-					for (Integer index : BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices()) {
-						BorderPane_CENTER.getCentertable().getItems().get(index.intValue()).setArtwork(artwork);
+					for (Integer index : Main_Frame.getBorderPane_Center().getCentertable().getSelectionModel().getSelectedIndices()) {
+						Main_Frame.getBorderPane_Center().getCentertable().getItems().get(index.intValue()).setArtwork(artwork);
 					}
 				}
 				
-				BorderPane_CENTER.getCenterGridPane().setArtWorkImage(artwork);
+				Main_Frame.getBorderPane_Center().getCenterGridPane().setArtWorkImage(artwork);
 			} catch (IOException e) {
 				try {
-					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Failed to import Image file!");
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Failed to import Image file!");
 					Thread.sleep(2000);
-					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
+					Main_Frame.getBorderPaneTopCenter().resetStatusFields();
 				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+					Main_Frame.getBorderPaneTopCenter().resetStatusFields();
 				}
 			}
 		}

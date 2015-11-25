@@ -5,10 +5,9 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import ms5000.tasks.readdir.ImportMode;
-import ms5000.tasks.readdir.ReadDirTask;
+import ms5000.tasks.readdir.ReadDirTaskManager;
 
 public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEvent>{
-	
 	
 	/**
 	 * Method to handle the drag events received from the center table
@@ -32,9 +31,8 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 			if (db.hasFiles()) {
 				success = true;
 				if (db.hasFiles()) {
-
-					ReadDirTask task = new ReadDirTask(db.getFiles(), ImportMode.DRAGNDROP);
-					new Thread(task).start();
+					// Starting the task to import
+					ReadDirTaskManager.startTask(db.getFiles(), ImportMode.DRAGNDROP);
 				}
 
 			}

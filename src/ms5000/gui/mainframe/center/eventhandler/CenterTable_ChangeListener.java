@@ -2,113 +2,112 @@ package ms5000.gui.mainframe.center.eventhandler;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import ms5000.audio.player.AudioPlayer;
-import ms5000.audio.player.PlayerStatus;
-import ms5000.gui.mainframe.center.BorderPane_CENTER;
-import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
-import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
-import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
+import ms5000.gui.mainframe.Main_Frame;
+import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterTable;
-import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.MusicTag.Tags;
 
+/**
+ * This class implements the functionalities which appear if there was a change in center table
+ */
 public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
-	private CenterTable table;
-	private final static String missingCritical = "-fx-control-inner-background: rgb(255, 153, 153,1)";
-	private final static String missingNonCritical = "-fx-control-inner-background: rgb(255, 255, 179,1)";
-	private final static String missingWeak = "-fx-control-inner-background: rgb(255, 255, 229,1)";
-	private final static String default_format = "-fx-control-inner-background: #ffffff";
-
-	public CenterTable_ChangeListener(CenterTable table) {
-		this.table = table;
-	}
+	
+	/**
+	 * Instance of the center table
+	 */
+	private CenterTable centerTable;
+	
+	/**
+	 * Instance of the center grid pane with the detail view
+	 */
+	private CenterGridPane centerGridPane;
+	
+	
 
 	@Override
 	public void changed(ObservableValue<? extends MusicTag> observable, MusicTag oldValue, MusicTag newValue) {
 		
-		if (table.getSelectionModel().getSelectedIndices().size() == 1) {
+		// Getting the instances
+		centerGridPane = Main_Frame.getBorderPane_Center().getCenterGridPane();
+		centerTable = Main_Frame.getBorderPane_Center().getCentertable();
+		
+		// Case: only one entry was choosen
+		if (centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
 			// Reverting changes made
-			BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setEditable(true);
-			BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setEditable(true);
-			BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setEditable(true);
-			addSingleEntryToDetails(table.getSelectionModel().getSelectedItem());
+			centerGridPane.enableTextFields();
 			
-			updatePlayer(table.getSelectionModel().getSelectedItem().getMusicFile());
-		} else if (table.getSelectionModel().getSelectedIndices().size() > 1) {
-			disablePlayer();
+			// Adding the information of a single entry to the detail view
+			addSingleEntryToDetails(centerTable.getSelectionModel().getSelectedItem());
+			
+			// Enabling the player and setting the audio file
+			AudioPlayer.getInstance().enablePlayer();
+			AudioPlayer.getInstance().setMedia(centerTable.getSelectionModel().getSelectedItem().getMusicFile());
+
+		// Case: More than one entry was choosen	
+		} else if (centerTable.getSelectionModel().getSelectedIndices().size() > 1) {
+			// Disabling the audio player
+			AudioPlayer.getInstance().disablePlayer();
+			
+			// Getting the selected tags
 			MusicTag[] tags = new MusicTag[0];
-			tags = BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedItems().toArray(tags);
-			addMultipleEntryToDetails(tags,BorderPane_CENTER.getCentertable().getSelectionModel().getSelectedIndices());
-		} else if (table.getSelectionModel().getSelectedIndices().get(0) == -1) {
-			HBox_TOP_LEFT.getBtn_Start().setDisable(true);
-			HBox_TOP_LEFT.getBtn_Stop().setDisable(true);
-			disablePlayer();
-			refershTextFieldColorProfile();
-			clearTextFields();
-			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
+			tags = Main_Frame.getBorderPane_Center().getCentertable().getSelectionModel().getSelectedItems().toArray(tags);
+			
+			// Adding the common information of the tags to the detail view
+			addMultipleEntryToDetails(tags);
+			
+		// Case: No entry was choosen	
+		} else if (centerTable.getSelectionModel().getSelectedIndices().get(0) == -1) {
+			// Reseting the detail view and disabling the player
+			AudioPlayer.getInstance().disablePlayer();
+			centerGridPane.refershTextFieldColorProfile();
+			centerGridPane.clearTextFields();
+			centerGridPane.setArtWorkImage(null);
 		}
 	}
 
-	private void updatePlayer(MusicFile musicFile) {
-		if (HBox_TOP_LEFT.getBtn_Stop().isDisable()) {
-			HBox_TOP_LEFT.getBtn_Stop().setDisable(false);
-		}
-		
-		HBox_TOP_LEFT.getBtn_Start().setDisable(false);
-		
-		if (AudioPlayer.getInstance().getMediaPlayer() != null) {
-			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.READY) {
-				AudioPlayer.getInstance().stop();
-			}
-		}
-		
-		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
-		AudioPlayer.getInstance().setMedia(musicFile);
-	}
-	
-	private void disablePlayer() {
-		if (AudioPlayer.getInstance().getMediaPlayer() != null) {
-			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.READY) {
-				AudioPlayer.getInstance().stop();
-			}
-		}
-		HBox_TOP_LEFT.getBtn_Stop().setDisable(true);
-		HBox_TOP_LEFT.getBtn_Start().setDisable(true);
-		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
-		AudioPlayer.getInstance().setMedia(null);
-		AudioPlayer.getInstance().setStatus(PlayerStatus.NOMEDIAFILE);
-	}
-
+	/**
+	 * Method to add a single entry to the detail view
+	 * 
+	 * @param tag tag that will be red
+	*/
 	private void addSingleEntryToDetails(MusicTag tag) {
-		refershTextFieldColorProfile();
-
-		BorderPane_CENTER.getCenterGridPane().getAlbum_textField().setText(tag.getAlbum());
-		BorderPane_CENTER.getCenterGridPane().getAlbumArtist_textField().setText(tag.getAlbumArtist());
-		BorderPane_CENTER.getCenterGridPane().getGenre_textField().setText(tag.getGenre());
-		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setText(tag.getTitlename());
-		BorderPane_CENTER.getCenterGridPane().getComposer_textField().setText(tag.getComposer());
-		BorderPane_CENTER.getCenterGridPane().getComment_textField().setText(tag.getComment());
-		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setText("" + tag.getTitlenumber());
-		BorderPane_CENTER.getCenterGridPane().getTotalTitleNumbers_textField().setText("" + tag.getTotal_titles());
-		BorderPane_CENTER.getCenterGridPane().getDiscNumber_textField().setText("" + tag.getDisc_number());
-		BorderPane_CENTER.getCenterGridPane().getTotalDiscNumbers_textField().setText("" + tag.getTotal_discs());
-		BorderPane_CENTER.getCenterGridPane().getYear_textField().setText("" + tag.getYear());
-		BorderPane_CENTER.getCenterGridPane().getArtist_textField().setText(tag.getArtist());
-		BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setText(tag.getMusicFile().getOriginalFilePath());
+		// Refreshing the color profile
+		centerGridPane.refershTextFieldColorProfile();
+		
+		// Adding the entries
+		centerGridPane.getAlbum_textField().setText(tag.getAlbum());
+		centerGridPane.getAlbumArtist_textField().setText(tag.getAlbumArtist());
+		centerGridPane.getGenre_textField().setText(tag.getGenre());
+		centerGridPane.getTitlename_textField().setText(tag.getTitlename());
+		centerGridPane.getComposer_textField().setText(tag.getComposer());
+		centerGridPane.getComment_textField().setText(tag.getComment());
+		centerGridPane.getTitleNumber_textField().setText("" + tag.getTitlenumber());
+		centerGridPane.getTotalTitleNumbers_textField().setText("" + tag.getTotal_titles());
+		centerGridPane.getDiscNumber_textField().setText("" + tag.getDisc_number());
+		centerGridPane.getTotalDiscNumbers_textField().setText("" + tag.getTotal_discs());
+		centerGridPane.getYear_textField().setText("" + tag.getYear());
+		centerGridPane.getArtist_textField().setText(tag.getArtist());
+		centerGridPane.getFilePath_TextField().setText(tag.getMusicFile().getOriginalFilePath());
 
 		if (tag.getArtwork() != null) {
-			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(tag.getArtwork());
+			centerGridPane.setArtWorkImage(tag.getArtwork());
 		} else {
-			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
+			centerGridPane.setArtWorkImage(null);
 		}
-
-		setTextFieldColorProfile();
+		
+		// Setting the color profile of the text fields
+		centerGridPane.setTextFieldColorProfile();
 	}
-
-	private void addMultipleEntryToDetails(MusicTag[] tags, ObservableList<Integer> observableList) {
-		refershTextFieldColorProfile();
+	
+	/**
+	 * Method to add more than one entry to the detail view
+	 * 
+	 * @param tags the tags which will be added
+	 */
+	private void addMultipleEntryToDetails(MusicTag[] tags) {
+		centerGridPane.refershTextFieldColorProfile();
 		OriginalState state = OriginalState.getInstance();
 
 		// Getting the entries that are the same
@@ -135,25 +134,25 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 		state.setYear(year);
 		state.setTotalDiscNumber(maxDiscNumber);
 
-		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setText("");
-		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setText("");
-
-		BorderPane_CENTER.getCenterGridPane().getAlbum_textField().setText(album);
-		BorderPane_CENTER.getCenterGridPane().getAlbumArtist_textField().setText(albumArtist);
-		BorderPane_CENTER.getCenterGridPane().getGenre_textField().setText(genre);
-		BorderPane_CENTER.getCenterGridPane().getTitlename_textField().setEditable(false);
-		BorderPane_CENTER.getCenterGridPane().getComposer_textField().setText(composer);
-		BorderPane_CENTER.getCenterGridPane().getComment_textField().setText(comment);
-		BorderPane_CENTER.getCenterGridPane().getTitleNumber_textField().setEditable(false);
-		BorderPane_CENTER.getCenterGridPane().getTotalTitleNumbers_textField().setText(maxTitleNumber);
-		BorderPane_CENTER.getCenterGridPane().getDiscNumber_textField().setText(discNumber);
-		BorderPane_CENTER.getCenterGridPane().getTotalDiscNumbers_textField().setText(maxDiscNumber);
-		BorderPane_CENTER.getCenterGridPane().getYear_textField().setText(year);
-		BorderPane_CENTER.getCenterGridPane().getArtist_textField().setText(artist);
-		BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setEditable(false);
-
+		// Setting the entries
+		centerGridPane.getTitlename_textField().setText("");
+		centerGridPane.getTitleNumber_textField().setText("");
+		centerGridPane.getAlbum_textField().setText(album);
+		centerGridPane.getAlbumArtist_textField().setText(albumArtist);
+		centerGridPane.getGenre_textField().setText(genre);
+		centerGridPane.getComposer_textField().setText(composer);
+		centerGridPane.getComment_textField().setText(comment);
+		centerGridPane.getTotalTitleNumbers_textField().setText(maxTitleNumber);
+		centerGridPane.getDiscNumber_textField().setText(discNumber);
+		centerGridPane.getTotalDiscNumbers_textField().setText(maxDiscNumber);
+		centerGridPane.getYear_textField().setText(year);
+		centerGridPane.getArtist_textField().setText(artist);
+		
+		centerGridPane.disableTextFields();
+		
+		// Setting the artwork (If there is a common album)
 		if (album.equals("")) {
-			BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
+			centerGridPane.setArtWorkImage(null);
 		} else {
 			boolean thereIsArtwork = false;
 			int tagWithArtwork = 0;
@@ -166,60 +165,33 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 			}
 
 			if (thereIsArtwork) {
-				BorderPane_CENTER.getCenterGridPane().setArtWorkImage(tags[tagWithArtwork].getArtwork());
+				centerGridPane.setArtWorkImage(tags[tagWithArtwork].getArtwork());
 			} else {
-				BorderPane_CENTER.getCenterGridPane().setArtWorkImage(null);
+				centerGridPane.setArtWorkImage(null);
 			}
 
 		}
 
 	}
-
+	
+	/**
+	 * Method to return the common string if there is one 
+	 * 
+	 * @param tags Tags, which will be compared
+	 * @param tagType the tag type (needed for iteration)
+	 * 
+	 * @return nothing or the common string
+	 */
 	private String getSameEntries(MusicTag[] tags, Tags tagType) {
-		String init = tags[0].getString(tagType);
+		String tmp = tags[0].getString(tagType);
 
 		for (int i = 1; i < tags.length; i++) {
-			if (!tags[i].getString(tagType).equals(init)) {
+			if (!tags[i].getString(tagType).equals(tmp)) {
 				return "";
 			}
 		}
 
-		return init;
-	}
-
-	public static void setTextFieldColorProfile() {
-		for (TextFieldKey key : TextFieldKey.values()) {
-			if (key == TextFieldKey.ARTIST || key == TextFieldKey.ALBUM || key == TextFieldKey.TITLENAME) {
-				if (BorderPane_CENTER.getCenterGridPane().getTextField(key).getText().equals("")) {
-					BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(missingCritical);
-				}
-			} else if (key == TextFieldKey.TITLENUMBER || key == TextFieldKey.TITLENUMBER_TOTAL) {
-				if (BorderPane_CENTER.getCenterGridPane().getTextField(key).getText().equals("0")) {
-					BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(missingNonCritical);
-				}
-			} else if (key == TextFieldKey.YEAR || key == TextFieldKey.ALBUM_ARTIST) {
-				if (BorderPane_CENTER.getCenterGridPane().getTextField(key).getText().equals("")
-						|| BorderPane_CENTER.getCenterGridPane().getTextField(key).getText().equals("0")) {
-					BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(missingWeak);
-				}
-			}
-		}
-	}
-
-	public static void refershTextFieldColorProfile() {
-		for (TextFieldKey key : TextFieldKey.values()) {
-			if(BorderPane_CENTER.getCenterGridPane().getTextField(key) != null) {
-				BorderPane_CENTER.getCenterGridPane().getTextField(key).setStyle(default_format);	
-			}
-		}
+		return tmp;
 	}
 	
-	private void clearTextFields() {
-		for (TextFieldKey key : TextFieldKey.values()) {
-			if(BorderPane_CENTER.getCenterGridPane().getTextField(key) != null) {
-				BorderPane_CENTER.getCenterGridPane().getTextField(key).setText("");
-				BorderPane_CENTER.getCenterGridPane().getFilePath_TextField().setText("");
-			}
-		}
-	}
 }

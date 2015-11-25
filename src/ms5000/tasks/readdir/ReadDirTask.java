@@ -17,8 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
-import ms5000.gui.mainframe.center.BorderPane_CENTER;
-import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
+import ms5000.gui.mainframe.Main_Frame;
 import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.file.MusicFileType;
 import ms5000.musicfile.file.MusicFileUtils;
@@ -55,10 +54,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 		try {
 			writer = new PrintWriter("log.txt", "UTF-8");
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -89,7 +86,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	
 	private void initProgressBar() {
 		// Getting the ProgressBar
-		ProgressBar bar = BorderPane_CENTER.getProgressBar();
+		ProgressBar bar = Main_Frame.getBorderPane_Center().getProgressBar();
 		bar.progressProperty().unbind();
 		bar.progressProperty().bind(this.progressProperty());
 	}
@@ -186,14 +183,15 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 			
 		}
 		// Process-End
-		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Import completed");
+		Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import completed");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			log(e.getLocalizedMessage());
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
 		}
-		BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
+		
+		Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
 
 		return musicFiles;
 
@@ -216,20 +214,20 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 			if (isCancelled()) {
 				try {
 					this.cancel();
-					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("");
-					System.out.println(importMode);
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
+					
 					if (importMode != ImportMode.APPEND) {
-						BorderPane_CENTER.getCentertable().getItems().clear();
-						BorderPane_CENTER.getProgressBar().progressProperty().unbind();
-						BorderPane_CENTER.getProgressBar().setProgress(0);
-						BorderPane_CENTER.getCentertable().getItems().clear();
+						Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
+						Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
+						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
+						Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
 					} else {
-						BorderPane_CENTER.getCentertable().getItems().removeAll(newTableEntries);
-						BorderPane_CENTER.getProgressBar().progressProperty().unbind();
-						BorderPane_CENTER.getProgressBar().setProgress(0);
+						Main_Frame.getBorderPane_Center().getCentertable().getItems().removeAll(newTableEntries);
+						Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
+						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
 					}
 				} finally {
-					BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Import aborted!");
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import aborted!");
 					break;
 				}
 
@@ -238,7 +236,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 				updateProgress(i + 1, number_of_imported_files);
 
 				// Updating the status slider
-				BoderPane_TOP_CENTER.getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
+				Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
 
 				try {
 					if (importMode == ImportMode.CLEAR || importMode == null) {
@@ -246,13 +244,13 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 						musicFiles.add(new MusicFile(readFiles.get(i).getAbsolutePath()).getTag());
 						// Checking for duplicates
 
-						BorderPane_CENTER.getCentertable().getItems().add(musicFiles.get(i));
+						Main_Frame.getBorderPane_Center().getCentertable().getItems().add(musicFiles.get(i));
 						
 						// Sleeping to wait until table operations are finished
 						this.wait(200);
-						BorderPane_CENTER.getCentertable().refresh();
+						Main_Frame.getBorderPane_Center().getCentertable().refresh();
 					} else {
-						ObservableList<MusicTag> tableEntries = BorderPane_CENTER.getCentertable().getItems();
+						ObservableList<MusicTag> tableEntries = Main_Frame.getBorderPane_Center().getCentertable().getItems();
 						MusicTag newEntry = new MusicFile(readFiles.get(i).getAbsolutePath()).getTag();
 						boolean duplicateInList = false;
 
@@ -279,19 +277,18 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 							
 							newTableEntries.add(newEntry);
 							newEntry.getMusicFile().setPossibleDuplicate(duplicate);
-							BorderPane_CENTER.getCentertable().getItems().add(newEntry);
+							Main_Frame.getBorderPane_Center().getCentertable().getItems().add(newEntry);
 							
 							// Sleeping to wait until table operations are finished
 							this.wait(1000);
-							BorderPane_CENTER.getCentertable().refresh();
+							Main_Frame.getBorderPane_Center().getCentertable().refresh();
 							
 						}
 					}
 
 				} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 						| InvalidAudioFrameException e) {
-					BoderPane_TOP_CENTER.getStatusSlider()
-							.setStatusText("Faild to import: " + readFiles.get(i).getName());
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + readFiles.get(i).getName());
 					log(e.getMessage());
 					Thread.sleep(2000);
 					// TO-DO: Exception Handling

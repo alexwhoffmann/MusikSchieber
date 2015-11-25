@@ -9,7 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import ms5000.gui.mainframe.center.BorderPane_CENTER;
+import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
 import ms5000.gui.mainframe.center.CenterTable;
@@ -35,8 +35,8 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	 */
 	@Override
 	public void handle(ActionEvent event) {
-		CenterTable centerTable = BorderPane_CENTER.getCentertable();
-		CenterGridPane centerGrid = BorderPane_CENTER.getCenterGridPane();
+		CenterTable centerTable = Main_Frame.getBorderPane_Center().getCentertable();
+		CenterGridPane centerGrid = Main_Frame.getBorderPane_Center().getCenterGridPane();
 		
 		// Checking whether a row is selected
 		if (event.getEventType().toString().equals("ACTION")
@@ -64,7 +64,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 					}
 				}
 				
-				// Calling different mehtods when one or more entries are selected
+				// Calling different methods when one or more entries are selected
 				if (checkNumbers(discNumber, totalDiscs, totalTitles, titelNumber, year) && discNumberOk && titleNumberOk) {
 					if (centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
 						setEntriesSingle(centerTable, centerGrid, discNumber, totalDiscs, totalTitles, titelNumber,year);
@@ -170,7 +170,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	}
 	
 	/**
-	 * Method to store the tag when only one entry is choosen
+	 * Method to store the tag when only one entry is chosen
 	 * 
 	 * @param centerTable an instance of the center table to access the tag instances
 	 * @param centerGrid an instance of the center grid to access the values of the text fields
@@ -203,8 +203,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		centerTable.refresh();
 		
 		// Refreshing the detail view
-		CenterTable_ChangeListener.refershTextFieldColorProfile();
-		CenterTable_ChangeListener.setTextFieldColorProfile();
+		Main_Frame.getBorderPane_Center().getCenterGridPane().refershTextFieldColorProfile();
 	}
 	
 	/**
@@ -223,11 +222,13 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	
 	/**
 	 * Method for checking whether the numeric tag entries have valid values
+	 * 
 	 * @param discNumber
 	 * @param totalDiscs
 	 * @param totalTitles
 	 * @param titleNumber
 	 * @param year
+	 * 
 	 * @return boolean which indicates whether the numeric entries are valid 
 	 */
 	private boolean checkNumbers(int discNumber, int totalDiscs, int totalTitles, int titleNumber, int year) {
