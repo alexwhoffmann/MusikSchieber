@@ -6,42 +6,76 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.MediaPlayer;
-import ms5000.audio.player.AudioPlayer;
 import ms5000.gui.mainframe.top.sliderbar.SliderBar;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.gui.GuiProperties;
 
+/**
+ * This vbox holds the volume slider
+ */
 public class VBox_VolumeSlider extends VBox{
-	private Label volume;
-	private static final String icon_label_volume_path = "file:icons/Volume.png";
-	private static SliderBar volumeSlider;
+	/**
+	 * The volume label
+	 */
+	private final Label volume;
 	
+	/**
+	 * The path to the image icon
+	 */
+	private final String icon_label_volume_path = "file:icons/Volume.png";
+	
+	/**
+	 * The volume slider
+	 */
+	private SliderBar volumeSlider;
+	
+	/**
+	 * Instantiates the vbox
+	 */
 	public VBox_VolumeSlider() {
+		// Adding the stylesheet
 		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_vbox_volumeslider.css").toExternalForm());
+		
+		// Preparing the Label
 		volume = new Label();
 		volume.setGraphic(new ImageView(icon_label_volume_path));
-		volumeSlider = new SliderBar(50);
+		
+		// Preparing the Slider
+		try {
+			Double volume = Double.parseDouble(PropertiesUtils.getProperty(GuiProperties.VOLUME));
+			volumeSlider = new SliderBar(volume);
+		} catch (Exception e) {
+			volumeSlider = new SliderBar(50.0);
+		}
+		
+		// Adding the ChangeListener 
 		volumeSlider.sliderValueProperty().addListener(getChangeListener());
+		
+		// Adding the contents
 		this.getChildren().add(volume);
 		this.getChildren().add(volumeSlider);
 		this.setAlignment(Pos.CENTER);
 	}
 	
-	public static SliderBar getVolumeSlider() {
+	/**
+	 * @return Instance of the volume slider
+	 */
+	public SliderBar getVolumeSlider() {
 		return volumeSlider;
 	}
 	
-	private ChangeListener<Number> getChangeListener() {
+	/**
+	 * Returning a new change listener for the volume slider that keeps track of the last used volume level
+	 *  
+	 * @return the change listener 
+	 */
+	public ChangeListener<Number> getChangeListener() {
 		return new ChangeListener<Number>() {
-
 			@Override
-			public void changed(ObservableValue<? extends Number> arg0, Number newValue, Number oldValue) {
-				MediaPlayer mp = AudioPlayer.getInstance().getMediaPlayer();
-				
-				if(mp != null) {
-					System.out.println(mp.getVolume());
-				}
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				PropertiesUtils.setProperty(GuiProperties.VOLUME, newValue.toString());
 			}
-			
-		};
+	    };
 	}
+	
 }

@@ -3,35 +3,48 @@ package ms5000.gui.mainframe.top;
 import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import ms5000.gui.mainframe.top.buttons.Button_Add;
-import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler;
 
+/**
+ * This HBox holds the items on the top right side of the frame
+ */
 public class HBox_TOP_RIGHT extends HBox{
+	/**
+	 * The ImportButton
+	 */
 	private Button_Add btn_import_data;
-	private static VBox_VolumeSlider volumeSlider;
 	
+	/**
+	 * The VolumeSlider
+	 */
+	private VBox_VolumeSlider volumeSlider;
+	
+	/**
+	 * Instantiates the HBox
+	 */
 	public HBox_TOP_RIGHT() {
-		
-		ButtonAdd_EventHandler eventHandler = new ButtonAdd_EventHandler();
-		
 		btn_import_data = new Button_Add();
-		btn_import_data.setOnMouseEntered(eventHandler);
-		btn_import_data.setOnMouseExited(eventHandler);
-		btn_import_data.setOnMouseClicked(eventHandler);
-		
 		volumeSlider = new VBox_VolumeSlider();
+		
 		this.getChildren().add(volumeSlider);
 		this.getChildren().add(btn_import_data);
 		
+		// Setting the style
 		this.setPadding(new Insets(37, 12, 15, 12));
 		this.setSpacing(10);
 		this.setStyle("-fx-background-color:#5A5A5A");
 	}
 	
-	public static VBox_VolumeSlider getVolumeSlider() {
+	/**
+	 * @return returns the instance of the volume slider
+	 */
+	public VBox_VolumeSlider getVolumeSlider() {
 		return volumeSlider;
 	}
-
-	public Button_Add getBtn_import_data() {
+	
+	/**
+	 * @return returns the instance of the button import
+	 */
+	public Button_Add getBtnImportData() {
 		return btn_import_data;
 	}
 }

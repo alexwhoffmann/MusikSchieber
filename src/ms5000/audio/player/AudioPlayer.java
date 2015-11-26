@@ -9,9 +9,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import ms5000.gui.mainframe.Main_Frame;
-import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
-import ms5000.gui.mainframe.top.VBox_StatusSlider;
-import ms5000.gui.mainframe.top.VBox_VolumeSlider;
 import ms5000.musicfile.file.MusicFile;
 
 /**
@@ -95,7 +92,8 @@ public class AudioPlayer {
 			
 			// Binding the volume property to the slider in the right hand side of
 			// the player
-			mediaPlayer.volumeProperty().bind(VBox_VolumeSlider.getVolumeSlider().sliderValueProperty().divide(100));
+			mediaPlayer.volumeProperty().bind(
+					Main_Frame.gethBox_Right().getVolumeSlider().getVolumeSlider().sliderValueProperty().divide(100));
 				
 			// Setting the player status
 			this.setStatus(PlayerStatus.READY);
@@ -134,7 +132,7 @@ public class AudioPlayer {
 			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText(currentlyPlaying);
 
 			// Enabling the slider which shows the progress of the song
-			VBox_StatusSlider.getSlider().getSlider().setDisable(false);
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider().getSlider().getSlider().setDisable(false);
 
 			// Starting the player
 			mediaPlayer.play();
@@ -152,8 +150,8 @@ public class AudioPlayer {
 			//
 			Main_Frame.getBorderPaneTopCenter().resetStatusFields();
 
-			VBox_StatusSlider.getSlider().getSlider().setValue(0);
-			VBox_StatusSlider.getSlider().getSlider().setDisable(true);
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider().getSlider().getSlider().setValue(0);
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider().getSlider().getSlider().setDisable(true);
 
 			mediaPlayer.stop();
 			this.setStatus(PlayerStatus.READY);
@@ -177,11 +175,11 @@ public class AudioPlayer {
 				double progressNew = (newValue.toMillis() / mediaPlayer.getTotalDuration().toMillis())*100;
 				difference = progressNew - progressOld;
 				
-				VBox_StatusSlider.getSlider().getSlider().setValue(progressNew);
+				Main_Frame.getBorderPaneTopCenter().getStatusSlider().getSlider().getSlider().setValue(progressNew);
 				
 				if (newValue.greaterThanOrEqualTo(mediaPlayer.getTotalDuration())) {
 					// Invoking the stop button in case the song is over
-					HBox_TOP_LEFT.getBtn_Stop().fire();
+					Main_Frame.gethBox_Left().getBtnStop().fire();
 				}
 			}
 			};
@@ -313,8 +311,8 @@ public class AudioPlayer {
 				AudioPlayer.getInstance().stop();
 			}
 		}
-		HBox_TOP_LEFT.getBtn_Stop().setDisable(true);
-		HBox_TOP_LEFT.getBtn_Start().setDisable(true);
+		Main_Frame.gethBox_Left().getBtnStop().setDisable(true);
+		Main_Frame.gethBox_Left().getBtnStart().setDisable(true);
 		
 		Main_Frame.getBorderPaneTopCenter().resetStatusFields();
 		AudioPlayer.getInstance().setMedia(null);
@@ -324,11 +322,11 @@ public class AudioPlayer {
 	 * Method to enable the audio player internally and on the frame
 	 */
 	public void enablePlayer() {
-		if (HBox_TOP_LEFT.getBtn_Stop().isDisable()) {
-			HBox_TOP_LEFT.getBtn_Stop().setDisable(false);
+		if (Main_Frame.gethBox_Left().getBtnStop().isDisable()) {
+			Main_Frame.gethBox_Left().getBtnStop().setDisable(false);
 		}
 		
-		HBox_TOP_LEFT.getBtn_Start().setDisable(false);
+		Main_Frame.gethBox_Left().getBtnStart().setDisable(false);
 		
 		if (AudioPlayer.getInstance().getMediaPlayer() != null) {
 			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.READY) {

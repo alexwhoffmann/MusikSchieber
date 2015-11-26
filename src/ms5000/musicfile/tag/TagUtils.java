@@ -1,15 +1,7 @@
 package ms5000.musicfile.tag;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
-
-import ms5000.musicfile.file.MusicFile;
-import ms5000.musicfile.file.MusicFileType;
-import ms5000.musicfile.tag.MusicTag.TagState;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -22,33 +14,14 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import org.jaudiotagger.tag.datatype.Artwork;
 
+import ms5000.musicfile.file.MusicFile;
+import ms5000.musicfile.file.MusicFileType;
+import ms5000.musicfile.tag.MusicTag.TagState;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.library.OrderingProperty;
+
 public class TagUtils {
 
-	/**
-	 * Properties File to music library settings
-	 */
-	private static final String PROPERTIES = "properties/musicLibrary.properties";
-	private static Properties properties;
-
-	/**
-	 * Reading the properties
-	 */
-	static {
-		// Reading the properties
-		properties = new Properties();
-		BufferedInputStream stream;
-		try {
-			stream = new BufferedInputStream(new FileInputStream(PROPERTIES));
-			properties.load(stream);
-			stream.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Reads the tag from the music file and stores them in a tag object
@@ -189,7 +162,7 @@ public class TagUtils {
 		// Non-critical
 		int titleNumber = tag.getTitlenumber();
 		int totalTitleNumber = tag.getTotal_titles();
-		int orderingMode = stringToInt(properties.getProperty("ordering_mode"));
+		OrderingProperty orderingMode = PropertiesUtils.getOrderingProperty();
 		// Weak infos
 		int year = tag.getYear();
 		String albumArtist = tag.getAlbumArtist();
@@ -198,7 +171,7 @@ public class TagUtils {
 			tag.setStatus(TagState.DUPLICATE);
 		}
 
-		if (orderingMode == 3) {
+		if (orderingMode == OrderingProperty.GAA) {
 			if (artist.equals("") || album.equals("") || genre.equals("") || titlename.equals("")) {
 				tag.setStatus(TagState.MISSINGCRITICAL);
 				return;

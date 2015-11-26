@@ -13,7 +13,7 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 	 * Method to handle the drag events received from the center table
 	 */
 	@Override
-	public void handle(final DragEvent event) {
+	public void handle(DragEvent event) {
 		// Preparing the Drag
 		if (event.getEventType().toString().equals("DRAG_OVER")) {
 			Dragboard db = event.getDragboard();
@@ -36,7 +36,7 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 				}
 
 			}
-
+			
 			event.setDropCompleted(success);
 			event.consume();
 		}

@@ -6,6 +6,7 @@ public enum MusicFileType {
 	MP3("mp3"),
 	MP4("m4a"),
 	OGG("ogg"),
+	AAC("aac"),
 	FLAC("flac"),
 	WMA("wma");
 	

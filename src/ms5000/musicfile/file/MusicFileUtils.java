@@ -1,14 +1,11 @@
 package ms5000.musicfile.file;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Properties;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -16,6 +13,9 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
 import ms5000.musicfile.tag.MusicTag;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.library.LibraryProperties;
+import ms5000.properties.library.OrderingProperty;
 
 /**
  * Helper class for all kinds of operations with music files
@@ -45,32 +45,7 @@ public class MusicFileUtils {
 	 */
 	private static String forbiddenChars_2 = "<>?\"\\:|/*()'°^´`_";
 
-	/**
-	 * Properties File to music library settings
-	 */
-	private static final String PROPERTIES = "properties/musicLibrary.properties";
-	private static Properties properties;
-	private static ArrayList<File> readFiles = new ArrayList<File>();	
-	
-	/**
-	 * Reading the properties
-	 */
-	static {
-		// Reading the properties
-		properties = new Properties();
-		BufferedInputStream stream;
-		try {
-			stream = new BufferedInputStream(new FileInputStream(PROPERTIES));
-			properties.load(stream);
-			stream.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	private static ArrayList<File> readFiles = new ArrayList<File>();
 	
 	/**
 	 * Method for generating the new File name of the music file, after the tag was completed
@@ -96,7 +71,7 @@ public class MusicFileUtils {
 	}
 	
 	/**
-	 * Method for making the directory for the imported fiel
+	 * Method for making the directory for the imported file
 	 * 
 	 * @param musicFile
 	 * @return path to the directory
@@ -108,10 +83,9 @@ public class MusicFileUtils {
 		File level_3;
 
 		String pathToMusicLibrary;
-		String orderingMode;
 
-		pathToMusicLibrary = properties.getProperty("filepath");
-		orderingMode = properties.getProperty("ordering_mode");
+		pathToMusicLibrary = PropertiesUtils.getProperty(LibraryProperties.FILEPATH);
+		OrderingProperty orderingMode = PropertiesUtils.getOrderingProperty();
 
 		// Cleaning artist and album
 		String artist = cleanString(musicFile.getTag().getArtist());
@@ -120,7 +94,7 @@ public class MusicFileUtils {
 		album = clearForbiddenCharacters(album);
 
 		// Ordering: A - Artist - Album
-		if (orderingMode.equals("1")) {
+		if (orderingMode == OrderingProperty.AAA) {
 			if (NUMBERS.contains(artist.substring(0, 1))) {
 				level_1 = new File(pathToMusicLibrary + "\\" + "123");
 				level_2 = new File(pathToMusicLibrary + "\\" + "123" + "\\" + artist);
@@ -150,7 +124,7 @@ public class MusicFileUtils {
 			return level_3.getAbsolutePath();
 
 			// Genre - Artist - Album
-		} else if (orderingMode.equals("3")) {
+		} else if (orderingMode == OrderingProperty.GAA) {
 			String genre = cleanString(musicFile.getTag().getGenre());
 			genre = clearForbiddenCharacters(genre);
 
@@ -179,7 +153,7 @@ public class MusicFileUtils {
 			return level_3.getAbsolutePath();
 
 			// Artist - Album
-		} else if (orderingMode.equals("2")) {
+		} else if (orderingMode == OrderingProperty.AA) {
 			level_1 = new File(
 					pathToMusicLibrary + "\\" + artist.toUpperCase().charAt(0) + artist.substring(1, artist.length()));
 			level_2 = new File(
@@ -286,9 +260,10 @@ public class MusicFileUtils {
 		// Reading the tag
 		MusicTag tag = musicFile.getTag();
 		boolean duplicate = false;
+		
 		// Reading the path to the music library and ordering Mode
-		String orderingMode = properties.getProperty("ordering_mode");
-		String pathToLibrary = properties.getProperty("filepath");
+		String pathToLibrary = PropertiesUtils.getProperty(LibraryProperties.FILEPATH);
+		OrderingProperty orderingMode = PropertiesUtils.getOrderingProperty();
 
 		// Cleaning the Strings
 		String artist = MusicFileUtils.clearForbiddenCharacters(MusicFileUtils.cleanString(tag.getArtist()));
@@ -297,10 +272,10 @@ public class MusicFileUtils {
 		String genre = MusicFileUtils.clearForbiddenCharacters(MusicFileUtils.cleanString(tag.getGenre()));
 
 
-		if (orderingMode.equals("1") || orderingMode.equals("3")) {
+		if (orderingMode == OrderingProperty.AAA || orderingMode == OrderingProperty.AA) {
 			// Building the Directorystrings
 			// Ordering: A - Artist - Album
-			if (orderingMode.equals("1")) {
+			if (orderingMode == OrderingProperty.AAA) {
 				firstLevelDir_path = pathToLibrary + "\\" + artist.substring(0, 1).toUpperCase();
 				secondLevelDir_path = firstLevelDir_path + "\\" + artist.substring(0, 1).toUpperCase()
 						+ artist.substring(1, artist.length());

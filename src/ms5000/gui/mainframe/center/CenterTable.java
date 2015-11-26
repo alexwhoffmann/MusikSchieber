@@ -76,7 +76,7 @@ public class CenterTable extends TableView<MusicTag> {
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		// Adding the event handlers
-		this.setOnKeyPressed(new CenterTable_EventHandler_KeyBoard(this));
+		this.setOnKeyPressed(new CenterTable_EventHandler_KeyBoard());
 		CenterTable_EventHandler_DragNDrop dragAndDropHandler = new CenterTable_EventHandler_DragNDrop();
 		this.setOnDragOver(dragAndDropHandler);
 		this.setOnDragDropped(dragAndDropHandler);
@@ -114,6 +114,7 @@ public class CenterTable extends TableView<MusicTag> {
 		                        
 		                        if (!isEmpty() && this.getTableRow().getItem() != null) {
 		                        	MusicTag tag = ((MusicTag) this.getTableRow().getItem());
+		                        	
 		                        	if (tag.getStatus() == TagState.DUPLICATE) {
 		                        		this.setStyle(duplicate);
 		                        	} else if(tag.getStatus() == TagState.MISSINGCRITICAL) {

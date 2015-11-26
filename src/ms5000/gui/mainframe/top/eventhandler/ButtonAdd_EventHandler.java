@@ -1,25 +1,19 @@
 package ms5000.gui.mainframe.top.eventhandler;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import ms5000.gui.dialogs.AddDialog;
 import ms5000.gui.mainframe.Main_Frame;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.gui.GuiProperties;
 import ms5000.tasks.readdir.ImportMode;
 import ms5000.tasks.readdir.ReadDirTaskManager;
 import ms5000.tasks.readdir.ReadDirTaskManager.TaskStatus;
 
 public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
-	private final String PROPERTIES = "properties/gui.properties";
-	private Properties properties;
 	private File lastImportedDir;
 	private ImportMode importMode = null;
 	
@@ -57,7 +51,7 @@ public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 
 					if (selectedDir != null) {
 						// Setting the properties to the last imported Dir
-						saveProperties(selectedDir.getParent());
+						PropertiesUtils.setProperty(GuiProperties.LASTIMPORTDIR, selectedDir.getParent());
 
 						// Starting the Read Dir Process
 						ReadDirTaskManager.startTask(selectedDir.getAbsolutePath(), importMode);
@@ -66,70 +60,20 @@ public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 			}
 			
 		} else {
-			Main_Frame.gethBox_Right().getBtn_import_data().changeButtonIcon_Rollover(event);
-		}
-	}
-	
-	private void saveProperties(String lastImportDir) {
-		FileOutputStream output = null;
-		
-		try {
-			output = new FileOutputStream(PROPERTIES);
-
-			// set the properties value
-			properties.setProperty("lastImportDir", lastImportDir);
-
-			// save properties to project root folder
-			properties.store(output, null);
-
-		} catch (IOException io) {
-			io.printStackTrace();
-		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
+			Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon_Rollover(event);
 		}
 	}
 
 	private File readProperties() {
-		// Reading the properties
-		if (this.properties == null) {
-			this.properties = new Properties();
-			BufferedInputStream stream;
-			try {
-				stream = new BufferedInputStream(new FileInputStream(PROPERTIES));
-				properties.load(stream);
-				stream.close();
-
-				// Reading the last Dir which was Imported
-				lastImportedDir = new File(properties.getProperty("lastImportDir"));
-				if (!lastImportedDir.exists()) {
-					String userDirectoryString = System.getProperty("user.home");
-					lastImportedDir = new File(userDirectoryString);
-				}
-				// In case the Properties coudn't be read
-			} catch (FileNotFoundException e) {
-				String userDirectoryString = System.getProperty("user.home");
-				lastImportedDir = new File(userDirectoryString);
-			} catch (IOException e) {
-				String userDirectoryString = System.getProperty("user.home");
-				lastImportedDir = new File(userDirectoryString);
-			}
-		} else {
-			// Reading the last Dir which was Imported
-			lastImportedDir = new File(properties.getProperty("lastImportDir"));
-			if (!lastImportedDir.exists()) {
-				String userDirectoryString = System.getProperty("user.home");
-				lastImportedDir = new File(userDirectoryString);
-			}
+		// Reading the last Dir which was Imported
+		lastImportedDir = new File(PropertiesUtils.getProperty(GuiProperties.LASTIMPORTDIR));
+		System.out.println(lastImportedDir.getAbsolutePath());
+		if (!lastImportedDir.exists()) {
+			String userDirectoryString = System.getProperty("user.home");
+			lastImportedDir = new File(userDirectoryString);
 		}
-		return lastImportedDir;
 		
+		return lastImportedDir;
 	}
 
 }

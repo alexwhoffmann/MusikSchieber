@@ -15,6 +15,7 @@ import org.jaudiotagger.tag.TagException;
 
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.TagUtils;
+import ms5000.musicfile.tag.MusicTag.TagState;
 import ms5000.web.acousticid.result.Result;
 import ms5000.web.acusticid.AcoustID;
 import ms5000.web.acusticid.ChromaPrint;
@@ -191,6 +192,10 @@ public class MusicFile {
 
 	public void setPossibleDuplicate(boolean possibleDuplicate) {
 		this.possibleDuplicate = possibleDuplicate;
+		
+		if (possibleDuplicate) {
+			this.getTag().setStatus(TagState.DUPLICATE);
+		}
 	}
 
 	public String getMusicBrainz_recordingID() {

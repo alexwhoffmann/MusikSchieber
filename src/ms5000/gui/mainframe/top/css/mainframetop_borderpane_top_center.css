@@ -3,5 +3,35 @@
 }
 
 .text-field {
+	-fx-max-width: 50.0;
+	-fx-max-height: 15.0;
 	-fx-background-color: #A7FFA7;
 }
+
+#vbox_status_slider {
+	-fx-min-width:600;
+	-fx-max-height:100;
+	-fx-alignment:center;
+	-fx-spacing:5;
+	-fx-padding: 5, 12, 15, 12 ; 
+}
+
+.button {
+	-fx-padding: 100, 12, 15, 5;
+	-fx-min-width:22;
+	-fx-min-height:22;
+	-fx-max-width:22;
+	-fx-max-height:22;
+	-fx-focus-color: transparent;
+	-fx-background-color: transparent;
+}
+
+#hboxTopLeft {
+	-fx-spacing:35;
+	-fx-padding: 50, 12, 25, 12;
+	-fx-background-color:#5A5A5A;
+	-fx-min-width: 126.0; 
+	-fx-pref-width: 220.0; 
+}
+
+

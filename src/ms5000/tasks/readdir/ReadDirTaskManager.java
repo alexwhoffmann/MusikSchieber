@@ -30,8 +30,15 @@ public class ReadDirTaskManager {
 		startTask(task);
 	}
 	
+	public static void startTask(File file, ImportMode mode) {
+		importMode = mode;
+		task = new ReadDirTask(file,mode);
+		
+		startTask(task);
+	}
+	
 	private static void startTask(ReadDirTask task) {
-		Main_Frame.gethBox_Right().getBtn_import_data().changeButtonIcon(TaskStatus.RUNNING);
+		Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon(TaskStatus.RUNNING);
 		task.stateProperty().addListener(getTaskChangeListener());
 		
 		taskThread = new Thread(task);
@@ -46,7 +53,7 @@ public class ReadDirTaskManager {
 				if (newState.toString().equals("SCHEDULED")) {
 					taskStatus = TaskStatus.SCHEDULED;
 				} else if (newState.toString().equals("SUCCEEDED")) {
-					//changeButtonIcon(TaskStatus.SUCCEEDED);
+					Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon(TaskStatus.SUCCEEDED);
 					taskStatus = null;
 				} else if (newState.toString().equals("RUNNING")) {
 					taskStatus = TaskStatus.RUNNING;

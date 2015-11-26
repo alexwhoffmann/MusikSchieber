@@ -1,13 +1,12 @@
 package ms5000.web.acusticid;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Properties;
 
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.web.WebProperties;
 import ms5000.web.acousticid.result.Result;
 import ms5000.web.acousticid.result.Results;
 import ms5000.web.httputil.HTTPUtil;
@@ -16,7 +15,6 @@ import ms5000.web.httputil.WebService;
 import com.google.gson.Gson;
 
 public class AcoustID {
-	private final static String PROPERTIES = "properties/http.properties";
 	
 	/**
 	 * Chromaprint the file passed in
@@ -26,14 +24,8 @@ public class AcoustID {
 		String chromaprint = null;
 		String duration = null;
 		
-		// Setting the Properties
-		Properties properties = new Properties();
-		BufferedInputStream stream = new BufferedInputStream(new FileInputStream(PROPERTIES));
-	    properties.load(stream);
-	    stream.close();
-	    
-	    // Setting the Properties for the FpCalc - Process
-		final ProcessBuilder processBuilder = new ProcessBuilder(properties.getProperty("fpcalc"), null);
+	    // Setting the PropertyType for the FpCalc - Process
+		final ProcessBuilder processBuilder = new ProcessBuilder(PropertiesUtils.getProperty(WebProperties.FPCALC), null);
 		processBuilder.redirectErrorStream(true);
 		processBuilder.command().set(1, file.getAbsolutePath());
 		
@@ -93,13 +85,8 @@ public class AcoustID {
 	public static Result lookup(ChromaPrint chromaprint) throws IOException {
 		String url = null;
 		
-		Properties properties = new Properties();
-		BufferedInputStream stream = new BufferedInputStream(new FileInputStream(PROPERTIES));
-	    properties.load(stream);
-	    stream.close();
-	      
-		url = properties.getProperty("url_acoustid") + "?client="
-				+ properties.getProperty("client_acoustid") + "&meta=recordings+compress"
+		url = PropertiesUtils.getProperty(WebProperties.ACOUSTID_URL) + "?client="
+				+ PropertiesUtils.getProperty(WebProperties.ACOUSTID_CLIENT) + "&meta=recordings+compress"
 				+ "&fingerprint=" + chromaprint.chromaprint + "&duration="
 				+ chromaprint.duration;
 		Standard_Response response = (Standard_Response) HTTPUtil.get(url,WebService.ACOUSTID);

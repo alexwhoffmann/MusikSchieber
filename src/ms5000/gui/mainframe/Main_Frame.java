@@ -8,8 +8,6 @@ import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
 import ms5000.gui.mainframe.top.HBox_TOP_RIGHT;
-import ms5000.gui.mainframe.top.VBox_StatusSlider;
-import ms5000.gui.mainframe.top.VBox_VolumeSlider;
 
 /**
  * Class with starts the application and shows the mainframe
@@ -98,8 +96,8 @@ public class Main_Frame extends Application {
 			Main_Frame.getPrimaryStage().setMinWidth(minFrameWidth);
 			
 			//Setting Sizes of components
-			VBox_StatusSlider.getSlider().setProgressBarWidth();
-			VBox_VolumeSlider.getVolumeSlider().setProgressBarWidth();
+			borderPaneTopCenter.getStatusSlider().getSlider().setProgressBarWidth();
+			hBox_Right.getVolumeSlider().getVolumeSlider().setProgressBarWidth();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

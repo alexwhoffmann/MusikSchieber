@@ -39,7 +39,9 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 * File representation of the directory which will be imported
 	 */
 	private File dir;
-
+	
+	private File importFile;
+	
 	/**
 	 * ArrayList which stors the imported Files
 	 */
@@ -69,6 +71,17 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	public ReadDirTask(List<File> list, ImportMode importMode) {
 		this.importMode = importMode;
 		this.readFiles_DND = list;
+		initProgressBar();
+	}
+	
+	/**
+	 * @param pathToDir:
+	 *            Path to the directory which will be imported
+	 * 
+	 */
+	public ReadDirTask(File file, ImportMode importMode) {
+		this.importMode = importMode;
+		this.importFile = file;
 		initProgressBar();
 	}
 	
@@ -172,8 +185,13 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 			}
 		} else {
 			// reading all the music files from the dir
-			dir = new File(pathToDir);
-			addDirContent(dir);
+			if (importFile == null) {
+				dir = new File(pathToDir);
+				addDirContent(dir);
+			} else {
+				readFiles.add(importFile);
+			}
+			
 			
 			try {
 				musicFiles = importMusicFiles();
@@ -239,11 +257,19 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 				Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
 
 				try {
+					boolean duplicate = false;
+					
 					if (importMode == ImportMode.CLEAR || importMode == null) {
 						// Adding the music file to the table
-						musicFiles.add(new MusicFile(readFiles.get(i).getAbsolutePath()).getTag());
-						// Checking for duplicates
-
+						MusicFile newFile = new MusicFile(readFiles.get(i).getAbsolutePath());  
+						
+						
+						if (newFile.getTag().getStatus() != TagState.MISSINGCRITICAL) {
+							duplicate = MusicFileUtils.checkForDuplicates(newFile);
+						}
+						
+						newFile.setPossibleDuplicate(duplicate);
+						musicFiles.add(newFile.getTag());
 						Main_Frame.getBorderPane_Center().getCentertable().getItems().add(musicFiles.get(i));
 						
 						// Sleeping to wait until table operations are finished
@@ -269,18 +295,17 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 
 						if (!duplicateInList) {
 							// Adding the File
-							boolean duplicate = false;
-							
 							if (newEntry.getStatus() != TagState.MISSINGCRITICAL) {
 								duplicate = MusicFileUtils.checkForDuplicates(newEntry.getMusicFile());
 							}
 							
 							newTableEntries.add(newEntry);
 							newEntry.getMusicFile().setPossibleDuplicate(duplicate);
+							
 							Main_Frame.getBorderPane_Center().getCentertable().getItems().add(newEntry);
 							
 							// Sleeping to wait until table operations are finished
-							this.wait(1000);
+							this.wait(200);
 							Main_Frame.getBorderPane_Center().getCentertable().refresh();
 							
 						}

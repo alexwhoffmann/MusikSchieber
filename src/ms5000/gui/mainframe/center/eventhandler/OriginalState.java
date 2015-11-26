@@ -1,5 +1,9 @@
 package ms5000.gui.mainframe.center.eventhandler;
 
+/**
+ * This class captures the original state after multiple items in the were selected
+ * This makes it possible to determine which entry has changed
+ */
 public class OriginalState {
 	private String album;
 	private String album_artist;
@@ -12,6 +16,10 @@ public class OriginalState {
 	private String year;
 	private String titlesTotal;
 	
+	
+	/**
+	 * This class is set up to be a singleton, so only one instance can exist
+	 */
 	private static OriginalState originalState = new OriginalState();
 	
 	private OriginalState() {
