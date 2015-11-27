@@ -24,7 +24,8 @@
 
 .text-field {
 	-fx-alignment:center;
-	-fx-max-width: 400.0;
+	-fx-pref-width: 600.0;
+	-fx-max-width: 600.0;
 	-fx-max-height: 30.0;
 	-fx-min-width: 400.0;
 	-fx-min-height: 30.0;

@@ -1,0 +1,57 @@
+#border-pane {
+	-fx-background-color:#999999;
+	-fx-max-height:150;
+	-fx-pref-height:150;
+	-fx-min-height:100;
+	-fx-spacing:10;
+}
+
+.progress-bar {
+	-fx-control-inner-background: #999999;
+	-fx-accent: #A7FFA7;
+}
+
+#button {
+	-fx-focus-color: transparent;
+	-fx-background-color: transparent;
+	-fx-alignment:center ;
+		
+}
+
+#button:hover {
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,1) , 5, 0.0 , 0 , 1 );
+}
+
+#hbox {
+	-fx-alignment:center;
+	-fx-padding:25,0,0,0;
+	-fx-background-color:#5A5A5A	
+}
+
+#textfield_large {
+	-fx-alignment:center;
+	-fx-pref-width: 600.0;
+	-fx-max-width: 600.0;
+	-fx-max-height: 30.0;
+	-fx-min-width: 400.0;
+	-fx-min-height: 30.0;
+	-fx-background-color: #A7FFA7;
+}
+
+#textfield_small {
+	-fx-alignment:center;
+	-fx-pref-width: 300.0;
+	-fx-max-width: 300.0;
+	-fx-max-height: 30.0;
+	-fx-min-width: 400.0;
+	-fx-min-height: 30.0;
+	-fx-background-color: #A7FFA7;
+}
+
+#vbox {
+	-fx-spacing:10;
+	-fx-alignment:center ;
+}
+
+
+

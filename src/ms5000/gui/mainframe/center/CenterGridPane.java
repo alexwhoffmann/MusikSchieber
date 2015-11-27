@@ -146,7 +146,7 @@ public class CenterGridPane extends GridPane {
 		filePath_Label = new Label("File-Path:");
 		filePath_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 		
-		filePath_TextField = new TextField("Example");
+		filePath_TextField = new TextField("");
 		filePath_TextField.setEditable(false);
 		filePath_TextField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 		

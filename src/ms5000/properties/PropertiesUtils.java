@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import ms5000.properties.gui.GuiProperties;
+import ms5000.properties.importprop.ImportProperties;
 import ms5000.properties.library.LibraryProperties;
 import ms5000.properties.library.OrderingProperty;
+import ms5000.properties.playlist.PlayListProperties;
 import ms5000.properties.web.WebProperties;
 
 public class PropertiesUtils {
@@ -24,6 +26,14 @@ public class PropertiesUtils {
 
 	public static String getProperty(WebProperties webProperty) {
 		return readProperty(PropertyType.HTTP.returnName(), webProperty.returnName());
+	}
+	
+	public static String getProperty(PlayListProperties playListProperty) {
+		return readProperty(PropertyType.PLAYLIST.returnName(), playListProperty.returnName());
+	}
+	
+	public static String getProperty(ImportProperties importProperty) {
+		return readProperty(PropertyType.IMPORT.returnName(), importProperty.returnName());
 	}
 
 	public static String getProperty(GuiProperties guiProperty) {
@@ -46,6 +56,14 @@ public class PropertiesUtils {
 
 	public static void setProperty(LibraryProperties libraryProperty, String value) {
 		writeProperty(PropertyType.LIBRARY.returnName(), libraryProperty.returnName(), value);
+	}
+	
+	public static void setProperty(ImportProperties importProperty, String value) {
+		writeProperty(PropertyType.IMPORT.returnName(), importProperty.returnName(), value);
+	}
+	
+	public static void setProperty(PlayListProperties playlistProperty, String value) {
+		writeProperty(PropertyType.PLAYLIST.returnName(), playlistProperty.returnName(), value);
 	}
 
 	public static void setOrderingProperty(OrderingProperty orderingProperty) {
@@ -130,5 +148,55 @@ public class PropertiesUtils {
 				printWriter.close();
 			}
 		}
+	}
+	
+	public static ProfileProperties getProfile() {
+		ProfileProperties profile = ProfileProperties.getProfile();
+		
+		readMusicLibraryProperties(profile);
+		readImportProperties(profile);
+		readPlayListProperties(profile);
+		
+		return profile;
+	}
+	
+	public static void saveProfile() {
+		ProfileProperties profile = ProfileProperties.getProfile();
+		
+		setProperty(LibraryProperties.FILEPATH, profile.getPathToMusicLibrary());
+		setOrderingProperty(profile.getOrderingMode());
+		
+		setProperty(ImportProperties.KEEPFILES, "" + profile.isKeepOriginalFiles());
+		setProperty(ImportProperties.JUSTTAGFILES, "" + profile.isJustTagFiles());
+		
+		setProperty(PlayListProperties.PLAYLISTEXPORT, "" + profile.isPlayListExport());
+		setProperty(PlayListProperties.PLAYLISTEXPORTDIR, profile.getPlayListExportDir());
+	}
+	
+
+	private static void readPlayListProperties(ProfileProperties profile) {
+		try {
+			profile.setPlayListExport(Boolean.parseBoolean(getProperty(PlayListProperties.PLAYLISTEXPORT)));
+			
+		} catch (NumberFormatException e) {
+			profile.setPlayListExport(true);
+		}
+		
+		profile.setPlayListExportDir(getProperty(PlayListProperties.PLAYLISTEXPORTDIR));
+	}
+
+	private static void readImportProperties(ProfileProperties profile) {
+		try {
+			profile.setKeepOriginalFiles(Boolean.parseBoolean(getProperty(ImportProperties.KEEPFILES)));
+			profile.setJustTagFiles(Boolean.parseBoolean(getProperty(ImportProperties.JUSTTAGFILES)));
+		} catch (NumberFormatException e) {
+			profile.setKeepOriginalFiles(true);
+			profile.setJustTagFiles(false);
+		}
+	}
+
+	private static void readMusicLibraryProperties(ProfileProperties profile) {
+		profile.setOrderingMode(PropertiesUtils.getOrderingProperty());
+		profile.setPathToMusicLibrary(PropertiesUtils.getProperty(LibraryProperties.FILEPATH));
 	}
 }

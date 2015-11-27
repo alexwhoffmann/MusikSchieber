@@ -55,4 +55,11 @@ public class VBox_StatusSlider extends VBox{
 	public SliderBar getSlider() {
 		return progress_slider;
 	}
+	
+	/**
+	 * @return instance of the status textfield
+	 */
+	public TextField getStatusTextField() {
+		return status_text;
+	}
 }

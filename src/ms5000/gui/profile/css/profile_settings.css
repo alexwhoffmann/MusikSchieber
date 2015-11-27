@@ -1,0 +1,33 @@
+.grid {
+	-fx-background-color: #cccccc;
+	-fx-padding: 10.0;
+    -fx-hgap: 20;
+    -fx-vgap: 10;
+}
+
+.text-field {
+	-fx-background-color: #f2f2f2;
+	-fx-pref-width:300;
+	-fx-min-width:300;
+}
+
+#LabelBig {
+	-fx-font: 16px "Arial";
+	-fx-font-weight: bold;
+}
+
+#LabelSmall {
+	-fx-font: 13px "Arial";
+	-fx-font-weight: 500;
+}
+
+.button {
+	-fx-pref-width:100;
+	-fx-min-width:100;
+}
+
+#OpenFolderButton {
+	-fx-pref-width:40;
+	-fx-min-width:40;
+	-fx-max-width:40;
+}
