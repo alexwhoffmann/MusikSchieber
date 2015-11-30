@@ -6,82 +6,115 @@ import javafx.beans.property.SimpleStringProperty;
 import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.tag.genre.Genre;
 
+/**
+ * This class captures the entries which will be found in the music tag
+ */
 public class MusicTag {
-	public enum Tags {
-		ALBUM, ALBUMARTIST, TITLENAME, ARTIST, GENRE, TOTALTRACKNUMBER, TRACKNUMBER, DISCNUMBER, TOTALDISCNUMBER, COMMENT, COMPOSER, YEAR
-	}
 	
-	public enum TagState {
-		MISSINGCRITICAL, DUPLICATE, MISSINGNONCRITICAL, COMPLETE, MISSINGWEAKINFOS
-	}
-	
+	/**
+	 * The music file itself
+	 */
 	private MusicFile musicFile;
+	
+	/**
+	 * The title name
+	 */
 	private SimpleStringProperty titlename;
+	
+	/**
+	 * The artist
+	 */
 	private SimpleStringProperty artist;
+	
+	/**
+	 * The album name
+	 */
 	private SimpleStringProperty album;
+	
+	/**
+	 * The album artist
+	 */
 	private String album_artist;
+	
+	/**
+	 * The composer
+	 */
 	private String composer;
+	
+	@Deprecated
 	private String opera;
+	
+	/**
+	 * The year of the album release
+	 */
 	private int year;
+	
+	/**
+	 * The genre
+	 */
 	private SimpleStringProperty genre;
+	
+	/**
+	 * The title number
+	 */
 	private int titlenumber;
+	
+	/**
+	 * The amount of the titles on the album
+	 */
 	private int total_titles;
+	
+	/**
+	 * The disc number of the title
+	 */
 	private int disc_number;
+	
+	/**
+	 * The amount of discs
+	 */
 	private int total_discs;
+	
+	/**
+	 * Comment
+	 */
 	private String comment;
+	
+	/**
+	 * Album artwork
+	 */
 	private Artwork artwork;
+	
+	/**
+	 * The tag status
+	 */
 	private TagState status;
+	
 
-	public String getTitlename() {
-		return titlename.get();
-	}
-
+	/**
+	 * Setter methods
+	 */
 	public void setTitlename(String titlename) {
 		this.titlename = new SimpleStringProperty(titlename);
 	}
-
-	public String getArtist() {
-		return artist.get();
-	}
-
+	
 	public void setArtist(String artist) {
 		this.artist = new SimpleStringProperty(artist);
-	}
-
-	public String getAlbum() {
-		return album.get();
 	}
 
 	public void setAlbum(String album) {
 		this.album = new SimpleStringProperty(album);
 	}
 
-	public String getComposer() {
-		return composer;
-	}
-
 	public void setComposer(String composer) {
 		this.composer = composer;
-	}
-
-	public String getOpera() {
-		return opera;
 	}
 
 	public void setOpera(String opera) {
 		this.opera = opera;
 	}
 
-	public int getYear() {
-		return year;
-	}
-
 	public void setYear(int year) {
 		this.year = year;
-	}
-
-	public String getGenre() {
-		return genre.get();
 	}
 
 	public void setGenre(String genre) {
@@ -93,40 +126,20 @@ public class MusicTag {
 		}
 	}
 
-	public int getTitlenumber() {
-		return titlenumber;
-	}
-
 	public void setTitlenumber(int titlenumber) {
 		this.titlenumber = titlenumber;
-	}
-
-	public int getTotal_titles() {
-		return total_titles;
 	}
 
 	public void setTotal_titles(int total_titles) {
 		this.total_titles = total_titles;
 	}
 
-	public int getDisc_number() {
-		return disc_number;
-	}
-
 	public void setDisc_number(int disc_number) {
 		this.disc_number = disc_number;
 	}
 
-	public int getTotal_discs() {
-		return total_discs;
-	}
-
 	public void setTotal_discs(int total_discs) {
 		this.total_discs = total_discs;
-	}
-
-	public String getComment() {
-		return comment;
 	}
 
 	public void setComment(String comment) {
@@ -156,6 +169,58 @@ public class MusicTag {
 	public void setStatus(TagState status) {
 		this.status = status;
 	}
+	
+	/**
+	 * Getter methods
+	 */
+	public String getTitlename() {
+		return titlename.get();
+	}
+	
+	public String getArtist() {
+		return artist.get();
+	}
+	
+	public String getAlbum() {
+		return album.get();
+	}
+	
+	public String getComposer() {
+		return composer;
+	}
+	
+	public String getOpera() {
+		return opera;
+	}
+	
+	public int getYear() {
+		return year;
+	}
+	
+	public String getGenre() {
+		return genre.get();
+	}
+	
+	public int getTitlenumber() {
+		return titlenumber;
+	}
+	
+	public int getTotal_titles() {
+		return total_titles;
+	}
+	
+	public int getDisc_number() {
+		return disc_number;
+	}
+	
+	public int getTotal_discs() {
+		return total_discs;
+	}
+	
+	public String getComment() {
+		return comment;
+	}
+	
 	
 	/**
 	 * Returns the music file to which the tag belongs

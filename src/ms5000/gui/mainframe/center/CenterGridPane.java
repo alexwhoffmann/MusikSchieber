@@ -5,15 +5,15 @@ import java.io.IOException;
 import org.jaudiotagger.tag.datatype.Artwork;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.eventhandler.CenterGridPane_ButtonSave_EventHandler;
 import ms5000.gui.mainframe.center.eventhandler.Import_Artwork_EventHandler;
@@ -126,29 +126,30 @@ public class CenterGridPane extends GridPane {
 	private void init() {
 		// Styling the grid pane
 		this.setHgap(15);
-		this.setVgap(15);
+		this.setVgap(5);
 		this.setPadding(new Insets(0, 10, 0, 10));
 
 		this.setPrefWidth(Main_Frame.getPrefFrameWidth() / 2);
 		this.setMinWidth(Main_Frame.getMinFrameWidth() / 2);
 		this.setMaxWidth(Main_Frame.getPrefFrameWidth() / 2);
-
+		
+		this.getStylesheets().add(this.getClass().getResource("css/mainframe_center.css").toExternalForm());
+		
 		// General informations
 		tagInformation_Label = new Label("Tag-Information");
-		tagInformation_Label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		tagInformation_Label.setId("labelLarge");
 
 		fileInformation_Label = new Label("File-Information");
-		fileInformation_Label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		fileInformation_Label.setId("labelLarge");
 
 		artWork_Label = new Label("Artwork");
-		artWork_Label.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+		artWork_Label.setId("labelLarge");
 		
 		filePath_Label = new Label("File-Path:");
-		filePath_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		filePath_Label.setId("labelSmall");
 		
 		filePath_TextField = new TextField("");
 		filePath_TextField.setEditable(false);
-		filePath_TextField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 		
 		// The buttons
 		button_openFolder = new Button();
@@ -177,85 +178,67 @@ public class CenterGridPane extends GridPane {
 		
 		// The TextFields of the tag informations
 		titlename_textField = new TextField("");
-		titlename_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
 		artist_textField = new TextField("");
-		artist_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-		
 		genre_textField = new TextField("");
-		genre_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
 		year_textField = new TextField("");
-		year_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
+		
 		titleNumber_textField = new TextField("");
 		titleNumber_textField.setMaxWidth(45);
 		titleNumber_textField.setMinWidth(45);
-		titleNumber_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
+		
 		totalTitleNumbers_textField = new TextField("");
 		totalTitleNumbers_textField.setMaxWidth(45);
 		totalTitleNumbers_textField.setMinWidth(45);
-		totalTitleNumbers_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
-		album_textField = new TextField("");
-		album_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 		
+		album_textField = new TextField("");
 		albumArtist_textField = new TextField("");
-		albumArtist_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
 		composer_textField = new TextField("");
-		composer_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
 		comment_textField = new TextField("");
-		comment_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
+		
 		discNumber_textField = new TextField("");
 		discNumber_textField.setMaxWidth(45);
 		discNumber_textField.setMinWidth(45);
-		discNumber_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
-
+		
 		totalDiscNumbers_textField = new TextField("");
 		totalDiscNumbers_textField.setMaxWidth(45);
 		totalDiscNumbers_textField.setMinWidth(45);
-		totalDiscNumbers_textField.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
 
 		// The Labels for the tag information text fields
 		artist_Label = new Label("Artist:");
-		artist_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		artist_Label.setId("labelSmall");
 
 		titlename_Label = new Label("Titlename:");
-		titlename_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		titlename_Label.setId("labelSmall");
 
 		genre_Label = new Label("Genre:");
-		genre_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		genre_Label.setId("labelSmall");
 
 		year_Label = new Label("Year:");
-		year_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		year_Label.setId("labelSmall");
 
 		titleNumber_Label = new Label("Title-Number:");
-		titleNumber_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		titleNumber_Label.setId("labelSmall");
 
 		album_Label = new Label("Album:");
-		album_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		album_Label.setId("labelSmall");
 
 		albumArtist_Label = new Label("Album Artist:");
-		albumArtist_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		albumArtist_Label.setId("labelSmall");
 
 		composer_Label = new Label("Composer:");
-		composer_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		composer_Label.setId("labelSmall");
 
 		comment_Label = new Label("Comment:");
-		comment_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		comment_Label.setId("labelSmall");
 
 		discNumber_Label = new Label("Disc-Number:");
-		discNumber_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		discNumber_Label.setId("labelSmall");
 
 		totalTitleNumbers_Label = new Label(" - ");
-		totalTitleNumbers_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		totalTitleNumbers_Label.setId("labelSmall");
 
 		totalDiscNumbers_Label = new Label(" - ");
-		totalDiscNumbers_Label.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+		totalDiscNumbers_Label.setId("labelSmall");
 		
 		// Putting text fields and labels on to the grid pane
 		// Tag Information
@@ -292,7 +275,7 @@ public class CenterGridPane extends GridPane {
 		CenterGridPane.setConstraints(titleNumber_Label, 1, 6);
 		CenterGridPane.setConstraints(titleNumber_textField, 2, 6);
 		CenterGridPane.setConstraints(totalTitleNumbers_Label, 3, 6);
-		CenterGridPane.setConstraints(totalTitleNumbers_textField, 4, 6);
+		CenterGridPane.setConstraints(totalTitleNumbers_textField, 4, 6,1,1,HPos.LEFT,VPos.CENTER);
 
 		// DiscNumber
 		CenterGridPane.setConstraints(discNumber_Label, 5, 6);

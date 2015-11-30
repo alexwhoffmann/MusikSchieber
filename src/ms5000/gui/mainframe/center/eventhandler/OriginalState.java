@@ -29,7 +29,9 @@ public class OriginalState {
 		return originalState;
 	}
 	
-	
+	/**
+	 * Getter and Setter Methods 
+	 */
 	public String getAlbum() {
 		return album;
 	}

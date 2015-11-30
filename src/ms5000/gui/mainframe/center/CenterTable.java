@@ -13,7 +13,7 @@ import ms5000.gui.mainframe.center.eventhandler.CenterTable_ChangeListener;
 import ms5000.gui.mainframe.center.eventhandler.CenterTable_EventHandler_DragNDrop;
 import ms5000.gui.mainframe.center.eventhandler.CenterTable_EventHandler_KeyBoard;
 import ms5000.musicfile.tag.MusicTag;
-import ms5000.musicfile.tag.MusicTag.TagState;
+import ms5000.musicfile.tag.TagState;
 
 /**
  * This class implements the main features of the table view 

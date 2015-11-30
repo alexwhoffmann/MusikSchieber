@@ -1,0 +1,16 @@
+#labelLarge {
+	-fx-font: 16px "Arial";
+	-fx-font-weight: bold;
+}
+
+#labelSmall {
+	-fx-font: 14px "Arial";
+	-fx-font-weight: bold;
+}
+
+.text-field { 
+	-fx-font: 14px "Arial";
+	-fx-font-weight: normal;
+}
+
+

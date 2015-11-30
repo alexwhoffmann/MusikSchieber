@@ -22,7 +22,7 @@ import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.file.MusicFileType;
 import ms5000.musicfile.file.MusicFileUtils;
 import ms5000.musicfile.tag.MusicTag;
-import ms5000.musicfile.tag.MusicTag.TagState;
+import ms5000.musicfile.tag.TagState;
 
 /**
  * This class captures the main functionality of the import process
@@ -40,66 +40,84 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 */
 	private File dir;
 	
+	/**
+	 * In case a single file gets imported 
+	 */
 	private File importFile;
 	
 	/**
-	 * ArrayList which stors the imported Files
+	 * ArrayList which stores the imported Files
 	 */
-	private ArrayList<File> readFiles = new ArrayList<File>();;
-	private ObservableList<MusicTag> newTableEntries;
-	private List<File> readFiles_DND;
-
-	private ImportMode importMode;
-	private static PrintWriter writer;
-	
-	static {
-		try {
-			writer = new PrintWriter("log.txt", "UTF-8");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
-	
+	private ArrayList<File> readFiles = new ArrayList<File>();
 	
 	/**
-	 * @param pathToDir:
-	 *            Path to the directory which will be imported
+	 * List that stores the new entries in the table
+	 */
+	private ObservableList<MusicTag> newTableEntries;
+	
+	/**
+	 * List that stores the files during a drag and drop import
+	 */
+	private List<File> readFilesDND;
+	
+	/**
+	 * The import mode
+	 */
+	private ImportMode importMode;
+	
+	/**
+	 * the logger
+	 */
+	private PrintWriter writer;
+	
+	/**
+	 * Constructor that is used when a drag and drop import occurs
 	 * 
+	 * @param list the list of files which get imported
+	 * @param importMode the import mode
 	 */
 	public ReadDirTask(List<File> list, ImportMode importMode) {
 		this.importMode = importMode;
-		this.readFiles_DND = list;
+		this.readFilesDND = list;
 		initProgressBar();
+		initLog();
 	}
 	
 	/**
-	 * @param pathToDir:
-	 *            Path to the directory which will be imported
+	 * The constructor that is used when a single file gets imported
 	 * 
+	 * @param file the File
+	 * @param importMode the Importmode
 	 */
 	public ReadDirTask(File file, ImportMode importMode) {
 		this.importMode = importMode;
 		this.importFile = file;
 		initProgressBar();
+		initLog();
 	}
 	
 	/**
-	 * @param pathToDir:
-	 *            Path to the directory which will be imported
+	 * The constructor that is used when a directory gets imported
 	 * 
+	 * @param pathToDir the path to the directory
+	 * @param importMode the import mode
 	 */
 	public ReadDirTask(String pathToDir, ImportMode importMode) {
 		this.pathToDir = pathToDir;
 		this.importMode = importMode;
-		
-		 initProgressBar();
+
+		initProgressBar();
+		initLog();
 	}
 	
+	/**
+	 * Method to configure the progress bar
+	 */
 	private void initProgressBar() {
 		// Getting the ProgressBar
 		ProgressBar bar = Main_Frame.getBorderPane_Center().getProgressBar();
+		
+		// Binding the progress bar to the process
 		bar.progressProperty().unbind();
 		bar.progressProperty().bind(this.progressProperty());
 	}
@@ -108,8 +126,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 * Method to read the music files from a directory and to store it in
 	 * readFiles
 	 * 
-	 * @param dir
-	 *            Directory which will be read
+	 * @param dir Directory which will be read
 	 */
 	private void addDirContent(File dir) {
 		// Write Files to Array
@@ -139,8 +156,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	/**
 	 * Method to check whether the imported file is a music file
 	 * 
-	 * @param file:
-	 *            imported file
+	 * @param file imported file
 	 * @return true: the imported file is a music file and otherwise
 	 */
 	public static boolean checkIfMusicFile(File file) {
@@ -159,26 +175,27 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 * @return ObservableList<MusicTag> with all imported music files
 	 */
 	@Override
-	protected ObservableList<MusicTag> call(){
+	protected ObservableList<MusicTag> call() {
 		// List which will be added to the table
 		ObservableList<MusicTag> musicFiles = FXCollections.observableArrayList();
-		
-		if(importMode == ImportMode.DRAGNDROP) {
-			for (File file : readFiles_DND) {
-				if(file.isDirectory()) {
+
+		if (importMode == ImportMode.DRAGNDROP) {
+			// Getting the music files
+			for (File file : readFilesDND) {
+				if (file.isDirectory()) {
 					addDirContent(file);
 				} else {
-					if(checkIfMusicFile(file)) {
+					if (checkIfMusicFile(file)) {
 						readFiles.add(file);
 					}
 				}
 			}
-			
+			// Alert when no files are loaded
+			// Start the process
 			try {
 				musicFiles = importMusicFiles();
 			} catch (Exception e) {
-				System.out.println(e.getStackTrace());
-				for(int i = 0; i < e.getStackTrace().length ; i ++) {
+				for (int i = 0; i < e.getStackTrace().length; i++) {
 					log(e.getStackTrace()[i].toString() + "\n");
 				}
 				closeLog();
@@ -189,26 +206,32 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 				dir = new File(pathToDir);
 				addDirContent(dir);
 			} else {
+				// Reading a single file
 				readFiles.add(importFile);
 			}
-			
-			
+
 			try {
 				musicFiles = importMusicFiles();
 			} catch (Exception e) {
-				log(e.getLocalizedMessage() + " " + readFiles.size());
+				for (int i = 0; i < e.getStackTrace().length; i++) {
+					log(e.getStackTrace()[i].toString() + "\n");
+				}
+				closeLog();
 			}
-			
+
 		}
 		// Process-End
 		Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import completed");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			log(e.getLocalizedMessage());
+			for (int i = 0; i < e.getStackTrace().length; i++) {
+				log(e.getStackTrace()[i].toString() + "\n");
+			}
+			closeLog();
 			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
 		}
-		
+
 		Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
 
 		return musicFiles;
@@ -263,7 +286,6 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 						// Adding the music file to the table
 						MusicFile newFile = new MusicFile(readFiles.get(i).getAbsolutePath());  
 						
-						
 						if (newFile.getTag().getStatus() != TagState.MISSINGCRITICAL) {
 							duplicate = MusicFileUtils.checkForDuplicates(newFile);
 						}
@@ -279,7 +301,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 						ObservableList<MusicTag> tableEntries = Main_Frame.getBorderPane_Center().getCentertable().getItems();
 						MusicTag newEntry = new MusicFile(readFiles.get(i).getAbsolutePath()).getTag();
 						boolean duplicateInList = false;
-
+						
+						// Checking if the imported file is already in the table
 						for (MusicTag tableEntry : tableEntries) {
 							// Pre-Check
 							if (tableEntry.getArtist().equals(newEntry.getArtist())
@@ -314,10 +337,10 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 				} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 						| InvalidAudioFrameException e) {
 					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + readFiles.get(i).getName());
-					log(e.getMessage());
-					Thread.sleep(2000);
-					// TO-DO: Exception Handling
-					
+					for(int j = 0; i < e.getStackTrace().length ; i ++) {
+						log(e.getStackTrace()[j].toString() + "\n");
+					}
+					closeLog();
 				} catch (Exception e) {
 					log(e.getMessage());
 					Thread.sleep(2000);
@@ -330,18 +353,49 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 		return musicFiles;
 	}			
 	
+	/**
+	 * Method to write the string e to the log
+	 * 
+	 * @param e string that gets logged
+	 */
 	private void log(String e) {
 		writer.append(e);
 	}
 	
+	/**
+	 * Method to close the log
+	 */
 	private void closeLog() {
 		writer.close();
 	}
-
+	
+	/**
+	 * Method to configure the log
+	 */
+	private void initLog() {
+		try {
+			writer = new PrintWriter("log.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Method to return the current import mode
+	 * 
+	 * @return the current import mode
+	 */
 	public ImportMode getImportMode() {
 		return importMode;
 	}
-
+	
+	/**
+	 * Method to return the new table entries
+	 * 
+	 * @return the new table entries
+	 */
 	public ObservableList<MusicTag> getNewTableEntries() {
 		return newTableEntries;
 	}

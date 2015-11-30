@@ -72,13 +72,10 @@ public class AddDialog extends Alert{
 		
 		// Determining the choosen import Mode
 		if (result.get() == buttonAppend){
-		    System.out.println("1");
 		    importMode = ImportMode.APPEND;
 		} else if (result.get() == buttonClear) {
-			System.out.println("2");
 			importMode = ImportMode.CLEAR;
 		} else if (result.get() == buttonCancel) {
-			System.out.println("3");
 			importMode = ImportMode.CANCEL;
 		}
 	}

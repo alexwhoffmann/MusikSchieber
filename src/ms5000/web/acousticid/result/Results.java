@@ -6,6 +6,9 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Generated class to capture the result of the acoustid web service
+ */
 @Generated("org.jsonschema2pojo")
 public class Results {
 

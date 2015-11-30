@@ -23,7 +23,7 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 			} 
 
 			event.consume();
-		// Launching the ReadDirTask with the files from the drag	
+		// Launching the ImportFilesTask with the files from the drag	
 		} else if (event.getEventType().toString().equals("DRAG_DROPPED")) {
 			Dragboard db = event.getDragboard();
 			boolean success = false;

@@ -18,7 +18,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -31,14 +30,28 @@ import ms5000.properties.ProfileProperties;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.library.OrderingProperty;
 
-public class ProfileSettings  extends GridPane {
+/**
+ * This class implements the profile view after pressing the settings button
+ */
+public class ProfileSettings extends GridPane {
+	/**
+	 * The open folder icon
+	 */
 	private final String openFolder_Image_Path = "file:icons/Folder_Open.png";
 	private final Image openFolder_Image = new Image(openFolder_Image_Path);
 	
+	/**
+	 * Dialog texts
+	 */
+	private final String header_text = "You are about to change the library settings. Do you want to continue?";
+	private final String header = "Changing library properties";
+	
+	/**
+	 * The labels
+	 */
 	private Label musicLibrarySettings_Label;
 	private Label importSettings_Label;
-	private Label playlistSettings_Label;
-	
+	private Label playlistSettings_Label;	
 	private Label musicLibraryPath_Label;
 	private Label orderingMode_Label;
 	private Label keepFiles_Label;
@@ -47,29 +60,56 @@ public class ProfileSettings  extends GridPane {
 	private Label playListExport_Label;
 	private Label playListName_Label;
 	
+	/**
+	 * Music library text field and open folder button
+	 */
 	private TextField musicLibraryPath;
 	private Button chooseDirToMusicLibrary;
+	
+	/**
+	 * The choice box for the ordering mode
+	 */
 	private ChoiceBox<String> orderingMode;
 	private final String AAA = "A - Artist - Album";
 	private final String AA = "Artist - Album";
 	private final String GAA = "Genre - Artist - Album";
 	
+	/**
+	 * Radio button for keeping the files
+	 */
 	private RadioButton keepFiles;
+	
+	/**
+	 * Radio button for just tagging the files
+	 */
 	private RadioButton justTagFiles;
 	
+	/**
+	 * Text fields and radio button for playlist export configuration
+	 */
 	private TextField playListExportPath;
 	private RadioButton playListExport;
 	private Button chooseDirToExportPlayList;
 	private TextField playListName;
 	
+	/**
+	 * The apply button
+	 */
 	private Button applyButton;
+	
+	/**
+	 * The restore button
+	 */
 	private Button restoreButton;
 	
+	/**
+	 * The stage on which the grid pane gets shown
+	 */
 	private Stage propertiesStage;
 	
-	// Toggle group for the radio buttons
-	private final ToggleGroup toggleGroup = new ToggleGroup();
-	
+	/**
+	 * Constructs the profile grid pane
+	 */
 	public ProfileSettings(){
 		// Setting the style sheet
 		this.getStylesheets().add(this.getClass().getResource("css/profile_settings.css").toExternalForm());
@@ -108,12 +148,10 @@ public class ProfileSettings  extends GridPane {
 		keepFiles_Label = new Label("Keep original files:");
 		keepFiles_Label.setId("LabelSmall");
 		keepFiles = new RadioButton();
-		keepFiles.setToggleGroup(toggleGroup);
 		
 		justTagFiles_Label = new Label("Just tag files:");
 		justTagFiles_Label.setId("LabelSmall");
 		justTagFiles = new RadioButton();
-		justTagFiles.setToggleGroup(toggleGroup);
 		
 		CenterGridPane.setConstraints(importSettings_Label, 0, 4, 3, 1);
 		CenterGridPane.setConstraints(keepFiles_Label, 0, 5, 1, 1);
@@ -151,6 +189,9 @@ public class ProfileSettings  extends GridPane {
 		CenterGridPane.setConstraints(playListExportPath, 1, 11, 1, 1);
 		CenterGridPane.setConstraints(chooseDirToExportPlayList, 2, 11, 1, 1);
 		
+		/**
+		 * Restore and apply button
+		 */
 		applyButton = new Button("Apply");
 		applyButton.setOnAction(getButtonApplyEventHandler());
 		
@@ -166,9 +207,15 @@ public class ProfileSettings  extends GridPane {
 				playListExport, playListName_Label, playListName, playListExportPath_Label, playListExportPath,
 				chooseDirToExportPlayList, restoreButton, applyButton);
 		
+		/**
+		 * Reading the properties and adding them to the pane
+		 */
 		readProperties();
 	}
 	
+	/**
+	 * Method to show the profile gridpane
+	 */
 	public void showPropertiesPage() {
 		propertiesStage = new Stage();
 		propertiesStage.setTitle("Settings");
@@ -178,6 +225,9 @@ public class ProfileSettings  extends GridPane {
 		propertiesStage.show();
 	}
 	
+	/**
+	 * Method to read the properties and adding them to the pane
+	 */
 	private void readProperties() {
 		ProfileProperties profile = PropertiesUtils.getProfile();
 		
@@ -195,15 +245,18 @@ public class ProfileSettings  extends GridPane {
 		
 		// Import properties
 		keepFiles.setSelected(profile.isKeepOriginalFiles());
-		keepFiles.setToggleGroup(toggleGroup);
 		justTagFiles.setSelected(profile.isJustTagFiles());
-		justTagFiles.setToggleGroup(toggleGroup);
 		
 		// Playlist properties
 		playListExport.setSelected(profile.isPlayListExport());
 		playListExportPath.setText(profile.getPlayListExportDir());
 	}
 	
+	/**
+	 * Returns the event handler for the apply button
+	 * 
+	 * @return the event handler for the apply button
+	 */
 	private EventHandler<ActionEvent> getButtonApplyEventHandler() {
 		return new EventHandler<ActionEvent>() {
 
@@ -212,7 +265,8 @@ public class ProfileSettings  extends GridPane {
 				ProfileProperties profile = PropertiesUtils.getProfile();
 
 				Boolean proceed;
-
+				
+				// Ask the user if he wants to proceed if music library properties are changed
 				if (!musicLibraryPath.getText().equals(profile.getPathToMusicLibrary())
 						|| differentOrderingMode(profile)) {
 					proceed = showAlert();
@@ -221,6 +275,7 @@ public class ProfileSettings  extends GridPane {
 				}
 
 				if (proceed) {
+					// Writing the properties
 					profile.setPathToMusicLibrary(musicLibraryPath.getText());
 
 					if (orderingMode.getValue().equals(GAA)) {
@@ -239,6 +294,7 @@ public class ProfileSettings  extends GridPane {
 
 					PropertiesUtils.saveProfile();
 				} else {
+					// Restores the settings
 					restoreButton.fire();
 				}
 
@@ -247,6 +303,12 @@ public class ProfileSettings  extends GridPane {
 		};
 	}
 	
+	/**
+	 * Method to determine if a different ordering mode was chosen
+	 * 
+	 * @param profile the original profile
+	 * @return boolean indicating whether a different ordering mode was chosen
+	 */
 	private boolean differentOrderingMode(ProfileProperties profile) {
 		OrderingProperty newProperty;
 		
@@ -265,6 +327,11 @@ public class ProfileSettings  extends GridPane {
 		}
 	}
 	
+	/**
+	 * Returns the event handler for the restore button
+	 * 
+	 * @return the event handler for the restore button
+	 */
 	private EventHandler<ActionEvent> getButtonRestoreEventHandler() {
 		return new EventHandler<ActionEvent>() {
 
@@ -276,6 +343,11 @@ public class ProfileSettings  extends GridPane {
 		};
 	}
 	
+	/**
+	 * Returns the event handler for the set library button
+	 * 
+	 * @return the event handler for the set library button
+	 */
 	private EventHandler<ActionEvent> getButtonSetLibraryEventHandler() {
 		return new EventHandler<ActionEvent>() {
 
@@ -302,6 +374,11 @@ public class ProfileSettings  extends GridPane {
 		};
 	}
 	
+	/**
+	 * Returns the event handler for the set playlist export dir button
+	 * 
+	 * @return the event handler for the playlist export dir button
+	 */
 	private EventHandler<ActionEvent> getButtonSetPlayListDirEventHandler() {
 		return new EventHandler<ActionEvent>() {
 
@@ -331,15 +408,17 @@ public class ProfileSettings  extends GridPane {
 		};
 	}
 	
+	/**
+	 * Method to show a dialog when music library properties are changed
+	 * 
+	 * @return boolean indicating wheter the user wants to proceed
+	 */
 	private boolean showAlert() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
-		String header = "Changing library properties";
 		// Setting the dialog text
 		alert.setTitle(header);
-		String header_text = "You are about to change the library settings. Do you want to continue?";
-		alert.setHeaderText(header_text );
-		
+		alert.setHeaderText(header_text);
 		
 		// Setting the buttons
 		ButtonType buttonContinue = new ButtonType("Continue",ButtonData.OK_DONE);

@@ -2,22 +2,65 @@ package ms5000.properties;
 
 import ms5000.properties.library.OrderingProperty;
 
+/**
+ * Object to bundle the profile properties needed for the music library import
+ */
 public class ProfileProperties {
+	
+	/**
+	 * The path to the music library
+	 */
 	private String pathToMusicLibrary;
+	
+	/**
+	 * The ordering mode of the music library
+	 */
 	private OrderingProperty orderingMode; 
+	
+	/**
+	 * Boolean indicating whether the original files are being kept
+	 */
 	private boolean keepOriginalFiles;
+	
+	/**
+	 * Boolean indicating if the user just wants to tag the imported files
+	 */
 	private boolean justTagFiles;
+	
+	/**
+	 * Boolean indicating if the user wants the playlist to be exported
+	 */
 	private boolean playListExport;
+	
+	/**
+	 * Path to the directory where the playlist gets stored
+	 */
 	private String playListExportDir;
 	
+	/**
+	 * This class is built up to be a singleton, so there can be only one instance of it
+	 */
 	private static ProfileProperties profile = new ProfileProperties();
 	
+	/**
+	 * Private constructor, so the profile properties can't be instantiated somewhere else
+	 */
 	private ProfileProperties(){}
 	
+	/**
+	 * Returns the instance of the profile
+	 * 
+	 * @return an instance of the profile
+	 */
 	public static ProfileProperties getProfile() {
 		return profile;
 	}
 
+	
+	/**
+	 * Getter and Setter methods for this class 
+	 */
+	
 	public String getPathToMusicLibrary() {
 		return pathToMusicLibrary;
 	}

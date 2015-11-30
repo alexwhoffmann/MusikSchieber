@@ -14,10 +14,22 @@ import ms5000.web.httputil.Standard_Response;
 import ms5000.web.httputil.WebService;
 import com.google.gson.Gson;
 
+/**
+ * This class is a helper class to generate the acoustic id of a track
+ * It also calls the corresponding web service and determines the needed musicbrainz 
+ * identifieres 
+ *
+ */
 public class AcoustID {
 	
 	/**
-	 * Chromaprint the file passed in
+	 * Calls the fpcalc tool and builds a Chromaprint object which captures the 
+	 * acoustic id and the duration
+	 * 
+	 * @param file the File from which the acoustic id will be generated
+	 * @return a chromaprint object
+	 * 
+	 * @throws IOException Exception that gets thrown if the file coundn't be red
 	 */
 	public static ChromaPrint chromaprint(File file) throws IOException {
 		String line;
@@ -45,9 +57,12 @@ public class AcoustID {
 		// Returning new ChromaPrint
 		return new ChromaPrint(chromaprint, duration);
 	}
-
+	
 	/**
-	 * get the highest rated result
+	 * Method to get the result with the highest rating 
+	 
+	 * @param results Results received from the acoustId web service
+	 * @return the best result
 	 */
 	private static Result getBestResult(Results results) {
 		if (results.getResults().size() > 0) {
@@ -71,27 +86,39 @@ public class AcoustID {
 	}
 
 	/**
-	 * get the Results object from JSON
+	 * Method to convert a string representing a json object in an actual object 
+	 * @param json the string representing the json object
+	 * @return
 	 */
 	private static Results getResults(String json) {
 		Gson gson = new Gson();
 		Results results = gson.fromJson(json, Results.class);
 		return results;
 	}
-
+	
 	/**
-	 * do a ChromaPrint lookup and result a musicbrainz id
+	 * Queries the acoustId web service and delivers a result containing the identifiers with the 
+	 * highest score
+	 * 
+	 * @param chromaprint a chromaprint object
+	 * @return the result with the highest score
+	 * 
+	 * @throws IOException Exception that gets thrown if the file coundn't be red
 	 */
 	public static Result lookup(ChromaPrint chromaprint) throws IOException {
 		String url = null;
 		
+		// Building the url
 		url = PropertiesUtils.getProperty(WebProperties.ACOUSTID_URL) + "?client="
 				+ PropertiesUtils.getProperty(WebProperties.ACOUSTID_CLIENT) + "&meta=recordings+compress"
 				+ "&fingerprint=" + chromaprint.chromaprint + "&duration="
 				+ chromaprint.duration;
+		
+		// Querying the web service
 		Standard_Response response = (Standard_Response) HTTPUtil.get(url,WebService.ACOUSTID);
 		String json = response.getResponse();
-		System.out.println(json);
+		
+		// Converting the json string to object
 		Results results = getResults(json);
 		
 		/*
@@ -106,7 +133,7 @@ public class AcoustID {
 			
 			if (bestResult != null) {
 				/*
-				 * return the id
+				 * return the best result
 				 */
 				if (bestResult.getRecordings().size() > 0) {
 					return bestResult;

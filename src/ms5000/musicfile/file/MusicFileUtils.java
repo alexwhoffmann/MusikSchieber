@@ -19,9 +19,6 @@ import ms5000.properties.library.OrderingProperty;
 
 /**
  * Helper class for all kinds of operations with music files
- * 
- * @author Robert
- *
  */
 public class MusicFileUtils {
 	/**
@@ -49,24 +46,30 @@ public class MusicFileUtils {
 	
 	/**
 	 * Method for generating the new File name of the music file, after the tag was completed
-	 * @param musicFile
+	 * @param musicFile the music file
 	 * @return new Filename
 	 */
-	public static String generateNewFileName(MusicFile musicFile) {
+	public static void generateNewFileName(MusicFile musicFile) {
 		MusicTag tag = musicFile.getTag();
+		
+		if (!tag.getArtist().equals("") && tag.getArtist() != null && !tag.getTitlename().equals("") && tag.getTitlename() != null) {
+			// Clearing artist and title
+			int track = tag.getTitlenumber();
+			String artist = cleanString(tag.getArtist());
+			String title = cleanString(tag.getTitlename());
+			artist = clearForbiddenCharacters(artist);
+			title = clearForbiddenCharacters(title);
 
-		// Clearing artist and title
-		int track = tag.getTitlenumber();
-		String artist = cleanString(tag.getArtist());
-		String title = cleanString(tag.getTitlename());
-		artist = clearForbiddenCharacters(artist);
-		title = clearForbiddenCharacters(title);
-
-		if (tag.getTitlenumber() != 0) {
-			return track + " - " + artist + " - " + title + "."
-					+ MusicFileType.getFileExtension(musicFile.getFileType());
+			if (tag.getTitlenumber() != 0) {
+				musicFile.setNewFileName(track + " - " + artist + " - " + title + "."
+						+ MusicFileType.getFileExtension(musicFile.getFileType()));
+			} else {
+				musicFile.setNewFileName(artist + " - " + title + "." + MusicFileType.getFileExtension(musicFile.getFileType()));
+			}
+			
+			musicFile.setNewFileNameIsSet(true);
 		} else {
-			return artist + " - " + title + "." + MusicFileType.getFileExtension(musicFile.getFileType());
+			musicFile.setNewFileNameIsSet(false);
 		}
 	}
 	
@@ -182,7 +185,7 @@ public class MusicFileUtils {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("resource")
-	public static void copyMusicFile(MusicFile musicFile, Boolean keep) throws IOException {
+	public static void copyMusicFileToLibrary(MusicFile musicFile, Boolean keep) throws IOException {
 		if (musicFile.isNewFileNameIsSet() && musicFile.isNewFilePathIsSet()) {
 			File newFile_Dest = new File(musicFile.getNewFilePath() + "\\" + musicFile.getNewFileName());
 			FileChannel inChannel = null;
@@ -204,6 +207,37 @@ public class MusicFileUtils {
 			if (!keep) {
 				(new File(musicFile.getOriginalFilePath())).delete();
 			}
+		}
+	}
+	
+	/**
+	 * Method for copying the music file to the new destination
+	 * 
+	 * @param musicFile File to be copied
+	 * @param keep indicates whether the original file gets kept
+	 * @throws IOException
+	 */
+	@SuppressWarnings("resource")
+	public static void copyMusicFileToTmp(MusicFile musicFile, String pathToTmp) throws IOException {
+
+		File newFile_Dest = new File(pathToTmp + "//" + musicFile.getFile().getName());
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
+
+		try {
+			inChannel = new FileInputStream(new File(musicFile.getOriginalFilePath())).getChannel();
+			outChannel = new FileOutputStream(newFile_Dest).getChannel();
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+			
+			musicFile.setOriginalFilePath(newFile_Dest.getAbsolutePath());
+			musicFile.setFile(newFile_Dest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inChannel != null)
+				inChannel.close();
+			if (outChannel != null)
+				outChannel.close();
 		}
 	}
 	
@@ -439,4 +473,29 @@ public class MusicFileUtils {
 
 		return false;
 	}
+	
+	/**
+	 * Method to generate the new file path
+	 * 
+	 * @throws IOException Gets thrown if the directory can't be made
+	 */
+	public static void generateNewFilePath(MusicFile file) throws IOException {
+		MusicTag tag = file.getTag();
+		OrderingProperty orderingProperty = PropertiesUtils.getOrderingProperty();
+		
+		if (!tag.getArtist().equals("") && !tag.getAlbum().equals("")) {
+			if(orderingProperty == OrderingProperty.GAA && !tag.getGenre().equals("") || orderingProperty == OrderingProperty.AA || orderingProperty == OrderingProperty.AAA) {
+				file.setNewFilePathIsSet(true);
+				file.setNewFilePath(MusicFileUtils.makeFileDir(file)); 
+			} else {
+				file.setNewFilePathIsSet(false);
+				file.setNewFilePath("");
+			}
+		} else {
+			file.setNewFilePathIsSet(false);
+			file.setNewFilePath("");
+		}
+	}
+	
+	
 }

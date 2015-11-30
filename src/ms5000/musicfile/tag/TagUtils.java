@@ -16,12 +16,13 @@ import org.jaudiotagger.tag.datatype.Artwork;
 
 import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.file.MusicFileType;
-import ms5000.musicfile.tag.MusicTag.TagState;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.library.OrderingProperty;
 
+/**
+ * Helper class for tag operations
+ */
 public class TagUtils {
-
 
 	/**
 	 * Reads the tag from the music file and stores them in a tag object

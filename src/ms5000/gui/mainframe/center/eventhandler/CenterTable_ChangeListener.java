@@ -7,7 +7,7 @@ import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.musicfile.tag.MusicTag;
-import ms5000.musicfile.tag.MusicTag.Tags;
+import ms5000.musicfile.tag.Tags;
 
 /**
  * This class implements the functionalities which appear if there was a change in center table
