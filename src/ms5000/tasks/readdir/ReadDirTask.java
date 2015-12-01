@@ -66,9 +66,19 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	private ImportMode importMode;
 	
 	/**
+	 * The progress bar
+	 */
+	private ProgressBar bar;
+	
+	/**
 	 * the logger
 	 */
 	private PrintWriter writer;
+	
+	/**
+	 * Boolean indicating whether there were imported files
+	 */
+	private boolean noFilesInDir = false;
 	
 	/**
 	 * Constructor that is used when a drag and drop import occurs
@@ -115,7 +125,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 */
 	private void initProgressBar() {
 		// Getting the ProgressBar
-		ProgressBar bar = Main_Frame.getBorderPane_Center().getProgressBar();
+		bar = Main_Frame.getBorderPane_Center().getProgressBar();
 		
 		// Binding the progress bar to the process
 		bar.progressProperty().unbind();
@@ -190,8 +200,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 					}
 				}
 			}
-			// Alert when no files are loaded
-			// Start the process
+
 			try {
 				musicFiles = importMusicFiles();
 			} catch (Exception e) {
@@ -221,7 +230,6 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 
 		}
 		// Process-End
-		Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import completed");
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -250,104 +258,110 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 
 		// number of imported files
 		int number_of_imported_files = readFiles.size();
-
-		for (int i = 0; i < number_of_imported_files; i++) {
-			if (isCancelled()) {
-				try {
-					this.cancel();
-					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
-					
-					if (importMode != ImportMode.APPEND) {
-						Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
-						Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
-						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
-						Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
-					} else {
-						Main_Frame.getBorderPane_Center().getCentertable().getItems().removeAll(newTableEntries);
-						Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
-						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
+		
+		if (readFiles.size() == 0) {
+			noFilesInDir = true;
+		} else {
+			for (int i = 0; i < number_of_imported_files; i++) {
+				if (isCancelled()) {
+					try {
+						this.cancel();
+						Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("");
+						
+						if (importMode != ImportMode.APPEND) {
+							Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
+							Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
+							Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
+							Main_Frame.getBorderPane_Center().getCentertable().getItems().clear();
+						} else {
+							Main_Frame.getBorderPane_Center().getCentertable().getItems().removeAll(newTableEntries);
+							Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
+							Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
+						}
+					} finally {
+						Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import aborted!");
+						break;
 					}
-				} finally {
-					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import aborted!");
-					break;
-				}
 
-			} else {
-				// Updating the progress bar
-				updateProgress(i + 1, number_of_imported_files);
+				} else {
+					// Updating the progress bar
+					updateProgress(i + 1, number_of_imported_files);
 
-				// Updating the status slider
-				Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
+					// Updating the status slider
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
 
-				try {
-					boolean duplicate = false;
-					
-					if (importMode == ImportMode.CLEAR || importMode == null) {
-						// Adding the music file to the table
-						MusicFile newFile = new MusicFile(readFiles.get(i).getAbsolutePath());  
+					try {
+						boolean duplicate = false;
 						
-						if (newFile.getTag().getStatus() != TagState.MISSINGCRITICAL) {
-							duplicate = MusicFileUtils.checkForDuplicates(newFile);
-						}
-						
-						newFile.setPossibleDuplicate(duplicate);
-						musicFiles.add(newFile.getTag());
-						Main_Frame.getBorderPane_Center().getCentertable().getItems().add(musicFiles.get(i));
-						
-						// Sleeping to wait until table operations are finished
-						this.wait(200);
-						Main_Frame.getBorderPane_Center().getCentertable().refresh();
-					} else {
-						ObservableList<MusicTag> tableEntries = Main_Frame.getBorderPane_Center().getCentertable().getItems();
-						MusicTag newEntry = new MusicFile(readFiles.get(i).getAbsolutePath()).getTag();
-						boolean duplicateInList = false;
-						
-						// Checking if the imported file is already in the table
-						for (MusicTag tableEntry : tableEntries) {
-							// Pre-Check
-							if (tableEntry.getArtist().equals(newEntry.getArtist())
-									&& tableEntry.getAlbum().equals(newEntry.getAlbum())
-									&& tableEntry.getTitlename().equals(newEntry.getTitlename())) {
-								// Exact check
-								if (MusicFileUtils.compareAcousticIds(newEntry.getMusicFile(),
-										tableEntry.getMusicFile()) >= 90.0) {
-									duplicateInList = true;
-								}
-							}
-						}
-
-						if (!duplicateInList) {
-							// Adding the File
-							if (newEntry.getStatus() != TagState.MISSINGCRITICAL) {
-								duplicate = MusicFileUtils.checkForDuplicates(newEntry.getMusicFile());
+						if (importMode == ImportMode.CLEAR || importMode == null) {
+							// Adding the music file to the table
+							MusicFile newFile = new MusicFile(readFiles.get(i).getAbsolutePath());  
+							
+							if (newFile.getTag().getStatus() != TagState.MISSINGCRITICAL) {
+								duplicate = MusicFileUtils.checkForDuplicates(newFile);
 							}
 							
-							newTableEntries.add(newEntry);
-							newEntry.getMusicFile().setPossibleDuplicate(duplicate);
-							
-							Main_Frame.getBorderPane_Center().getCentertable().getItems().add(newEntry);
+							newFile.setPossibleDuplicate(duplicate);
+							musicFiles.add(newFile.getTag());
+							Main_Frame.getBorderPane_Center().getCentertable().getItems().add(musicFiles.get(i));
 							
 							// Sleeping to wait until table operations are finished
 							this.wait(200);
 							Main_Frame.getBorderPane_Center().getCentertable().refresh();
+						} else {
+							ObservableList<MusicTag> tableEntries = Main_Frame.getBorderPane_Center().getCentertable().getItems();
+							MusicTag newEntry = new MusicFile(readFiles.get(i).getAbsolutePath()).getTag();
+							boolean duplicateInList = false;
 							
+							// Checking if the imported file is already in the table
+							for (MusicTag tableEntry : tableEntries) {
+								// Pre-Check
+								if (tableEntry.getArtist().equals(newEntry.getArtist())
+										&& tableEntry.getAlbum().equals(newEntry.getAlbum())
+										&& tableEntry.getTitlename().equals(newEntry.getTitlename())) {
+									// Exact check
+									if (MusicFileUtils.compareAcousticIds(newEntry.getMusicFile(),
+											tableEntry.getMusicFile()) >= 90.0) {
+										duplicateInList = true;
+									}
+								}
+							}
+
+							if (!duplicateInList) {
+								// Adding the File
+								if (newEntry.getStatus() != TagState.MISSINGCRITICAL) {
+									duplicate = MusicFileUtils.checkForDuplicates(newEntry.getMusicFile());
+								}
+								
+								newTableEntries.add(newEntry);
+								newEntry.getMusicFile().setPossibleDuplicate(duplicate);
+								
+								Main_Frame.getBorderPane_Center().getCentertable().getItems().add(newEntry);
+								
+								// Sleeping to wait until table operations are finished
+								this.wait(200);
+								Main_Frame.getBorderPane_Center().getCentertable().refresh();
+								
+							}
 						}
+
+					} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
+							| InvalidAudioFrameException e) {
+						Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + readFiles.get(i).getName());
+						for(int j = 0; i < e.getStackTrace().length ; i ++) {
+							log(e.getStackTrace()[j].toString() + "\n");
+						}
+						closeLog();
+					} catch (Exception e) {
+						log(e.getMessage());
+						Thread.sleep(2000);
 					}
 
-				} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
-						| InvalidAudioFrameException e) {
-					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + readFiles.get(i).getName());
-					for(int j = 0; i < e.getStackTrace().length ; i ++) {
-						log(e.getStackTrace()[j].toString() + "\n");
-					}
-					closeLog();
-				} catch (Exception e) {
-					log(e.getMessage());
-					Thread.sleep(2000);
 				}
 
 			}
-
+			
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import completed");
 		}
 		
 		return musicFiles;
@@ -398,5 +412,9 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 */
 	public ObservableList<MusicTag> getNewTableEntries() {
 		return newTableEntries;
+	}
+
+	public boolean isNoFilesInDir() {
+		return noFilesInDir;
 	}
 }

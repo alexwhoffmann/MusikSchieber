@@ -6,6 +6,8 @@ import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import ms5000.gui.mainframe.Main_Frame;
 
 /**
@@ -38,6 +40,13 @@ public class ReadDirTaskManager {
 	 * The task thread
 	 */
 	private static Thread taskThread;
+	
+	/**
+	 * Alert strings
+	 */
+	private static String alertTitle = "No Music Files!";
+	private static String alertHeader = "It seems that there are no music files in the imported directory.";
+	private static String alertText = "Please choose another directory to proceed.";
 	
 	/**
 	 * Start the task in case a dir gets imported
@@ -111,6 +120,13 @@ public class ReadDirTaskManager {
 				} else if (newState.toString().equals("SUCCEEDED")) {
 					Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon(TaskStatus.SUCCEEDED);
 					taskStatus = null;
+					
+					
+					if(getTask().isNoFilesInDir()) {
+						Main_Frame.getBorderPane_Center().getProgressBar().progressProperty().unbind();
+						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
+						showAlert();
+					}
 				} else if (newState.toString().equals("RUNNING")) {
 					taskStatus = TaskStatus.RUNNING;
 				} else if (newState.toString().equals("FAILED")) {
@@ -173,5 +189,17 @@ public class ReadDirTaskManager {
 	 */
 	public static ReadDirTask getTask() {
 		return task;
+	}
+	
+	/**
+	 * Shows an alert when there are no files in the chosen directory
+	 */
+	private static void showAlert() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(alertTitle);
+		alert.setHeaderText(alertHeader);
+		alert.setContentText(alertText);
+
+		alert.showAndWait();
 	}
 }
