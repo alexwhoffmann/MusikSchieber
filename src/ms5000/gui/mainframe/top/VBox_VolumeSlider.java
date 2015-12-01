@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import ms5000.gui.mainframe.top.sliderbar.SliderBar;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.gui.GuiProperties;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This vbox holds the volume slider
@@ -18,11 +19,6 @@ public class VBox_VolumeSlider extends VBox{
 	 * The volume label
 	 */
 	private final Label volume;
-	
-	/**
-	 * The path to the image icon
-	 */
-	private final String icon_label_volume_path = "file:icons/Volume.png";
 	
 	/**
 	 * The volume slider
@@ -38,7 +34,7 @@ public class VBox_VolumeSlider extends VBox{
 		
 		// Preparing the Label
 		volume = new Label();
-		volume.setGraphic(new ImageView(icon_label_volume_path));
+		volume.setGraphic(new ImageView(PropertiesUtils.getProperty(IconProperties.VOLUME)));
 		
 		// Preparing the Slider
 		try {

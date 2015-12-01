@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import ms5000.properties.gui.GuiProperties;
+import ms5000.properties.icons.IconProperties;
 import ms5000.properties.importprop.ImportProperties;
 import ms5000.properties.library.LibraryProperties;
 import ms5000.properties.library.OrderingProperty;
@@ -27,6 +28,17 @@ public class PropertiesUtils {
 	 * Property profile instance
 	 */
 	private static Properties properties;
+	
+	
+	/**
+	 * Method to return the property value of the received icon property
+	 * 
+	 * @param iconProperty the web property which the user wants to be returned
+	 * @return the value of the icon property
+	 */
+	public static String getProperty(IconProperties iconProperty) {
+		return readProperty(PropertyType.ICON.returnName(), iconProperty.returnName());
+	}
 	
 	/**
 	 * Method to return the property value of the received web property
@@ -271,6 +283,7 @@ public class PropertiesUtils {
 		
 		setProperty(PlayListProperties.PLAYLISTEXPORT, "" + profile.isPlayListExport());
 		setProperty(PlayListProperties.PLAYLISTEXPORTDIR, profile.getPlayListExportDir());
+		setProperty(PlayListProperties.PLAYLISTHEADER,profile.getPlayListHeader());
 	}
 	
 	/**
@@ -281,12 +294,12 @@ public class PropertiesUtils {
 	private static void readPlayListProperties(ProfileProperties profile) {
 		try {
 			profile.setPlayListExport(Boolean.parseBoolean(getProperty(PlayListProperties.PLAYLISTEXPORT)));
-			
 		} catch (NumberFormatException e) {
 			profile.setPlayListExport(true);
 		}
 		
 		profile.setPlayListExportDir(getProperty(PlayListProperties.PLAYLISTEXPORTDIR));
+		profile.setPlayListHeader(getProperty(PlayListProperties.PLAYLISTHEADER));
 	}
 
 	/**

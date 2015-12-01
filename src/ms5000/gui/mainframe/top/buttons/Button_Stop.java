@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_EventHandler;
 import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_MouseEventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the functionalities of the stop button
@@ -14,20 +16,10 @@ import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_MouseEventHandler;
 public class Button_Stop extends Button{
 	
 	/**
-	 * The stop disabled icon
-	 */
-	private final String icon_button_stop_disabled_path = "file:icons/Stop_Disabled.png";;
-	
-	/**
-	 * The stop enabled icon
-	 */
-	private final String icon_button_stop_enabled_path = "file:icons/Stop.png";
-	
-	/**
 	 * The icon images
 	 */
-	private final Image icon_button_stop_enabled;
-	private final Image icon_button_stop_disabled;
+	private final Image icon_button_stop_enabled = new Image(PropertiesUtils.getProperty(IconProperties.STOPENABLED));
+	private final Image icon_button_stop_disabled = new Image(PropertiesUtils.getProperty(IconProperties.STOPDISABLED));
 	
 	/**
 	 * The drop shadow
@@ -44,8 +36,6 @@ public class Button_Stop extends Button{
 		this.getStylesheets().add(this.getClass().getResource("../css/mainframetop_borderpane_top_center.css").toExternalForm());
 		
 		// Styling the button
-		icon_button_stop_disabled = new Image(icon_button_stop_disabled_path);
-		icon_button_stop_enabled = new Image(icon_button_stop_enabled_path);
 		this.setGraphic(new ImageView(icon_button_stop_disabled));
 		this.setShape(new Circle(button_radius));
 		

@@ -17,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.eventhandler.CenterGridPane_ButtonSave_EventHandler;
 import ms5000.gui.mainframe.center.eventhandler.Import_Artwork_EventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the detail view on the right hand side of the main frame
@@ -90,16 +92,11 @@ public class CenterGridPane extends GridPane {
 	/**
 	 * Paths to the icon files and the correspondig image objects
 	 */
-	private final String openFolder_Image_Path = "file:icons/Folder_Open.png";
-	private final String getInfo_Image_Path = "file:icons/question_mark.png";
-	private final String save_Image_Path = "file:icons/save_icon.png";
-	private final String default_Image_Path = "file:icons/artwork_icon.png";
-	private final String open_File_Image_Path = "file:icons/load-image-icon.png";
-	private final Image getInfo_Image = new Image(getInfo_Image_Path);
-	private final Image openFolder_Image = new Image(openFolder_Image_Path);
-	private final Image save_Image = new Image (save_Image_Path);
-	private final Image open_File_Image = new Image (open_File_Image_Path);
-	private final Image artworkDefault = new Image(default_Image_Path);
+	private final Image getInfo_Image = new Image(PropertiesUtils.getProperty(IconProperties.QUESTION_MARK));
+	private final Image openFolder_Image = new Image(PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_SHOW));
+	private final Image save_Image = new Image (PropertiesUtils.getProperty(IconProperties.SAVE));
+	private final Image open_File_Image = new Image (PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_IMPORT));
+	private final Image artworkDefault = new Image(PropertiesUtils.getProperty(IconProperties.ARTWORK));
 	
 	/**
 	 * The default format for the text fields

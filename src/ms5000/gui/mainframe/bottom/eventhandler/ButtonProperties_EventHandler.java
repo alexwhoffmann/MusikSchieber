@@ -12,7 +12,6 @@ public class ButtonProperties_EventHandler implements EventHandler<ActionEvent> 
 	@Override
 	public void handle(ActionEvent event) {
 		// Showing the properties
-		ProfileSettings settings = new ProfileSettings();
-		settings.showPropertiesPage();
+		ProfileSettings.getInstance().showPropertiesPage();
 	}
 }

@@ -5,7 +5,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import ms5000.gui.mainframe.Main_Frame;
@@ -14,6 +13,8 @@ import ms5000.gui.mainframe.center.eventhandler.CenterTable_EventHandler_DragNDr
 import ms5000.gui.mainframe.center.eventhandler.CenterTable_EventHandler_KeyBoard;
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.TagState;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the main features of the table view 
@@ -27,12 +28,6 @@ public class CenterTable extends TableView<MusicTag> {
 	private TableColumn<MusicTag, String> albumCol;
 	private TableColumn<MusicTag, String> trackCol;
 	private TableColumn<MusicTag, String> genreCol;
-	
-	/**
-	 * Path and image of the placeholder icon
-	 */
-	private final String placeholder_icon = "file:icons/green_music_icon_table.png";
-	private final Image placeHolder = new Image(placeholder_icon);
 	
 	/**
 	 * Strings to style the row's
@@ -72,7 +67,7 @@ public class CenterTable extends TableView<MusicTag> {
 		
 		// Setting the table properties
 		this.setColumnResizePolicy(CenterTable.CONSTRAINED_RESIZE_POLICY);
-		this.setPlaceholder(new ImageView(placeHolder));
+		this.setPlaceholder(new ImageView(PropertiesUtils.getProperty(IconProperties.TABLE_EMPTY_SHOW)));
 		this.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		// Adding the event handlers

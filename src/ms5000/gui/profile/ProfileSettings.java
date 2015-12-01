@@ -18,7 +18,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
@@ -28,18 +27,14 @@ import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.properties.ProfileProperties;
 import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 import ms5000.properties.library.OrderingProperty;
+import ms5000.properties.playlist.Header;
 
 /**
  * This class implements the profile view after pressing the settings button
  */
 public class ProfileSettings extends GridPane {
-	/**
-	 * The open folder icon
-	 */
-	private final String openFolder_Image_Path = "file:icons/Folder_Open.png";
-	private final Image openFolder_Image = new Image(openFolder_Image_Path);
-	
 	/**
 	 * Dialog texts
 	 */
@@ -59,6 +54,7 @@ public class ProfileSettings extends GridPane {
 	private Label playListExportPath_Label;
 	private Label playListExport_Label;
 	private Label playListName_Label;
+	private Label playListHeader;
 	
 	/**
 	 * Music library text field and open folder button
@@ -92,6 +88,20 @@ public class ProfileSettings extends GridPane {
 	private Button chooseDirToExportPlayList;
 	private TextField playListName;
 	
+	private ChoiceBox<String> playListHeaderMode;
+	private final String germanHeader = "German Header";
+	private final String englishHeader = "English Header";
+	
+	/**
+	 * Instance of this
+	 */
+	private static ProfileSettings profileSettings = new ProfileSettings();
+	
+	/**
+	 * Scene of the properties settings
+	 */
+	private Scene scene = new Scene(this);
+	
 	/**
 	 * The apply button
 	 */
@@ -110,7 +120,7 @@ public class ProfileSettings extends GridPane {
 	/**
 	 * Constructs the profile grid pane
 	 */
-	public ProfileSettings(){
+	private ProfileSettings(){
 		// Setting the style sheet
 		this.getStylesheets().add(this.getClass().getResource("css/profile_settings.css").toExternalForm());
 		this.getStyleClass().add("grid");
@@ -132,7 +142,7 @@ public class ProfileSettings extends GridPane {
 		
 		chooseDirToMusicLibrary = new Button();
 		chooseDirToMusicLibrary.setId("OpenFolderButton");
-		chooseDirToMusicLibrary.setGraphic(new ImageView(openFolder_Image));
+		chooseDirToMusicLibrary.setGraphic(new ImageView(PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_IMPORT)));
 		chooseDirToMusicLibrary.setOnAction(getButtonSetLibraryEventHandler());
 		
 		CenterGridPane.setConstraints(musicLibrarySettings_Label, 0, 0, 3, 1);
@@ -177,8 +187,11 @@ public class ProfileSettings extends GridPane {
 		playListExportPath.setEditable(false);
 		chooseDirToExportPlayList = new Button();
 		chooseDirToExportPlayList.setId("OpenFolderButton");
-		chooseDirToExportPlayList.setGraphic(new ImageView(openFolder_Image));
+		chooseDirToExportPlayList.setGraphic(new ImageView(PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_IMPORT)));
 		chooseDirToExportPlayList.setOnAction(getButtonSetPlayListDirEventHandler());
+		playListHeader = new Label("Playlist Header-Language");
+		playListHeaderMode = new ChoiceBox<String>();
+		playListHeaderMode.setItems(FXCollections.observableArrayList(germanHeader, englishHeader));	
 		
 		CenterGridPane.setConstraints(playlistSettings_Label, 0, 8, 3, 1);
 		CenterGridPane.setConstraints(playListExport_Label, 0, 9, 1, 1);
@@ -188,6 +201,8 @@ public class ProfileSettings extends GridPane {
 		CenterGridPane.setConstraints(playListExportPath_Label, 0, 11, 1, 1);
 		CenterGridPane.setConstraints(playListExportPath, 1, 11, 1, 1);
 		CenterGridPane.setConstraints(chooseDirToExportPlayList, 2, 11, 1, 1);
+		CenterGridPane.setConstraints(playListHeader, 0, 12, 1, 1);
+		CenterGridPane.setConstraints(playListHeaderMode, 1, 12, 1, 1);
 		
 		/**
 		 * Restore and apply button
@@ -205,7 +220,7 @@ public class ProfileSettings extends GridPane {
 				chooseDirToMusicLibrary, orderingMode_Label, orderingMode, importSettings_Label, keepFiles_Label,
 				keepFiles, justTagFiles_Label, justTagFiles, playlistSettings_Label, playListExport_Label,
 				playListExport, playListName_Label, playListName, playListExportPath_Label, playListExportPath,
-				chooseDirToExportPlayList, restoreButton, applyButton);
+				chooseDirToExportPlayList, restoreButton, applyButton,playListHeader,playListHeaderMode);
 		
 		/**
 		 * Reading the properties and adding them to the pane
@@ -217,9 +232,14 @@ public class ProfileSettings extends GridPane {
 	 * Method to show the profile gridpane
 	 */
 	public void showPropertiesPage() {
+		/**
+		 * Reading the properties and adding them to the pane
+		 */
+		readProperties();
+		
 		propertiesStage = new Stage();
 		propertiesStage.setTitle("Settings");
-		Scene scene = new Scene(this);
+
 		propertiesStage.initModality(Modality.APPLICATION_MODAL);
 		propertiesStage.setScene(scene);
 		propertiesStage.show();
@@ -241,6 +261,12 @@ public class ProfileSettings extends GridPane {
 			orderingMode.setValue(AA);
 		} else {
 			orderingMode.setValue(AAA);
+		}
+		
+		if (profile.getPlayListHeader().contains("german")) {
+			playListHeaderMode.setValue(germanHeader);
+		} else {
+			playListHeaderMode.setValue(englishHeader);
 		}
 		
 		// Import properties
@@ -285,7 +311,13 @@ public class ProfileSettings extends GridPane {
 					} else {
 						profile.setOrderingMode(OrderingProperty.AAA);
 					}
-
+					
+					if (playListHeaderMode.getValue().toLowerCase().contains("english")) {
+						profile.setPlayListHeader(Header.ENGLISH.toString());
+					} else {
+						profile.setPlayListHeader(Header.GERMAN.toString());
+					}
+					
 					profile.setKeepOriginalFiles(keepFiles.isSelected());
 					profile.setJustTagFiles(justTagFiles.isSelected());
 
@@ -438,5 +470,21 @@ public class ProfileSettings extends GridPane {
 		}
 	}
 	
+	/**
+	 * Returns the name of the playlist
+	 * 
+	 * @return the name of the playlist
+	 */
+	public String getPlaListyName() {
+		return this.playListName.getText();
+	}
 	
+	/**
+	 * Returns an instance of the Profile Settings
+	 * 
+	 * @return instance of the Profile Settings
+	 */
+	public static ProfileSettings getInstance() {
+		return profileSettings;
+	}
 }

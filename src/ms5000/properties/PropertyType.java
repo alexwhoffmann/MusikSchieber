@@ -27,7 +27,12 @@ public enum PropertyType {
 	/**
 	 * Music library import properties
 	 */
-	IMPORT("import.properties");
+	IMPORT("import.properties"),
+	
+	/**
+	 * Icon file path properties
+	 */
+	ICON("icon.properties");
 	
 	/**
 	 * The property file name

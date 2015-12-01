@@ -38,6 +38,12 @@ public class ProfileProperties {
 	private String playListExportDir;
 	
 	/**
+	 * Path to the directory where the playlist gets stored
+	 */
+	private String playListHeader;
+	
+	
+	/**
 	 * This class is built up to be a singleton, so there can be only one instance of it
 	 */
 	private static ProfileProperties profile = new ProfileProperties();
@@ -112,7 +118,12 @@ public class ProfileProperties {
 	public static void setProfile(ProfileProperties profile) {
 		ProfileProperties.profile = profile;
 	}
-	
-	
-	
+
+	public String getPlayListHeader() {
+		return playListHeader;
+	}
+
+	public void setPlayListHeader(String playListHeader) {
+		this.playListHeader = playListHeader;
+	}
 }

@@ -10,6 +10,8 @@ import ms5000.audio.player.AudioPlayer;
 import ms5000.audio.player.PlayerStatus;
 import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_EventHandler;
 import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_MouseEventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the functionalities of the start button
@@ -17,32 +19,12 @@ import ms5000.gui.mainframe.top.eventhandler.ButtonStartStop_MouseEventHandler;
 public class Button_Start extends Button{
 	
 	/**
-	 * The start disabled icon
-	 */
-	private final String icon_button_start_disabled_path = "file:icons/Play_Disabled.png";
-	
-	/**
-	 * The start enabled icon
-	 */
-	private final String icon_button_start_enabled_path = "file:icons/Play.png";
-	
-	/**
-	 * The pause enabled icon
-	 */
-	private final String icon_button_pause_enabled_path = "file:icons/Pause.png";
-	
-	/**
-	 * The pause disabled icon
-	 */
-	private final String icon_button_pause_disabled_path = "file:icons/Pause_Disabled.png";
-	
-	/**
 	 * The icon images
 	 */
-	private final Image icon_button_start_disabled;
-	private final Image icon_button_pause_disabled;
-	private final Image icon_button_start_enabled;
-	private final Image icon_button_pause_enabled;
+	private final Image icon_button_play_disabled = new Image(PropertiesUtils.getProperty(IconProperties.PLAYDISABLED));
+	private final Image icon_button_pause_disabled = new Image(PropertiesUtils.getProperty(IconProperties.PAUSEDISABLED));
+	private final Image icon_button_play_enabled= new Image(PropertiesUtils.getProperty(IconProperties.PLAYENABLED));
+	private final Image icon_button_pause_enabled= new Image(PropertiesUtils.getProperty(IconProperties.PAUSEENABLED));
 	
 	/**
 	 * The drop shadow
@@ -61,13 +43,8 @@ public class Button_Start extends Button{
 		// Applying the style sheet
 		this.getStylesheets().add(this.getClass().getResource("../css/mainframetop_borderpane_top_center.css").toExternalForm());
 		
-		icon_button_start_enabled = new Image(icon_button_start_enabled_path);
-		icon_button_pause_enabled = new Image(icon_button_pause_enabled_path);
-		icon_button_start_disabled = new Image(icon_button_start_disabled_path);
-		icon_button_pause_disabled = new Image(icon_button_pause_disabled_path);
-		
 		// Styling the button
-		this.setGraphic(new ImageView(icon_button_start_disabled));
+		this.setGraphic(new ImageView(icon_button_play_disabled));
 		this.setShape(new Circle(button_radius));
 		
 		// Applying the eventhandler
@@ -85,10 +62,10 @@ public class Button_Start extends Button{
 			this.setGraphic(new ImageView(icon_button_pause_enabled));
 			shapeButtonRectangle();
 		} else if (AudioPlayer.getInstance().getStatus() == PlayerStatus.PAUSED && !stopPressed) {
-			this.setGraphic(new ImageView(icon_button_start_enabled));
+			this.setGraphic(new ImageView(icon_button_play_enabled));
 			shapeButtonCircle();
 		} else if (stopPressed) {
-			this.setGraphic(new ImageView(icon_button_start_disabled));
+			this.setGraphic(new ImageView(icon_button_play_disabled));
 			shapeButtonCircle();
 		}
 	}
@@ -116,7 +93,7 @@ public class Button_Start extends Button{
 		if (eventType.equals("MOUSE_ENTERED")) {
 			this.setEffect(shadow);
 			if (AudioPlayer.getInstance().getStatus() != PlayerStatus.PLAYING) {
-				this.setGraphic(new ImageView(icon_button_start_enabled));
+				this.setGraphic(new ImageView(icon_button_play_enabled));
 				shapeButtonCircle();
 			} else if (AudioPlayer.getInstance().getStatus() == PlayerStatus.PLAYING) {
 				this.setGraphic(new ImageView(icon_button_pause_enabled));
@@ -126,7 +103,7 @@ public class Button_Start extends Button{
 				this.setEffect(null);
 				
 				if (AudioPlayer.getInstance().getStatus() != PlayerStatus.PLAYING) {
-					this.setGraphic(new ImageView(icon_button_start_disabled));
+					this.setGraphic(new ImageView(icon_button_play_disabled));
 					shapeButtonCircle();
 				} else {
 					this.setGraphic(new ImageView(icon_button_pause_disabled));

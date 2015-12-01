@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import ms5000.gui.mainframe.top.eventhandler.ButtonAdd_EventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 import ms5000.tasks.readdir.ReadDirTaskManager;
 import ms5000.tasks.readdir.ReadDirTaskManager.TaskStatus;
 
@@ -14,27 +16,13 @@ import ms5000.tasks.readdir.ReadDirTaskManager.TaskStatus;
  * This class implements the functionalities of the add button
  */
 public class Button_Add extends Button{
-	/**
-	 * The disabled icon path
-	 */
-	private final String icon_button_add_disabled_path = "file:icons/Add_Disabled.png";
-	
-	/**
-	 * The enabled icon path
-	 */
-	private final String icon_button_add_enabled_path = "file:icons/Add.png";
-	
-	/**
-	 * The cancel icon path
-	 */
-	private final String icon_button_add_cancel_path = "file:icons/cancel_icon.png";
 	
 	/**
 	 * The icon images
 	 */
-	private final Image icon_button_add_cancel;
-	private final Image icon_button_add_disabled;
-	private final Image icon_button_add_enabled;
+	private final Image icon_button_add_cancel = new Image(PropertiesUtils.getProperty(IconProperties.CANCELIMPORT));
+	private final Image icon_button_add_disabled = new Image(PropertiesUtils.getProperty(IconProperties.ADDDISABLED));
+	private final Image icon_button_add_enabled = new Image(PropertiesUtils.getProperty(IconProperties.ADDENABLED));
 	
 	/**
 	 * The drop shadow
@@ -63,10 +51,6 @@ public class Button_Add extends Button{
 		this.setOnMouseExited(eventHandler);
 		this.setOnMouseClicked(eventHandler);
 		
-		// Instantiating the images and the drop shadow
-		icon_button_add_disabled = new Image(icon_button_add_disabled_path);
-		icon_button_add_enabled = new Image(icon_button_add_enabled_path);
-		icon_button_add_cancel = new Image(icon_button_add_cancel_path);
 		shadow = new DropShadow();
 		
 		// Applying the icons and shaping the button

@@ -1,24 +1,16 @@
 package ms5000.gui.mainframe.bottom.buttons;
 
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import ms5000.gui.mainframe.bottom.eventhandler.ButtonProperties_EventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the functionalities of the button to show the properties
  */
 public class Button_Properties extends Button{
-	/**
-	 * The icon path
-	 */
-	private final String icon_button_properties_path = "file:icons/properties_icon.png";
-	
-	/**
-	 * The icon image
-	 */
-	private final Image icon_button_properties;
 	
 	/**
 	 * The radius of the button
@@ -34,8 +26,7 @@ public class Button_Properties extends Button{
 		this.setId("button");
 		
 		// Adding the icon
-		icon_button_properties = new Image(icon_button_properties_path);
-		ImageView view = new ImageView(icon_button_properties);
+		ImageView view = new ImageView(PropertiesUtils.getProperty(IconProperties.PROPERTIES));
 		this.setPrefSize(button_radius, button_radius);
 		view.setFitWidth(70);
 		view.setFitHeight(70);

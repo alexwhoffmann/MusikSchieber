@@ -17,10 +17,13 @@ import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterTable;
+import ms5000.gui.profile.ProfileSettings;
 import ms5000.musicfile.file.MusicFile;
 import ms5000.musicfile.file.MusicFileUtils;
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.TagUtils;
+import ms5000.playlist.generator.Playlist;
+import ms5000.playlist.generator.PlaylistGenerator;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.library.LibraryProperties;
 
@@ -78,6 +81,10 @@ public class ImportFilesTask extends Task<Void> {
 		// Copy files to the new directory
 		copyFilesToLibrary();
 		
+		if (PropertiesUtils.getProfile().isPlayListExport()) {
+			buildPlayList();
+		}
+		
 		if(!PropertiesUtils.getProfile().isKeepOriginalFiles()) {
 			for (File file : originalFiles) {
 				File parentDir = file.getParentFile();
@@ -97,6 +104,21 @@ public class ImportFilesTask extends Task<Void> {
 		return null;
 	}
 
+
+	private void buildPlayList() {
+		Playlist playlist = new Playlist(ProfileSettings.getInstance().getPlaListyName());
+		
+		for (MusicFile musicFile : tableFiles) {
+			playlist.add(musicFile);
+		}
+		
+		try {
+			PlaylistGenerator.generate(playlist);
+		} catch (IOException e) {
+			// Log...
+			log(e.getLocalizedMessage());
+		}
+	}
 
 	private void calculateProgressSteps() {
 		progress = 0;

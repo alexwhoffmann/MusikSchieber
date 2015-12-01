@@ -13,8 +13,13 @@ public enum PlayListProperties {
 	/**
 	 * The export directory property
 	 */
-	PLAYLISTEXPORTDIR("playlist_dir");
-
+	PLAYLISTEXPORTDIR("playlist_dir"),
+	
+	/**
+	 * The header of the playlist
+	 */
+	PLAYLISTHEADER("playlist_header");
+	
 	/**
 	 * The property name in the file
 	 */

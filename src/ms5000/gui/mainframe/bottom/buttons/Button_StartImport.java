@@ -5,15 +5,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import ms5000.gui.mainframe.bottom.eventhandler.ButtonStartImport_EventHandler;
+import ms5000.properties.PropertiesUtils;
+import ms5000.properties.icons.IconProperties;
 
 /**
  * This class implements the functionalities of the button to start the music library import
  */
 public class Button_StartImport extends Button{
-	/**
-	 * The icon path
-	 */
-	private final String icon_button_start_import_path = "file:icons/start_import_button.png";
 	
 	/**
 	 * The icon image
@@ -34,7 +32,7 @@ public class Button_StartImport extends Button{
 		this.setId("button");
 		
 		// Setting the button image
-		icon_button_start_import = new Image(icon_button_start_import_path);
+		icon_button_start_import = new Image(PropertiesUtils.getProperty(IconProperties.START_IMPORT));
 		ImageView view = new ImageView(icon_button_start_import);
 		view.setFitWidth(70);
 		view.setFitHeight(70);
