@@ -218,9 +218,41 @@ public class MusicFileUtils {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("resource")
-	public static void copyMusicFileToTmp(MusicFile musicFile, String pathToTmp) throws IOException {
+	public static void copyMusicFileToOther(MusicFile musicFile, String newDest) throws IOException {
 
-		File newFile_Dest = new File(pathToTmp + "//" + musicFile.getFile().getName());
+		File newFile_Dest = new File(newDest + "//" + musicFile.getFile().getName());
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
+
+		try {
+			inChannel = new FileInputStream(new File(musicFile.getOriginalFilePath())).getChannel();
+			outChannel = new FileOutputStream(newFile_Dest).getChannel();
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+			
+			musicFile.setOriginalFilePath(newFile_Dest.getAbsolutePath());
+			musicFile.setFile(newFile_Dest);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inChannel != null)
+				inChannel.close();
+			if (outChannel != null)
+				outChannel.close();
+		}
+	}
+	
+	/**
+	 * Method for copying the music file to the new destination
+	 * 
+	 * @param musicFile File to be copied
+	 * @param keep indicates whether the original file gets kept
+	 * @param the new file name
+	 * @throws IOException
+	 */
+	@SuppressWarnings("resource")
+	public static void copyMusicFileToOther(MusicFile musicFile, String newDest, String newFileName) throws IOException {
+
+		File newFile_Dest = new File(newDest + "//" + newFileName);
 		FileChannel inChannel = null;
 		FileChannel outChannel = null;
 

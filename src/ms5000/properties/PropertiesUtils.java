@@ -198,9 +198,12 @@ public class PropertiesUtils {
 	 */
 	private static void writeProperty(String propertyType, String propertyName, String value) {
 		ArrayList<String[]> list = new ArrayList<String[]>();
+		ArrayList<String[]> newList = new ArrayList<String[]>();
+		
 		BufferedReader br = null;
 		PrintWriter printWriter = null;
-
+		
+		
 		try {
 			br = new BufferedReader(new FileReader(new File(propertyType)));
 			
@@ -224,14 +227,38 @@ public class PropertiesUtils {
 					}
 					
 					// Writing the new value to the array
-					entry[1] = value;
+					if (entry.length == 1) {
+						// Case: no value was stored
+						String[] newEntry = new String[2];
+						
+								
+						// New entry object		
+						newEntry[0] = propertyName;
+						newEntry[1] = value;
+						
+						newList.add(newEntry);
+					} else {
+						entry[1] = value;
+						newList.add(entry);
+					}
+				} else {
+					if (entry.length == 1) {
+						String[] newEntry = new String[2];
+						newEntry[0] = entry[0];
+						newEntry[1] = "";
+						
+						newList.add(newEntry);
+					} else {
+						newList.add(entry);
+					}
 				}
 			}
+			
 			
 			// Writing in the file
 			printWriter = new PrintWriter(new File(propertyType));
 
-			for (String[] entry : list) {
+			for (String[] entry : newList) {
 				printWriter.println(entry[0] + "=" + entry[1]);
 			}
 			printWriter.close();

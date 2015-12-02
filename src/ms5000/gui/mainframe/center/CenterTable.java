@@ -37,6 +37,10 @@ public class CenterTable extends TableView<MusicTag> {
 	private final String missingWeak = "-fx-background-color: rgb(255, 255, 229,0.45)";
 	private final String duplicate = "-fx-background-color: rgb(179, 255, 179,0.3)";
 	
+	/**
+	 * Boolean indicating whether the list holds entries with incomplete tags
+	 */
+	private boolean inCompleteTags = false;
 	
 	@SuppressWarnings("unchecked")
 	public CenterTable() {
@@ -119,10 +123,21 @@ public class CenterTable extends TableView<MusicTag> {
 		                        	} else if (tag.getStatus() == TagState.MISSINGWEAKINFOS) {
 		                        		this.setStyle(missingWeak);
 		                        	}
-		                            
 		                            setText(item);
+		                            checkEntries();
 		                        }
 		                        
+		                    }
+		                    
+		                    private void checkEntries() {
+		                    	for (MusicTag tag : Main_Frame.getBorderPane_Center().getCentertable().getItems()) {
+		                    		if (tag.getStatus() == TagState.MISSINGCRITICAL) {
+		                    			inCompleteTags = true;
+		                    			break;
+		                    		} else {
+		                    			inCompleteTags = false;
+		                    		}
+		                    	}
 		                    }
 		                };
 
@@ -132,5 +147,14 @@ public class CenterTable extends TableView<MusicTag> {
 		
 		
 		return cellFactory;
+	}
+	
+	/**
+	 * Returns the boolean indicating whether the list holds entries with incomplete tags
+	 * 
+	 * @return boolean indicating whether the list holds entries with incomplete tags
+	 */
+	public boolean isInCompleteTags() {
+		return inCompleteTags;
 	}
 }

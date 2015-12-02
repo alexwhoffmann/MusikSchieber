@@ -28,17 +28,43 @@ import ms5000.properties.PropertiesUtils;
 import ms5000.properties.library.LibraryProperties;
 
 /**
- * This class captures the main functionality of the import process
+ * This class captures the main functionality of the process used to tag files without extracting them to
+ * the users music library
  */
-public class ImportFilesTask extends Task<Void> {
-	
+public class TagFilesTask extends Task<Void> {
+	/**
+	 * The array list containing the files from the table
+	 */
 	private ArrayList<MusicFile> tableFiles;
+	
+	/**
+	 * The array list containing the original file objects
+	 */
 	private ArrayList<File> originalFiles;
+	
+	/**
+	 * The progress steps
+	 */
 	private int progressSteps = 0;
+	
+	/**
+	 * The overall progress steps
+	 */
 	private int progress = 0;
-	private static PrintWriter writer;
+	
+	/**
+	 * The temporal directory to store the files during tagging and renaming
+	 */
 	private File tmpDir;
 	
+	/**
+	 * The writer for logging
+	 */
+	private static PrintWriter writer;
+	
+	/**
+	 * Initializing the writer
+	 */
 	static {
 		try {
 			writer = new PrintWriter("log.txt", "UTF-8");
@@ -49,10 +75,16 @@ public class ImportFilesTask extends Task<Void> {
 		}
 	}
 	
-	public ImportFilesTask() {
+	/**
+	 * The constructor
+	 */
+	public TagFilesTask() {
 		initProgressBar();
 	}
 	
+	/**
+	 * Initialization of the used progressbar
+	 */
 	private void initProgressBar() {
 		// Getting the ProgressBar
 		ProgressBar bar = Main_Frame.getBorderPaneBottom().getProgressBar();
@@ -65,12 +97,13 @@ public class ImportFilesTask extends Task<Void> {
 		tableFiles = new ArrayList<MusicFile>();
 		originalFiles = new ArrayList<File>();
 		
-		// Read Files from table and store the in a arraylist
+		// Read Files from table and store the in a array list
 		readFilesFromTable();
 		
 		// Calculating the progress steps
 		calculateProgressSteps();
 		
+		// Status message
 		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Tagging files");
 		
 		// Copy Files to temporary folder
@@ -79,142 +112,153 @@ public class ImportFilesTask extends Task<Void> {
 		
 		pause(200);
 		
-		// Copy files to the new directory
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Moving files to library");
-		copyFilesToLibrary();
+		// Status message
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Deleting original files");
 		
-		pause(200);
+		int index = 0;
+		for (int i = 0; i < originalFiles.size(); i++) {
+			Main_Frame.getBorderPaneBottom()
+					.setStatusTextSmall("Changing File " + index + " from " + tableFiles.size());
+
+			// Path to the parent dir of the file
+			String pathToParent = originalFiles.get(i).getParent();
+			
+			// Setting the new File name
+			String newFileName = tableFiles.get(i).getNewFileName();
+
+			// Deleting the old file
+			originalFiles.get(i).delete();
+
+			// Pushing the new File to the directory
+			try {
+				MusicFileUtils.copyMusicFileToOther(tableFiles.get(i), pathToParent, newFileName);
+			} catch (IOException e) {
+				// Log...
+				log(e.getLocalizedMessage());
+				closeLog();
+			}
+
+			updateProgress(1);
+			index++;
+
+			Main_Frame.getBorderPaneBottom().setStatusTextSmall("");
+		}
 		
+		// This box gets executed if the user wants to have a playlist exported
 		if (PropertiesUtils.getProfile().isPlayListExport()) {
 			Main_Frame.getBorderPaneBottom().setStatusTextLarge("Generating Playlist");
 			buildPlayList();
 			pause(200);
 		}
 		
-		if(!PropertiesUtils.getProfile().isKeepOriginalFiles()) {
-			Main_Frame.getBorderPaneBottom().setStatusTextLarge("Deleting original files");
-			
-			int index = 0;
-			for (File file : originalFiles) {
-				Main_Frame.getBorderPaneBottom().setStatusTextSmall("Moving File " + index + " from " + tableFiles.size());
-				
-				File parentDir = file.getParentFile();
-				file.delete();
-				
-				if(parentDir.listFiles().length == 0) {
-					parentDir.delete();
-				}
-				
-				updateProgress(1);
-				index++;
-			}
-			
-			Main_Frame.getBorderPaneBottom().setStatusTextSmall("");
-		}
-		
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Music Library Import Complete");
-		pause(1000);
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("");
-		
+		// Removing the tmp dir
 		tmpDir.delete();
 		closeLog();
+
+		// Updating the status messages
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Tagging Files Complete");
+		pause(1000);
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge("");
 		
 		return null;
 	}
 	
+	/**
+	 * This method is used to pause these thread
+	 * 
+	 * @param millis Milliseconds the thread gets paused
+	 */
 	private void pause(int millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Log...
+			log(e.getLocalizedMessage());
+			closeLog();
 		}
 	}
 
+	/**
+	 * Method used for building the playlist
+	 */
 	private void buildPlayList() {
 		Playlist playlist = new Playlist(ProfileSettings.getInstance().getPlaListyName());
 		
+		// Adding the files to the playlist
 		for (MusicFile musicFile : tableFiles) {
 			playlist.add(musicFile);
 		}
 		
 		try {
+			// generating the playlist
 			PlaylistGenerator.generate(playlist);
 		} catch (IOException e) {
 			// Log...
 			log(e.getLocalizedMessage());
+			closeLog();
 		}
 		
+		// Updating the progress
 		updateProgress(10);
 	}
-
+	
+	/**
+	 * This method calculates the overall progress steps
+	 */
 	private void calculateProgressSteps() {
 		progress = 0;
-		
-		if(PropertiesUtils.getProfile().isKeepOriginalFiles()) {
-			progressSteps = tableFiles.size()*3;
-		} else {
-			progressSteps = tableFiles.size()*4;
-		}
+		progressSteps = tableFiles.size()*3;
 		
 		if (PropertiesUtils.getProfile().isPlayListExport()) {
 			progressSteps += 10;
 		}
 	}
 	
+	/**
+	 * This method updates the progress 
+	 * 
+	 * @param steps amount of steps the progress gets updated
+	 */
 	private void updateProgress(int steps) {
 		progress += steps;
 		super.updateProgress(progress, progressSteps);
 		
 	}
 
-	private void copyFilesToLibrary() {
-		
-		int index = 0;
-		for (MusicFile file : tableFiles) {
-			try {
-				Main_Frame.getBorderPaneBottom()
-						.setStatusTextSmall("Moving File " + index + " from " + tableFiles.size());
-				MusicFileUtils.copyMusicFileToLibrary(file, false);
-				updateProgress(1);
-				index++;
-			} catch (IOException e) {
-				log(e.getLocalizedMessage());
-			}
-		}
-		Main_Frame.getBorderPaneBottom().setStatusTextSmall("");
-	}
-
+	/**
+	 * This method makes sure that the single received music file gets tagged and 
+	 * renamed
+	 * 
+	 * @param musicFile the musicFile that gets tagged and renamed
+	 */
 	private void tagFile(MusicFile musicFile) {
-
 		MusicFileUtils.generateNewFileName(musicFile);
-
-		try {
-			MusicFileUtils.generateNewFilePath(musicFile);
-		} catch (IOException e1) {
-			log(e1.getLocalizedMessage());
-		}
-
+		
 		try {
 			TagUtils.commitTagToFile(musicFile, musicFile.getTag());
-			updateProgress(1);
 		} catch (CannotReadException | IOException | TagException | ReadOnlyFileException | InvalidAudioFrameException
 				| CannotWriteException e) {
 			// Log...
 			log(e.getLocalizedMessage());
+			closeLog();
 		}
 
 	}
-
+	
+	/**
+	 * This method moves the table files to the tmp folder in the music library
+	 * After that the files get tagged and renamed
+	 */
 	private void moveToTmpAndTag() {
 		// Creating the temporary folder
 		String pathToMusicLibrary = PropertiesUtils.getProperty(LibraryProperties.FILEPATH);
 		tmpDir = new File(pathToMusicLibrary + "/" + "tmp"); 
 		tmpDir.mkdirs();
 		
-		// pushing the music files to the temporary directory
+		// Pushing the music files to the temporary directory
 		int index = 1;
 		for (MusicFile file : tableFiles) {
+			// Updating the small status text
 			Main_Frame.getBorderPaneBottom().setStatusTextSmall("Tagging File " + index + " from " + tableFiles.size());
 			
 			try {
@@ -235,20 +279,34 @@ public class ImportFilesTask extends Task<Void> {
 		Main_Frame.getBorderPaneBottom().setStatusTextSmall("");
 	}
 
-
+	/**
+	 * Method to read the files from the table and storing them in 
+	 * the array list table files and original files
+	 */
 	private void readFilesFromTable() {
+		// Getting the table
 		CenterTable table = Main_Frame.getBorderPane_Center().getCentertable();
 		
+		// Storing the file objects
 		for(MusicTag tag : table.getItems()) {
+			// The array list have the same order
 			tableFiles.add(tag.getMusicFile());
 			originalFiles.add(tag.getMusicFile().getFile());
 		}
 	}
 	
+	/**
+	 * Method used for logging the message e
+	 * 
+	 * @param e message that gets logged
+	 */
 	private void log(String e) {
 		writer.append(e);
 	}
 	
+	/**
+	 * Method for closing the log
+	 */
 	private void closeLog() {
 		writer.close();
 	}

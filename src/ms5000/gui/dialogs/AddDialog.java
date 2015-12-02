@@ -70,7 +70,7 @@ public class AddDialog extends Alert{
 		// Showing the dialog and waiting for the answer
 		Optional<ButtonType> result = this.showAndWait();
 		
-		// Determining the choosen import Mode
+		// Determining the chosen import Mode
 		if (result.get() == buttonAppend){
 		    importMode = ImportMode.APPEND;
 		} else if (result.get() == buttonClear) {

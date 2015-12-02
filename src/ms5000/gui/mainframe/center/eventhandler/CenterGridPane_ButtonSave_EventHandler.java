@@ -68,6 +68,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 				if (checkNumbers(discNumber, totalDiscs, totalTitles, titelNumber, year) && discNumberOk && titleNumberOk) {
 					if (centerTable.getSelectionModel().getSelectedIndices().size() == 1) {
 						setEntriesSingle(centerTable, centerGrid, discNumber, totalDiscs, totalTitles, titelNumber,year);
+						Main_Frame.getBorderPane_Center().getCenterGridPane().setTextFieldColorProfile();
 					} else if (centerTable.getSelectionModel().getSelectedIndices().size() > 1) {
 						setEntriesMultiple(centerTable, centerGrid, discNumber, totalTitles, totalDiscs, year);
 					}

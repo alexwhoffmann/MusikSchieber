@@ -111,4 +111,22 @@ public class BorderPane_Bottom extends BorderPane{
 	public ProgressBar getProgressBar() {
 		return progressBar;
 	}
+	
+	/**
+	 * Sets the text in the small status text field
+	 * 
+	 * @param text the status text
+	 */
+	public void setStatusTextSmall(String text) {
+		this.statusSmall.setText(text);
+	}
+	
+	/**
+	 * Sets the text in the large status text field
+	 * 
+	 * @param text the status text
+	 */
+	public void setStatusTextLarge(String text) {
+		this.statusLarge.setText(text);
+	}
 }

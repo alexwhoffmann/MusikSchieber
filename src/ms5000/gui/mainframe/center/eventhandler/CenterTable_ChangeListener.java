@@ -24,8 +24,6 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 	 */
 	private CenterGridPane centerGridPane;
 	
-	
-
 	@Override
 	public void changed(ObservableValue<? extends MusicTag> observable, MusicTag oldValue, MusicTag newValue) {
 		
@@ -65,6 +63,8 @@ public class CenterTable_ChangeListener implements ChangeListener<MusicTag> {
 			centerGridPane.clearTextFields();
 			centerGridPane.setArtWorkImage(null);
 		}
+		
+		
 	}
 
 	/**
