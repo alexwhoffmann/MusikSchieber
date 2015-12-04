@@ -35,7 +35,7 @@ public class Slider_ValueChange_Listener implements InvalidationListener{
 	public void invalidated(Observable arg0) {
 		player = AudioPlayer.getInstance().getMediaPlayer();
 		
-		// Pausing, Changing the position in the tune and playingi it again
+		// Pausing, Changing the position in the tune and playing it again
 		if (player != null) {
 			if ((AudioPlayer.getInstance().getProgressOld() + AudioPlayer.getInstance().getDifference() + 0.5) < slider
 					.getValue() || (AudioPlayer.getInstance().getProgressOld() + AudioPlayer.getInstance().getDifference() 

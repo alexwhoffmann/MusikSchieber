@@ -139,7 +139,9 @@ public class MusicFile {
 		} else if (originalFilePath.contains("flac")) {
 			return MusicFileType.FLAC;
 		} else if (originalFilePath.contains("m4a")) {
-			return MusicFileType.MP4;
+			return MusicFileType.M4A;
+		} else if (originalFilePath.contains("aac")) {
+			return MusicFileType.AAC;
 		}
 
 		return null;

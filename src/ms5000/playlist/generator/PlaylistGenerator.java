@@ -23,17 +23,15 @@ public class PlaylistGenerator {
 	/**
 	 * for bidden characters for the file/dir name
 	 */
-	private static String[] forbiddenChars_1 = { "ä", "ü", "ö", "Ä", "Ö", "Ü", "è", "é", "É", "È", "Ç", "ç", "Ó", "ó",
-			"Ò", "ò", "Ø", "ø", "Ú", "ú", "Ù", "ù", "æ", "Æ", "å", "Å" };
+	private static String[] forbiddenChars_1 = PropertiesUtils.getArray("util.config.forbidden.chars.1");
 	/**
 	 * valid characters for the file/dir name
 	 */
-	private static String[] validChars = { "ae", "ue", "oe", "Ae", "Oe", "Üe", "e", "e", "E", "E", "C", "c", "O", "o",
-			"O", "o", "O", "o", "U", "u", "U", "u", "ae", "Ae", "a", "A" };
+	private static String[] validChars = PropertiesUtils.getArray("util.config.valid.chars");
 	/**
 	 * forbidden characters for the file/dir name
 	 */
-	private static String forbiddenChars_2 = "<>?\"\\:|/*()'°^´`_";
+	private static String forbiddenChars_2 = PropertiesUtils.getString("util.config.forbidden.chars.2");
 	
 	/**
 	 * Single date format
@@ -43,7 +41,7 @@ public class PlaylistGenerator {
 	/**
 	 * The encoding of the playlist
 	 */
-	private static final String enCoding = "UTF-8";
+	private static final String enCoding = PropertiesUtils.getString("util.config.encoding.utf8");
 	
 	/**
 	 * Method to generate the playlist
@@ -83,7 +81,8 @@ public class PlaylistGenerator {
 	 * @throws FileNotFoundException if there is a problem with creating the file
 	 * @throws UnsupportedEncodingException if there is a problem with the encoding of the file
 	 */
-	private static void writeEntriesToPlayList(File playListFile,String header,ArrayList<MusicFile> files) throws FileNotFoundException, UnsupportedEncodingException {
+	private static void writeEntriesToPlayList(File playListFile, String header, ArrayList<MusicFile> files)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		ArrayList<String> inPlayList = new ArrayList<String>();
 		inPlayList.add(header);
 		

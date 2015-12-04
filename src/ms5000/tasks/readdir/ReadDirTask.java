@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import ms5000.musicfile.file.MusicFileType;
 import ms5000.musicfile.file.MusicFileUtils;
 import ms5000.musicfile.tag.MusicTag;
 import ms5000.musicfile.tag.TagState;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class captures the main functionality of the import process
@@ -81,6 +83,11 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	private boolean noFilesInDir = false;
 	
 	/**
+	 * String for the status text
+	 */
+	private String importStatusText = PropertiesUtils.getString("readdir.text.importing");
+	
+	/**
 	 * Constructor that is used when a drag and drop import occurs
 	 * 
 	 * @param list the list of files which get imported
@@ -97,7 +104,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 * The constructor that is used when a single file gets imported
 	 * 
 	 * @param file the File
-	 * @param importMode the Importmode
+	 * @param importMode the import mode
 	 */
 	public ReadDirTask(File file, ImportMode importMode) {
 		this.importMode = importMode;
@@ -279,7 +286,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 							Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
 						}
 					} finally {
-						Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import aborted!");
+						Main_Frame.getBorderPaneTopCenter().getStatusSlider()
+								.setStatusText(PropertiesUtils.getString("readdir.text.import.aborted"));
 						break;
 					}
 
@@ -288,7 +296,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 					updateProgress(i + 1, number_of_imported_files);
 
 					// Updating the status slider
-					Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Importing: " + readFiles.get(i).getName());
+					Main_Frame.getBorderPaneTopCenter().getStatusSlider()
+							.setStatusText(MessageFormat.format(importStatusText, readFiles.get(i).getName()));
 
 					try {
 						boolean duplicate = false;
@@ -347,7 +356,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 
 					} catch (CannotReadException | IOException | TagException | ReadOnlyFileException
 							| InvalidAudioFrameException e) {
-						Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Faild to import: " + readFiles.get(i).getName());
+						Main_Frame.getBorderPaneTopCenter().getStatusSlider()
+								.setStatusText(PropertiesUtils.getString("readdir.text.import.failed") + readFiles.get(i).getName());
 						for(int j = 0; i < e.getStackTrace().length ; i ++) {
 							log(e.getStackTrace()[j].toString() + "\n");
 						}
@@ -361,7 +371,8 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 
 			}
 			
-			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText("Import completed");
+			Main_Frame.getBorderPaneTopCenter().getStatusSlider()
+					.setStatusText(PropertiesUtils.getString("readdir.text.import.completed"));
 		}
 		
 		return musicFiles;
@@ -388,7 +399,7 @@ public class ReadDirTask extends Task<ObservableList<MusicTag>> {
 	 */
 	private void initLog() {
 		try {
-			writer = new PrintWriter("log.txt", "UTF-8");
+			writer = new PrintWriter("log.txt", PropertiesUtils.getString("util.config.encoding.utf8"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {

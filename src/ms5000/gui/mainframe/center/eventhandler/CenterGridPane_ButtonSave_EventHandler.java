@@ -7,13 +7,13 @@ import org.jaudiotagger.tag.datatype.Artwork;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import ms5000.gui.alert.ErrorAlert;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.gui.mainframe.center.CenterGridPane.TextFieldKey;
 import ms5000.gui.mainframe.center.CenterTable;
 import ms5000.musicfile.tag.TagUtils;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class implements the main functionality of the button for saving the tag
@@ -24,11 +24,11 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	/**
 	 * The error strings
 	 */
-	private final String ERROR_NUMBERFORMAT_EXCEPTION = "Please enter numeric values!";
-	private final String ERROR_UNREALISTIC_NUMBERS = "Please choose realsitic entries!";
-	private final String ERROR_TITLENUMBER = "The Titlenumber should be smaller than the total titlenumber.";
-	private final String ERROR_DISCNUMBER = "The Discnumber should be smaller than the total discnumber.";
-	private final String ERROR_DISCNUMBER_TITLENUMBER = "Please check title- and discnumber.";
+	private final String ERROR_NUMBERFORMAT_EXCEPTION = PropertiesUtils.getString("center.section.text.error.dialog.number.format");
+	private final String ERROR_UNREALISTIC_NUMBERS = PropertiesUtils.getString("center.section.text.error.dialog.unrealistic.number");
+	private final String ERROR_TITLENUMBER = PropertiesUtils.getString("center.section.text.error.dialog.titlenumber.to.large");
+	private final String ERROR_DISCNUMBER = PropertiesUtils.getString("center.section.text.error.dialog.discnumber.to.large");
+	private final String ERROR_DISCNUMBER_TITLENUMBER = PropertiesUtils.getString("center.section.text.error.dialog.check.title.disc.number");
 	
 	/**
 	 * Handle the event when the buttons is pressed
@@ -39,7 +39,7 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 		CenterGridPane centerGrid = Main_Frame.getBorderPane_Center().getCenterGridPane();
 		
 		// Checking whether a row is selected
-		if (event.getEventType().toString().equals("ACTION")
+		if (event.getEventType()== ActionEvent.ACTION
 				&& centerTable.getSelectionModel().getSelectedIndices().size() > 0) {
 			try {
 				boolean discNumberOk = true;
@@ -213,12 +213,8 @@ public class CenterGridPane_ButtonSave_EventHandler implements EventHandler<Acti
 	 * @param dialogText the error message which is displayed to the user
 	 */
 	private void openErrorDialog(String dialogText) {
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error");
-		alert.setHeaderText("Error occured!");
-		alert.setContentText(dialogText);
-
-		alert.showAndWait();
+		new ErrorAlert(PropertiesUtils.getString("center.section.text.error.dialog.title"),
+				PropertiesUtils.getString("center.section.text.error.dialog.header"), dialogText).showDialog();
 	}
 	
 	/**

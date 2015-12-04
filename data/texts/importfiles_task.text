@@ -1,0 +1,22 @@
+#AlertTexts
+importfiles.text.alert.title=Error
+importfiles.text.alert.header.info=It seems like there are some missing values.
+importfiles.text.alert.header.conf=It seems that you want to import files which are already in your library.
+importfiles.text.alert.text.conf=Do you want to proceed?
+importfiles.text.alert.error.no.files=There are no imported music files.
+importfiles.text.alert.error.incomplete.tags=It seems that there are still music files with incomplete tags in your list. \nPlease complete them to proceed.
+importfiles.text.alert.error.no.music.library=Please set your music library before proceeding.
+importfiles.text.alert.error.no.playlist.dir=Please set a export directory for the generated playlist.
+importfiles.text.alert.error.files.not.deleted.title=Failed to delete files
+importfiles.text.alert.error.files.not.deleted=The following files could not be deleted
+#TaskMessages
+importfiles.text.task.message.tagging=Tagging files
+importfiles.text.task.message.tagging.file=Tagging File {0} from {1}
+importfiles.text.task.message.deleting.file=Deleting File {0} from {1}
+importfiles.text.task.message.tagging.complete=Tagging Files Complete
+importfiles.text.task.message.deleting=Deleting original files
+importfiles.text.task.message.changing=Changing File {0} from {1}
+importfiles.text.task.message.moving=Moving files to library
+importfiles.text.task.message.moving.file=Moving File {0} from {1}
+importfiles.text.task.message.generating.playlist=Generating Playlist
+importfiles.text.task.message.import.complete=Music Library Import Complete

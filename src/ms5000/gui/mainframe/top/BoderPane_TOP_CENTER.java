@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import ms5000.properties.PropertiesUtils;
 
 public class BoderPane_TOP_CENTER extends BorderPane {
 	/**
@@ -37,7 +38,8 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 	 */
 	public BoderPane_TOP_CENTER() {
 		// Setting the style sheet
-		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_borderpane_top_center.css").toExternalForm());
+		String cssPath = PropertiesUtils.getString("top.section.config.borderpane.top.center.css");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
 		
 		// Building the border pane
 		timeToGO = new TextField();
@@ -47,7 +49,7 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 		timeLeft.setEditable(false);
 		
 		statusSlider = new VBox_StatusSlider();
-		statusSlider.setId("vbox_status_slider");
+		statusSlider.setId(PropertiesUtils.getString("top.section.config.borderpane.top.center.css.statusslider.id"));
 		
 		box_TimeToGo = new VBox();
 		box_TimeLeft = new VBox();
@@ -62,7 +64,7 @@ public class BoderPane_TOP_CENTER extends BorderPane {
 		this.setCenter(statusSlider);
 		this.setLeft(box_TimeToGo);
 		this.setRight(box_TimeLeft);
-		this.setId("border-pane");
+		this.setId(PropertiesUtils.getString("top.section.config.borderpane.top.center.css.borderpane.id"));
 		
 	}
 	/**

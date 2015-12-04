@@ -1,0 +1,35 @@
+#CenterGridPane
+center.section.text.label.tag.information=Tag-Information
+center.section.text.label.file.information=File-Information
+center.section.text.label.artwork=Artwork
+center.section.text.label.file.path=File-Path:
+center.section.text.label.artist=Artist:
+center.section.text.label.title.name=Titlename:
+center.section.text.label.genre=Genre:
+center.section.text.label.year=Year:
+center.section.text.label.album=Album:
+center.section.text.label.album.artist=Album-Artist:
+center.section.text.label.composer=Composer:
+center.section.text.label.comment=Comment:
+center.section.text.label.disc.number=Disc-Number:
+center.section.text.label.title.number=Title-Number:
+#CenterGridPaneErrorDialog
+center.section.text.error.dialog.title=Error!
+center.section.text.error.dialog.header=Error occurred!
+center.section.text.error.dialog.number.format=Please enter numeric values!
+center.section.text.error.dialog.unrealistic.number=Please choose realistic entries!
+center.section.text.error.dialog.titlenumber.to.large=The title number should be smaller than the total title number.
+center.section.text.error.dialog.discnumber.to.large=The disc number should be smaller than the total disc number.
+center.section.text.error.dialog.check.title.disc.number=Please check title- and disc number.
+#CenterGridPaneFileChooser
+center.section.text.image.file.chooser.ext.filter=Image Files
+center.section.text.image.file.chooser.title=Choose Image File
+center.section.text.image.file.chooser.error=Failed to import Image file!
+#CenterTable
+center.section.text.column.artist=Artist
+center.section.text.column.genre=Genre
+center.section.text.column.track=Track
+center.section.text.column.album=Album
+#CenterTableFileChooser
+center.section.text.table.file.chooser.ext.filter=Music Files
+center.section.text.table.file.chooser.title=Choose Music File

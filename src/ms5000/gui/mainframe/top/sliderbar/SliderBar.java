@@ -6,7 +6,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 
 /**
- * This class implenments the slider which is used for the volume and the song
+ * This class implements the slider which is used for the volume and the song
  * progress slider
  */
 public class SliderBar extends StackPane {

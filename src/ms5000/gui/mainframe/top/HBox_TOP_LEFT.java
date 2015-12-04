@@ -3,6 +3,7 @@ package ms5000.gui.mainframe.top;
 import javafx.scene.layout.HBox;
 import ms5000.gui.mainframe.top.buttons.Button_Start;
 import ms5000.gui.mainframe.top.buttons.Button_Stop;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This HBox holds the items on the top left side of the frame
@@ -22,9 +23,10 @@ public class HBox_TOP_LEFT extends HBox {
 	 * Instantiates the HBox
 	 */
 	public HBox_TOP_LEFT() {		
-		// applying the style sheet
-		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_borderpane_top_center.css").toExternalForm());
-		this.setId("hboxTopLeft");
+		// Setting the style sheet
+		String cssPath = PropertiesUtils.getString("top.section.config.borderpane.top.center.css");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+		this.setId(PropertiesUtils.getString("top.section.config.borderpane.top.center.css.hboxtopleft.id"));
 		
 		// adding the buttons to the frame
 		btn_Stop = new Button_Stop();

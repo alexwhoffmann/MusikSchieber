@@ -4,8 +4,8 @@ import java.io.File;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.DirectoryChooser;
-import ms5000.gui.dialogs.AddDialog;
+import ms5000.gui.alert.AddDialog;
+import ms5000.gui.chooser.DirChooser;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.gui.GuiProperties;
@@ -18,18 +18,13 @@ import ms5000.tasks.readdir.ReadDirTaskManager.TaskStatus;
  */
 public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 	/**
-	 * The last dir from which the user imported music files
-	 */
-	private File lastImportedDir;
-	
-	/**
 	 * The import mode
 	 */
 	private ImportMode importMode = null;
 	
 	@Override
 	public void handle(MouseEvent event) {
-		if (event.getEventType().toString().equals("MOUSE_CLICKED")) {
+		if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
 			// Cancel the running task
 			if (ReadDirTaskManager.getTaskStatus() == TaskStatus.RUNNING || ReadDirTaskManager.getTaskStatus() == TaskStatus.SCHEDULED || ReadDirTaskManager.getTaskStatus() == TaskStatus.FAILED) {
 				// Canceling the task
@@ -61,10 +56,9 @@ public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 				
 				// There are no entries in the list
 				if (this.importMode != ImportMode.CANCEL) {
-					final DirectoryChooser chooser = new DirectoryChooser();
-					chooser.setInitialDirectory(readProperties());
-					chooser.setTitle("Choose Import Directory");
-					File selectedDir = chooser.showDialog(Main_Frame.getPrimaryStage());
+					File lastImportedDir = new File(PropertiesUtils.getProperty(GuiProperties.LASTIMPORTDIR));
+					File selectedDir = new DirChooser(lastImportedDir,
+							PropertiesUtils.getString("top.section.text.dirchooser.title")).getSelectedDir();
 					
 					if (selectedDir != null) {
 						// Setting the properties to the last imported Dir
@@ -88,22 +82,4 @@ public class ButtonAdd_EventHandler implements EventHandler<MouseEvent> {
 			Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon_Rollover(event);
 		}
 	}
-	
-	/**
-	 * Method to read the last imported dir from the properties
-	 * 
-	 * @return the path to the last imported dir
-	 */
-	private File readProperties() {
-		// Reading the last Dir which was Imported
-		lastImportedDir = new File(PropertiesUtils.getProperty(GuiProperties.LASTIMPORTDIR));
-		System.out.println(lastImportedDir.getAbsolutePath());
-		if (!lastImportedDir.exists()) {
-			String userDirectoryString = System.getProperty("user.home");
-			lastImportedDir = new File(userDirectoryString);
-		}
-		
-		return lastImportedDir;
-	}
-
 }

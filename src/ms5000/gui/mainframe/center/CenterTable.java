@@ -32,10 +32,10 @@ public class CenterTable extends TableView<MusicTag> {
 	/**
 	 * Strings to style the row's
 	 */
-	private final String missingCritical = "-fx-background-color: rgb(255, 153, 153,0.3)";
-	private final String missingNonCritical = "-fx-background-color: rgb(255, 255, 179,0.3)";
-	private final String missingWeak = "-fx-background-color: rgb(255, 255, 229,0.45)";
-	private final String duplicate = "-fx-background-color: rgb(179, 255, 179,0.3)";
+	private final String missingCritical = PropertiesUtils.getString("center.section.config.css.color.table.missing.critical");
+	private final String missingNonCritical = PropertiesUtils.getString("center.section.config.css.color.table.missing.non.critical");
+	private final String missingWeak = PropertiesUtils.getString("center.section.config.css.color.table.missing.weak");
+	private final String duplicate = PropertiesUtils.getString("center.section.config.css.color.table.duplicate");
 	
 	/**
 	 * Boolean indicating whether the list holds entries with incomplete tags
@@ -44,23 +44,25 @@ public class CenterTable extends TableView<MusicTag> {
 	
 	@SuppressWarnings("unchecked")
 	public CenterTable() {
+		
+		
 		// Setting the Columns
-		artistCol = new TableColumn<MusicTag, String>("Artist");
+		artistCol = new TableColumn<MusicTag, String>(PropertiesUtils.getString("center.section.text.column.artist"));
 		artistCol.setCellValueFactory(new PropertyValueFactory<MusicTag, String>("artist"));
 		setWidth(artistCol);
 		artistCol.setCellFactory(getCellFactory());
 		
-		albumCol = new TableColumn<MusicTag, String>("Album");
+		albumCol = new TableColumn<MusicTag, String>(PropertiesUtils.getString("center.section.text.column.album"));
 		albumCol.setCellValueFactory(new PropertyValueFactory<MusicTag, String>("album"));
 		setWidth(albumCol);
 		albumCol.setCellFactory(getCellFactory());
 		
-		trackCol = new TableColumn<MusicTag, String>("Track");
+		trackCol = new TableColumn<MusicTag, String>(PropertiesUtils.getString("center.section.text.column.track"));
 		trackCol.setCellValueFactory(new PropertyValueFactory<MusicTag, String>("titlename"));
 		setWidth(trackCol);
 		trackCol.setCellFactory(getCellFactory());
 		
-		genreCol = new TableColumn<MusicTag, String>("Genre");
+		genreCol = new TableColumn<MusicTag, String>(PropertiesUtils.getString("center.section.text.column.genre"));
 		genreCol.setCellValueFactory(new PropertyValueFactory<MusicTag, String>("genre"));
 		setWidth(genreCol);
 		genreCol.setCellFactory(getCellFactory());

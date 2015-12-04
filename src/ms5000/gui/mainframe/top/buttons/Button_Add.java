@@ -43,8 +43,9 @@ public class Button_Add extends Button{
 	 * Construction the button
 	 */
 	public Button_Add() {
-		// Applying the stylesheet
-		this.getStylesheets().add(this.getClass().getResource("../css/mainframetop_vbox_volumeslider.css").toExternalForm());
+		// Setting the style sheet
+		String cssPath = "../" + PropertiesUtils.getString("top.section.config.vbox.volumeslider.css");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
 		
 		// Adding the event handler
 		this.setOnMouseEntered(eventHandler);
@@ -65,21 +66,23 @@ public class Button_Add extends Button{
 	 */
 	public void changeButtonIcon_Rollover(MouseEvent event) {		
 		// Task ins't running
-		if (ReadDirTaskManager.getTaskStatus() != TaskStatus.RUNNING && ReadDirTaskManager.getTaskStatus() != TaskStatus.SCHEDULED && ReadDirTaskManager.getTaskStatus() != TaskStatus.FAILED) {
-			if (event.getEventType().toString().equals("MOUSE_ENTERED")) {
+		if (ReadDirTaskManager.getTaskStatus() != TaskStatus.RUNNING
+				&& ReadDirTaskManager.getTaskStatus() != TaskStatus.SCHEDULED
+				&& ReadDirTaskManager.getTaskStatus() != TaskStatus.FAILED) {
+			if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
 				this.setEffect(shadow);
 				this.setGraphic(new ImageView(icon_button_add_enabled));
 				shapeButtonCircle();
-			} else if (event.getEventType().toString().equals("MOUSE_EXITED")) {
+			} else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
 				this.setEffect(null);
 				this.setGraphic(new ImageView(icon_button_add_disabled));
 				shapeButtonCircle();
 			}
 		// Task is running	
 		} else {
-			if (event.getEventType().toString().equals("MOUSE_ENTERED")) {
+			if (event.getEventType() == MouseEvent.MOUSE_ENTERED) {
 				this.setEffect(shadow);
-			} else if (event.getEventType().toString().equals("MOUSE_EXITED")) {
+			} else if (event.getEventType() == MouseEvent.MOUSE_EXITED) {
 				this.setEffect(null);
 			}
 

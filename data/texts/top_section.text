@@ -1,0 +1,13 @@
+#Main Frame
+top.section.text.mainframe.title=MusikSchieber 6000
+#Player
+top.section.text.audioplayer.playing=Playing: {0} - {1}
+#AddDialog
+top.section.text.adddialog.header=Import Options
+top.section.text.adddialog.header.text=There are already entries in your list.
+top.section.text.adddialog.context.text=Do you want to add further entries to the list?
+top.section.text.adddialog.button.append=Append List
+top.section.text.adddialog.button.clear=Clear List
+top.section.text.adddialog.button.cancel=Cancel
+#DirChooser
+top.section.text.dirchooser.title=Choose Import Directory

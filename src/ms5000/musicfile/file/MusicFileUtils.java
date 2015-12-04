@@ -24,23 +24,20 @@ public class MusicFileUtils {
 	/**
 	 * String that contains numbers (for ordering Mode 1)
 	 */
-	private final static String NUMBERS = "0123456789";
+	private final static String NUMBERS = PropertiesUtils.getString("util.config.numbers");
 
 	/**
 	 * for bidden characters for the file/dir name
 	 */
-	private static String[] forbiddenChars_1 = { "ä", "ü", "ö", "Ä", "Ö", "Ü", "è", "é", "É", "È", "Ç", "ç", "Ó", "ó",
-			"Ò", "ò", "Ø", "ø", "Ú", "ú", "Ù", "ù", "æ", "Æ", "å", "Å" };
+	private static String[] forbiddenChars_1 = PropertiesUtils.getArray("util.config.forbidden.chars.1");
 	/**
 	 * valid characters for the file/dir name
 	 */
-	private static String[] validChars = { "ae", "ue", "oe", "Ae", "Oe", "Üe", "e", "e", "E", "E", "C", "c", "O", "o",
-			"O", "o", "O", "o", "U", "u", "U", "u", "ae", "Ae", "a", "A" };
-	
+	private static String[] validChars = PropertiesUtils.getArray("util.config.valid.chars");
 	/**
-	 * for bidden characters for the file/dir name
+	 * forbidden characters for the file/dir name
 	 */
-	private static String forbiddenChars_2 = "<>?\"\\:|/*()'°^´`_";
+	private static String forbiddenChars_2 = PropertiesUtils.getString("util.config.forbidden.chars.2");
 
 	private static ArrayList<File> readFiles = new ArrayList<File>();
 	
@@ -516,9 +513,10 @@ public class MusicFileUtils {
 		OrderingProperty orderingProperty = PropertiesUtils.getOrderingProperty();
 		
 		if (!tag.getArtist().equals("") && !tag.getAlbum().equals("")) {
-			if(orderingProperty == OrderingProperty.GAA && !tag.getGenre().equals("") || orderingProperty == OrderingProperty.AA || orderingProperty == OrderingProperty.AAA) {
+			if (orderingProperty == OrderingProperty.GAA && !tag.getGenre().equals("")
+					|| orderingProperty == OrderingProperty.AA || orderingProperty == OrderingProperty.AAA) {
 				file.setNewFilePathIsSet(true);
-				file.setNewFilePath(MusicFileUtils.makeFileDir(file)); 
+				file.setNewFilePath(MusicFileUtils.makeFileDir(file));
 			} else {
 				file.setNewFilePathIsSet(false);
 				file.setNewFilePath("");

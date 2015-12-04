@@ -4,6 +4,7 @@ package ms5000.gui.mainframe.center;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import ms5000.gui.mainframe.Main_Frame;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * BorderPane which holds the upper progress bar, the table and the detail view
@@ -40,7 +41,7 @@ public class BorderPane_CENTER extends BorderPane{
 		this.setTop(progressBar);
 		
 		// Setting the progress bar style
-		progressBar.setStyle("-fx-control-inner-background: #999999;-fx-accent: #A7FFA7");
+		progressBar.setStyle(PropertiesUtils.getString("center.section.config.css.color.progress.bar"));
 		
 		// Setting the Size of the progress bar
 		progressBar.setPrefWidth(Main_Frame.getPrefFrameWidth());
