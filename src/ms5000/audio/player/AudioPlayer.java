@@ -2,6 +2,7 @@ package ms5000.audio.player;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.MessageFormat;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,6 +11,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.musicfile.file.MusicFile;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class implements the main functionality of the player in the top of the main frame.
@@ -128,7 +130,8 @@ public class AudioPlayer {
 	public void play() {
 		if (mediaPlayer != null) {
 			// Setting up the status text
-			String currentlyPlaying = "Playing: " + currMusicFile.getTag().getArtist() + " - " + currMusicFile.getTag().getTitlename();
+			String currentlyPlaying = MessageFormat.format(PropertiesUtils.getString("top.section.text.audioplayer.playing"),
+					currMusicFile.getTag().getArtist(), currMusicFile.getTag().getTitlename());
 			Main_Frame.getBorderPaneTopCenter().getStatusSlider().setStatusText(currentlyPlaying);
 
 			// Enabling the slider which shows the progress of the song

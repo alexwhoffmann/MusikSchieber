@@ -96,7 +96,7 @@ public class TagUtils {
 		tag.setField(FieldKey.TITLE, musicTag.getTitlename());
 		tag.setField(FieldKey.COMPOSER, musicTag.getComposer());
 
-		if (musicFile.getFileType() == MusicFileType.MP4) {
+		if (musicFile.getFileType() == MusicFileType.M4A) {
 			tag.setField(FieldKey.GROUPING, musicTag.getGenre());
 		}
 

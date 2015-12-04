@@ -15,7 +15,7 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 	@Override
 	public void handle(DragEvent event) {
 		// Preparing the Drag
-		if (event.getEventType().toString().equals("DRAG_OVER")) {
+		if (event.getEventType() == DragEvent.DRAG_OVER) {
 			Dragboard db = event.getDragboard();
 			
 			if (db.hasFiles()) {
@@ -24,7 +24,7 @@ public class CenterTable_EventHandler_DragNDrop implements EventHandler<DragEven
 
 			event.consume();
 		// Launching the ImportFilesTask with the files from the drag	
-		} else if (event.getEventType().toString().equals("DRAG_DROPPED")) {
+		} else if (event.getEventType() == DragEvent.DRAG_DROPPED) {
 			Dragboard db = event.getDragboard();
 			boolean success = false;
 

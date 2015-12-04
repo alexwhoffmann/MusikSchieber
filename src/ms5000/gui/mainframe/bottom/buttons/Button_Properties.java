@@ -11,6 +11,10 @@ import ms5000.properties.icons.IconProperties;
  * This class implements the functionalities of the button to show the properties
  */
 public class Button_Properties extends Button{
+	/**
+	 * The path to the css file
+	 */
+	private final String cssPath = "../" + PropertiesUtils.getString("bottom.section.config.border.pane.css.path");
 	
 	/**
 	 * The radius of the button
@@ -22,8 +26,8 @@ public class Button_Properties extends Button{
 	 */
 	public Button_Properties() {
 		// Applying the stylesheet
-		this.getStylesheets().add(this.getClass().getResource("../css/mainframetop_borderpane_bottom.css").toExternalForm());
-		this.setId("button");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+		this.setId(PropertiesUtils.getString("bottom.section.config.button.small.css.id"));
 		
 		// Adding the icon
 		ImageView view = new ImageView(PropertiesUtils.getProperty(IconProperties.PROPERTIES));

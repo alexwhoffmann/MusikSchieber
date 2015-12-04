@@ -6,9 +6,9 @@ import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import ms5000.gui.alert.ErrorAlert;
 import ms5000.gui.mainframe.Main_Frame;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class is a helper class to manage the read dir task
@@ -44,9 +44,9 @@ public class ReadDirTaskManager {
 	/**
 	 * Alert strings
 	 */
-	private static String alertTitle = "No Music Files!";
-	private static String alertHeader = "It seems that there are no music files in the imported directory.";
-	private static String alertText = "Please choose another directory to proceed.";
+	private static String alertTitle = PropertiesUtils.getString("readdir.text.alert.title");
+	private static String alertHeader = PropertiesUtils.getString("readdir.text.alert.header.text");
+	private static String alertText = PropertiesUtils.getString("readdir.text.alert.context.text");
 	
 	/**
 	 * Start the task in case a dir gets imported
@@ -115,9 +115,9 @@ public class ReadDirTaskManager {
 			@Override
 			public void changed(ObservableValue<? extends Worker.State> observableValue, Worker.State oldState,
 					Worker.State newState) {
-				if (newState.toString().equals("SCHEDULED")) {
+				if (newState == Worker.State.SCHEDULED) {
 					taskStatus = TaskStatus.SCHEDULED;
-				} else if (newState.toString().equals("SUCCEEDED")) {
+				} else if (newState == Worker.State.SUCCEEDED) {
 					Main_Frame.gethBox_Right().getBtnImportData().changeButtonIcon(TaskStatus.SUCCEEDED);
 					taskStatus = null;
 					
@@ -127,9 +127,9 @@ public class ReadDirTaskManager {
 						Main_Frame.getBorderPane_Center().getProgressBar().setProgress(0);
 						showAlert();
 					}
-				} else if (newState.toString().equals("RUNNING")) {
+				} else if (newState == Worker.State.RUNNING) {
 					taskStatus = TaskStatus.RUNNING;
-				} else if (newState.toString().equals("FAILED")) {
+				} else if (newState == Worker.State.FAILED) {
 					taskStatus = TaskStatus.FAILED;
 				}
 			}
@@ -137,7 +137,7 @@ public class ReadDirTaskManager {
 	}
 	
 	/**
-	 * Method to canel the task
+	 * Method to cancel the task
 	 * 
 	 * @return boolean indicating if the abort was successful
 	 */
@@ -195,11 +195,6 @@ public class ReadDirTaskManager {
 	 * Shows an alert when there are no files in the chosen directory
 	 */
 	private static void showAlert() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(alertTitle);
-		alert.setHeaderText(alertHeader);
-		alert.setContentText(alertText);
-
-		alert.showAndWait();
+		new ErrorAlert(alertTitle, alertHeader, alertText).showDialog();
 	}
 }

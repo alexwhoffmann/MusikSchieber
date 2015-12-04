@@ -29,8 +29,9 @@ public class VBox_VolumeSlider extends VBox{
 	 * Instantiates the vbox
 	 */
 	public VBox_VolumeSlider() {
-		// Adding the stylesheet
-		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_vbox_volumeslider.css").toExternalForm());
+		// Setting the style sheet
+		String cssPath = PropertiesUtils.getString("top.section.config.vbox.volumeslider.css");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
 		
 		// Preparing the Label
 		volume = new Label();

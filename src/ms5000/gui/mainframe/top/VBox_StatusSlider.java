@@ -4,6 +4,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import ms5000.gui.mainframe.top.eventhandler.Slider_ValueChange_Listener;
 import ms5000.gui.mainframe.top.sliderbar.SliderBar;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class holds the StatusSlider and the status text field in the middle of the frame
@@ -23,9 +24,10 @@ public class VBox_StatusSlider extends VBox{
 	 * Instantiates the vbox 
 	 */
 	public VBox_StatusSlider() {
-		// Adding the style
-		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_vbox_statusslider.css").toExternalForm());
-		
+		// Setting the style sheet
+		String cssPath = PropertiesUtils.getString("top.section.config.vbox.statusslider.css");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+				
 		// Adding the contents to the vbox 
 		status_text = new TextField("");
 		status_text.setEditable(false);

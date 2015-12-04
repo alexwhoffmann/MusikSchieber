@@ -1,10 +1,21 @@
-#labelLarge {
+#labelLarge_Expanded {
+	-fx-font: 18px "Arial";
+	-fx-font-weight: bold;
+}
+
+#labelLarge_Minimized {
 	-fx-font: 16px "Arial";
 	-fx-font-weight: bold;
 }
 
-#labelSmall {
+
+#labelSmall_Minimized {
 	-fx-font: 14px "Arial";
+	-fx-font-weight: bold;
+}
+
+#labelSmall_Expanded {
+	-fx-font: 16px "Arial";
 	-fx-font-weight: bold;
 }
 
@@ -13,4 +24,29 @@
 	-fx-font-weight: normal;
 }
 
+#textfield_Expanded {
+	-fx-font: 16.0px "Arial";
+	-fx-font-weight: normal
+}
+
+#textfield_Minimized_Small {
+	-fx-max-width:50;
+	-fx-pref-width:50;
+	-fx-font: 14.0px "Arial";
+	-fx-font-weight: normal
+}
+
+#textfield_Minimized_Middle {
+	-fx-min-width:100;
+	-fx-max-width:180;
+	-fx-font: 14.0px "Arial";
+	-fx-font-weight: normal
+}
+
+#textfield_Minimized_Big {
+	-fx-max-width:400;
+	-fx-pref-width:400;
+	-fx-font: 14.0px "Arial";
+	-fx-font-weight: normal
+}
 

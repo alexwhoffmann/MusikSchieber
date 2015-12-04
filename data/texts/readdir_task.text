@@ -1,0 +1,7 @@
+readdir.text.alert.title=No Music Files!
+readdir.text.alert.header.text=It seems that there are no music files in the imported directory.
+readdir.text.alert.context.text=Please choose another directory to proceed.
+readdir.text.import.aborted=Import aborted!
+readdir.text.importing=Importing : {0}
+readdir.text.import.failed=Failed to import:
+readdir.text.import.completed=Import completed 

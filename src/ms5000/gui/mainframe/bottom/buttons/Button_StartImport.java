@@ -12,6 +12,10 @@ import ms5000.properties.icons.IconProperties;
  * This class implements the functionalities of the button to start the music library import
  */
 public class Button_StartImport extends Button{
+	/**
+	 * The path to the css file
+	 */
+	private final String cssPath = "../" + PropertiesUtils.getString("bottom.section.config.border.pane.css.path");
 	
 	/**
 	 * The icon image
@@ -28,8 +32,8 @@ public class Button_StartImport extends Button{
 	 */
 	public Button_StartImport() {
 		// Applying the style sheet
-		this.getStylesheets().add(this.getClass().getResource("../css/mainframetop_borderpane_bottom.css").toExternalForm());
-		this.setId("button");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+		this.setId(PropertiesUtils.getString("bottom.section.config.button.small.css.id"));
 		
 		// Setting the button image
 		icon_button_start_import = new Image(PropertiesUtils.getProperty(IconProperties.START_IMPORT));

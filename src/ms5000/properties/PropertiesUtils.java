@@ -314,6 +314,67 @@ public class PropertiesUtils {
 	}
 	
 	/**
+	 * Method to read the text and config properties of this program
+	 * 
+	 * @param propertyName the property name
+	 * @return the property value
+	 */
+	public static String getString(String propertyName) {
+		String propertyValue = "";
+		
+		if (propertyName.contains("top.section")) {
+			if (propertyName.contains("config")) {
+				propertyValue = readProperty(ConfigTextProperty.TOP_SECTION.getConfigProperty(),propertyName);
+			} else if (propertyName.contains("text")){
+				propertyValue = readProperty(ConfigTextProperty.TOP_SECTION.getTextProperty(),propertyName);
+			}
+		} else if (propertyName.contains("center.section")){
+			if (propertyName.contains("config")) {
+				propertyValue = readProperty(ConfigTextProperty.CENTER_SECTION.getConfigProperty(),propertyName);
+			} else if (propertyName.contains("text")){
+				propertyValue = readProperty(ConfigTextProperty.CENTER_SECTION.getTextProperty(),propertyName);
+			}
+		} else if (propertyName.contains("bottom.section")) {
+			if (propertyName.contains("config")) {
+				propertyValue = readProperty(ConfigTextProperty.BOTTOM_SECTION.getConfigProperty(),propertyName);
+			} else if (propertyName.contains("text")){
+				propertyValue = readProperty(ConfigTextProperty.BOTTOM_SECTION.getTextProperty(),propertyName);
+			}
+		} else if (propertyName.contains("profile.settings")) {
+			if (propertyName.contains("config")) {
+				propertyValue = readProperty(ConfigTextProperty.PROFILE_SETTINGS.getConfigProperty(),propertyName);
+			} else if (propertyName.contains("text")){
+				propertyValue = readProperty(ConfigTextProperty.PROFILE_SETTINGS.getTextProperty(),propertyName);
+			}
+		} else if (propertyName.contains("util.config")) {
+			propertyValue = readProperty(ConfigTextProperty.UTIL.getConfigProperty(),propertyName);
+		} else if (propertyName.contains("readdir.text")) {
+			propertyValue = readProperty(ConfigTextProperty.READDIR_TASK.getTextProperty(),propertyName);
+		} else if (propertyName.contains("importfiles.text")) {
+			propertyValue = readProperty(ConfigTextProperty.IMPORTFILES_TASK.getTextProperty(),propertyName);
+		}
+		
+		return propertyValue;
+	}
+	
+	/**
+	 * Returns the property value as a string array
+	 * 
+	 * @param propertyName the property name
+	 * @return the property value as string
+	 */
+	public static String[] getArray(String propertyName) {
+		String propertyValue;
+		
+		if (propertyName.contains("util.config")) {
+			propertyValue = readProperty(ConfigTextProperty.UTIL.getConfigProperty(),propertyName);
+			return propertyValue.split(",");
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Method to read and store the playlist properties in the profile object
 	 * 
 	 * @param profile the profile object

@@ -1,14 +1,19 @@
 package ms5000.gui.mainframe;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ms5000.gui.mainframe.bottom.BorderPane_Bottom;
 import ms5000.gui.mainframe.center.BorderPane_CENTER;
 import ms5000.gui.mainframe.top.BoderPane_TOP_CENTER;
 import ms5000.gui.mainframe.top.HBox_TOP_LEFT;
 import ms5000.gui.mainframe.top.HBox_TOP_RIGHT;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * Class with starts the application and shows the mainframe
@@ -73,12 +78,31 @@ public class Main_Frame extends Application {
 		try {
 			// the root pane
 			Main_Frame.setPrimaryStage(primaryStage);
+			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+			System.out.println(primaryScreenBounds.getWidth());
+			
+			
 			
 			// Main-Frame Settings
 			primaryStage.setScene(scene);
 
+			scene.widthProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth,
+						Number newSceneWidth) {
+					
+					if(getBorderPane_Center() != null) {
+						getBorderPane_Center().getCenterGridPane().applyCSS(newSceneWidth.doubleValue());
+					}
+					
+				}
+			});
+			
 			// Setting the initial size to screen size
 			primaryStage.setMaximized(true);
+			
+			// Setting the title of the primary stage
+			primaryStage.setTitle(PropertiesUtils.getString("top.section.text.mainframe.title"));
 
 			// Setting the Top Section
 			this.top = new BorderPane();

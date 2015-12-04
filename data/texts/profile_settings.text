@@ -1,0 +1,31 @@
+#FrameTitle
+profile.settings.text.frame.title=Settings
+#DialogText
+profile.settings.text.dialog.header.text=You are about to change the library settings. Do you want to continue?
+profile.settings.text.dialog.header=Changing library properties
+#ChoiceBoxes
+profile.settings.text.choicebox.ordering.mode.aaa=A - Artist - Album
+profile.settings.text.choicebox.ordering.mode.aa=Artist - Album
+profile.settings.text.choicebox.ordering.mode.gaa=Genre - Artist - Album
+profile.settings.text.choicebox.playlist.header.german=German Header
+profile.settings.text.choicebox.playlist.header.english=English Header
+#LabelTexts
+profile.settings.text.label.music.library.settings=Music Library
+profile.settings.text.label.music.library.path=Path to Library:
+profile.settings.text.label.music.library.ordering.mode=Ordering Mode:
+profile.settings.text.label.import.settings=Import Settings
+profile.settings.text.label.import.settings.keep.files=Keep original files:
+profile.settings.text.label.import.settings.tag.files=Just tag files:
+profile.settings.text.label.playlist.settings=Playlist Export Settings
+profile.settings.text.label.playlist.settings.export=Playlist Export Settings
+profile.settings.text.label.playlist.settings.name=Playlist Name:
+profile.settings.text.label.playlist.settings.export.dir=Export Directory
+profile.settings.text.label.playlist.settings.header.language=Playlist Header Language
+#ButtonTexts
+profile.settings.text.button.apply=Apply
+profile.settings.text.button.restore=Restore
+profile.settings.text.button.continue=Continue
+profile.settings.text.button.cancel=Cancel
+#ChooserTitle
+profile.settings.text.dir.chooser.title.library=Choose Musiclibrary Directory
+profile.settings.text.dir.chooser.title.playlist=Choose Playlist Export Directory

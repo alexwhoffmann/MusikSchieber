@@ -13,9 +13,13 @@ public enum MusicFileType {
 	MP3("mp3"),
 	
 	/**
-	 * Mp4 types
+	 * M4A type
 	 */
-	MP4("m4a"),
+	M4A("m4a"),
+	
+	/**
+	 * AAC type
+	 */
 	AAC("aac"),
 	
 	/**

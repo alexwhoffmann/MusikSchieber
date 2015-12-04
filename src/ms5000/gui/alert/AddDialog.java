@@ -1,10 +1,11 @@
-package ms5000.gui.dialogs;
+package ms5000.gui.alert;
 
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import ms5000.properties.PropertiesUtils;
 import ms5000.tasks.readdir.ImportMode;
 
 /**
@@ -12,7 +13,7 @@ import ms5000.tasks.readdir.ImportMode;
  */
 public class AddDialog extends Alert{	
 	/**
-	 * The choosen import mode
+	 * The chosen import mode
 	 */
 	private ImportMode importMode;
 	
@@ -24,16 +25,16 @@ public class AddDialog extends Alert{
 	/**
 	 * Dialog texts
 	 */
-	private String header = "Import Options";
-	private String header_text = "There are already entries in your list.";
-	private String context_text = "Do you want to add further entries to the list?";
+	private String header = PropertiesUtils.getString("top.section.text.adddialog.header");
+	private String header_text = PropertiesUtils.getString("top.section.text.adddialog.header.text");
+	private String context_text = PropertiesUtils.getString("top.section.text.adddialog.context.text");
 	
 	/**
 	 * Button texts
 	 */
-	private String append_button_text = "Append List";
-	private String clear_button_text = "Clear List";
-	private String cancel_button_text = "Cancel";
+	private String append_button_text = PropertiesUtils.getString("top.section.text.adddialog.button.append");
+	private String clear_button_text = PropertiesUtils.getString("top.section.text.adddialog.button.clear");
+	private String cancel_button_text = PropertiesUtils.getString("top.section.text.adddialog.button.cancel");
 	
 	/**
 	 * The buttons

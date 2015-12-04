@@ -1,7 +1,6 @@
 package ms5000.gui.profile;
 
 import java.io.File;
-import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -9,20 +8,17 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ms5000.gui.alert.ConfirmationAlert;
+import ms5000.gui.chooser.DirChooser;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterGridPane;
 import ms5000.properties.ProfileProperties;
@@ -36,10 +32,26 @@ import ms5000.properties.playlist.Header;
  */
 public class ProfileSettings extends GridPane {
 	/**
+	 * The path to the style css
+	 */
+	private final String cssPath = PropertiesUtils.getString("profile.settings.config.css.path");
+	
+	/**
+	 * The label css id's
+	 */
+	private final String labelBigId = PropertiesUtils.getString("profile.settings.config.css.label.big.id");
+	private final String labelSmallId = PropertiesUtils.getString("profile.settings.config.css.label.small.id");
+	
+	/**
+	 * OpenFolder button css id
+	 */
+	private final String openFolderButtonId = PropertiesUtils.getString("profile.settings.config.css.openFolder.button.id");
+	
+	/**
 	 * Dialog texts
 	 */
-	private final String header_text = "You are about to change the library settings. Do you want to continue?";
-	private final String header = "Changing library properties";
+	private final String header_text = PropertiesUtils.getString("profile.settings.text.dialog.header.text");
+	private final String header = PropertiesUtils.getString("profile.settings.text.dialog.header");
 	
 	/**
 	 * The labels
@@ -66,9 +78,9 @@ public class ProfileSettings extends GridPane {
 	 * The choice box for the ordering mode
 	 */
 	private ChoiceBox<String> orderingMode;
-	private final String AAA = "A - Artist - Album";
-	private final String AA = "Artist - Album";
-	private final String GAA = "Genre - Artist - Album";
+	private final String AAA = PropertiesUtils.getString("profile.settings.text.choicebox.ordering.mode.aaa");
+	private final String AA = PropertiesUtils.getString("profile.settings.text.choicebox.ordering.mode.aa");
+	private final String GAA = PropertiesUtils.getString("profile.settings.text.choicebox.ordering.mode.gaa");
 	
 	/**
 	 * Radio button for keeping the files
@@ -89,8 +101,8 @@ public class ProfileSettings extends GridPane {
 	private TextField playListName;
 	
 	private ChoiceBox<String> playListHeaderMode;
-	private final String germanHeader = "German Header";
-	private final String englishHeader = "English Header";
+	private final String germanHeader = PropertiesUtils.getString("profile.settings.text.choicebox.playlist.header.german");
+	private final String englishHeader = PropertiesUtils.getString("profile.settings.text.choicebox.playlist.header.english");
 	
 	/**
 	 * Instance of this
@@ -122,26 +134,25 @@ public class ProfileSettings extends GridPane {
 	 */
 	private ProfileSettings(){
 		// Setting the style sheet
-		this.getStylesheets().add(this.getClass().getResource("css/profile_settings.css").toExternalForm());
-		this.getStyleClass().add("grid");
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+		this.getStyleClass().add(PropertiesUtils.getString("profile.settings.config.css.grid.id"));
 		
 		// Library Settings
-		musicLibrarySettings_Label = new Label("Music Library");
-		musicLibrarySettings_Label.setId("LabelBig");
+		musicLibrarySettings_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.music.library.settings"));
+		musicLibrarySettings_Label.setId(labelBigId);
 		
-		musicLibraryPath_Label = new Label("Path to Library:");
-		musicLibraryPath_Label.setId("LabelSmall");
-		orderingMode_Label = new Label("Ordering Mode:");
+		musicLibraryPath_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.music.library.path"));
+		musicLibraryPath_Label.setId(labelSmallId);
 		musicLibraryPath = new TextField("");
 		musicLibraryPath.setEditable(false);
 		
-		orderingMode_Label = new Label("Ordering Mode");
-		orderingMode_Label.setId("LabelSmall");
+		orderingMode_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.music.library.ordering.mode"));
+		orderingMode_Label.setId(labelSmallId);
 		orderingMode = new ChoiceBox<String>();
 		orderingMode.setItems(FXCollections.observableArrayList(AAA, AA, GAA));	
 		
 		chooseDirToMusicLibrary = new Button();
-		chooseDirToMusicLibrary.setId("OpenFolderButton");
+		chooseDirToMusicLibrary.setId(openFolderButtonId);
 		chooseDirToMusicLibrary.setGraphic(new ImageView(PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_IMPORT)));
 		chooseDirToMusicLibrary.setOnAction(getButtonSetLibraryEventHandler());
 		
@@ -153,14 +164,14 @@ public class ProfileSettings extends GridPane {
 		CenterGridPane.setConstraints(orderingMode, 1, 2, 3, 1);
 		
 		// Import Settings
-		importSettings_Label = new Label("Import Settings");
-		importSettings_Label.setId("LabelBig");
-		keepFiles_Label = new Label("Keep original files:");
-		keepFiles_Label.setId("LabelSmall");
+		importSettings_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.import.settings"));
+		importSettings_Label.setId(labelBigId);
+		keepFiles_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.import.settings.keep.files"));
+		keepFiles_Label.setId(labelSmallId);
 		keepFiles = new RadioButton();
 		
-		justTagFiles_Label = new Label("Just tag files:");
-		justTagFiles_Label.setId("LabelSmall");
+		justTagFiles_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.import.settings.tag.files"));
+		justTagFiles_Label.setId(labelSmallId);
 		justTagFiles = new RadioButton();
 		
 		CenterGridPane.setConstraints(importSettings_Label, 0, 4, 3, 1);
@@ -170,26 +181,26 @@ public class ProfileSettings extends GridPane {
 		CenterGridPane.setConstraints(justTagFiles, 1, 6, 1, 1);
 		
 		// Playlist export settings
-		playlistSettings_Label = new Label("Playlist Export Settings");
-		playlistSettings_Label.setId("LabelBig");
+		playlistSettings_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.playlist.settings"));
+		playlistSettings_Label.setId(labelBigId);
 		
-		playListExport_Label = new Label("Playlist Export");
-		playListExport_Label.setId("LabelSmall");
+		playListExport_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.playlist.settings.export"));
+		playListExport_Label.setId(labelSmallId);
 		playListExport = new RadioButton();
 		
-		playListName_Label = new Label("Playlist-Name:");
-		playListName_Label.setId("LabelSmall");
+		playListName_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.playlist.settings.name"));
+		playListName_Label.setId(labelSmallId);
 		playListName = new TextField();
 		
-		playListExportPath_Label = new Label("Export Directory");
-		playListExportPath_Label.setId("LabelSmall");
+		playListExportPath_Label = new Label(PropertiesUtils.getString("profile.settings.text.label.playlist.settings.export.dir"));
+		playListExportPath_Label.setId(labelSmallId);
 		playListExportPath = new TextField("");
 		playListExportPath.setEditable(false);
 		chooseDirToExportPlayList = new Button();
-		chooseDirToExportPlayList.setId("OpenFolderButton");
+		chooseDirToExportPlayList.setId(openFolderButtonId);
 		chooseDirToExportPlayList.setGraphic(new ImageView(PropertiesUtils.getProperty(IconProperties.OPEN_FOLDER_IMPORT)));
 		chooseDirToExportPlayList.setOnAction(getButtonSetPlayListDirEventHandler());
-		playListHeader = new Label("Playlist Header-Language");
+		playListHeader = new Label(PropertiesUtils.getString("profile.settings.text.label.playlist.settings.header.language"));
 		playListHeaderMode = new ChoiceBox<String>();
 		playListHeaderMode.setItems(FXCollections.observableArrayList(germanHeader, englishHeader));	
 		
@@ -207,10 +218,10 @@ public class ProfileSettings extends GridPane {
 		/**
 		 * Restore and apply button
 		 */
-		applyButton = new Button("Apply");
+		applyButton = new Button(PropertiesUtils.getString("profile.settings.text.button.apply"));
 		applyButton.setOnAction(getButtonApplyEventHandler());
 		
-		restoreButton = new Button("Restore");
+		restoreButton = new Button(PropertiesUtils.getString("profile.settings.text.button.restore"));
 		restoreButton.setOnAction(getButtonRestoreEventHandler());
 		
 		CenterGridPane.setConstraints(restoreButton, 1, 13, 1, 1, HPos.RIGHT, VPos.CENTER);
@@ -238,7 +249,7 @@ public class ProfileSettings extends GridPane {
 		readProperties();
 		
 		propertiesStage = new Stage();
-		propertiesStage.setTitle("Settings");
+		propertiesStage.setTitle(PropertiesUtils.getString("profile.settings.text.frame.title"));
 
 		propertiesStage.initModality(Modality.APPLICATION_MODAL);
 		propertiesStage.setScene(scene);
@@ -385,18 +396,11 @@ public class ProfileSettings extends GridPane {
 
 			@Override
 			public void handle(ActionEvent event) {
-				final DirectoryChooser chooser = new DirectoryChooser();
-				
 				File library = new File(PropertiesUtils.getProfile().getPathToMusicLibrary());
 				
-				if (library.exists() && library.isDirectory()) {
-					chooser.setInitialDirectory(library);
-				} else {
-					chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-				}
-	
-				chooser.setTitle("Choose Musiclibrary Directory");
-				File selectedDir = chooser.showDialog(propertiesStage);
+				File selectedDir = new DirChooser(library,
+						PropertiesUtils.getString("profile.settings.text.dir.chooser.title.library"),
+						propertiesStage).getSelectedDir();
 
 				if (selectedDir != null) {
 					musicLibraryPath.setText(selectedDir.getAbsolutePath());
@@ -416,19 +420,10 @@ public class ProfileSettings extends GridPane {
 
 			@Override
 			public void handle(ActionEvent event) {
-				final DirectoryChooser chooser = new DirectoryChooser();
-				
 				File exportDir = new File(PropertiesUtils.getProfile().getPlayListExportDir());
-				
-				if (exportDir.exists() && exportDir.isDirectory()) {
-					chooser.setInitialDirectory(exportDir);
-				} else {
-					chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-				}
-				
-				chooser.setTitle("Choose Playlist Export Directory");
-				
-				File selectedDir = chooser.showDialog(propertiesStage);
+				File selectedDir = new DirChooser(exportDir,
+						PropertiesUtils.getString("profile.settings.text.dir.chooser.title.playlist"),
+						propertiesStage).getSelectedDir();
 				
 				if (selectedDir != null) {
 					Main_Frame.getPrimaryStage().toBack();
@@ -446,28 +441,10 @@ public class ProfileSettings extends GridPane {
 	 * @return boolean indicating wheter the user wants to proceed
 	 */
 	private boolean showAlert() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
 		// Setting the dialog text
-		alert.setTitle(header);
-		alert.setHeaderText(header_text);
-		
-		// Setting the buttons
-		ButtonType buttonContinue = new ButtonType("Continue",ButtonData.OK_DONE);
-		ButtonType buttonCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE); 
-		
-		// Adding the buttons to the dialog
-		alert.getButtonTypes().setAll(buttonContinue, buttonCancel);
-		
-		// Showing the dialog and waiting for the answer
-		Optional<ButtonType> result = alert.showAndWait();
-		
-		// Determining the choosen import Mode
-		if (result.get() == buttonContinue){
-		    return true;
-		} else {
-			return false;
-		}
+		ConfirmationAlert alert = new ConfirmationAlert(header, header_text);
+		alert.showDialog();
+		return alert.getResponse();
 	}
 	
 	/**

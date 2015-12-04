@@ -14,9 +14,9 @@ public class ButtonStartStop_MouseEventHandler implements EventHandler<MouseEven
 	public void handle(MouseEvent event) {
 		// Changing the rollover icons
 		if (event.getSource() instanceof Button_Start) {
-			Main_Frame.gethBox_Left().getBtnStart().changeButtonIcon_Rollover(event.getEventType().toString());
+			Main_Frame.gethBox_Left().getBtnStart().changeButtonIcon_Rollover(event.getEventType());
 		} else {
-			Main_Frame.gethBox_Left().getBtnStop().changeButtonIcon_Rollover(event.getEventType().toString());
+			Main_Frame.gethBox_Left().getBtnStop().changeButtonIcon_Rollover(event.getEventType());
 		}
 	}
 }

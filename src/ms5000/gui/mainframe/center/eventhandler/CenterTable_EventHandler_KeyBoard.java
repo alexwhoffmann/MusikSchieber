@@ -4,11 +4,10 @@ import java.io.File;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
+import ms5000.gui.chooser.FileChoooser;
+import ms5000.gui.chooser.FileChoooser.ChooserFileTypes;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.center.CenterTable;
-import ms5000.musicfile.file.MusicFileType;
 import ms5000.properties.PropertiesUtils;
 import ms5000.properties.gui.GuiProperties;
 import ms5000.tasks.readdir.ImportMode;
@@ -20,19 +19,9 @@ import ms5000.tasks.readdir.ReadDirTaskManager;
 public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>{
 	
 	/**
-	 * The extension filter for including music 
-	 */
-	private final ExtensionFilter extFilter = new ExtensionFilter("Music files", MusicFileType.getExtensionValues());
-	
-	/**
 	 * The title of the File chooser
 	 */
-	private final String chooserTitle = "Choose Import File";
-	
-	/**
-	 * The last directory that was imported
-	 */
-	private File lastImportedDir;
+	private final String chooserTitle = PropertiesUtils.getString("center.section.text.table.file.chooser.title");
 	
 	/**
 	 * Boolean that stores the state of the control key
@@ -89,29 +78,7 @@ public class CenterTable_EventHandler_KeyBoard implements EventHandler<KeyEvent>
 	 * @return returns the selected file
 	 */
 	private File openFileChooser() {
-		final FileChooser chooser = new FileChooser();
-		chooser.setInitialDirectory(readProperties());
-		chooser.setTitle(chooserTitle);
-		chooser.getExtensionFilters().add(extFilter);
-		
-		return chooser.showOpenDialog(Main_Frame.getPrimaryStage());
+		File lastImportedDir = new File(PropertiesUtils.getProperty(GuiProperties.LASTIMPORTDIRMUSICFILE));
+		return new FileChoooser(ChooserFileTypes.MUSIC,lastImportedDir,chooserTitle).getSelectedFile();
 	}
-	
-	/**
-	 * Method to read the properties
-	 * 
-	 * @return returns the last imported dir as file
-	 */
-	private File readProperties() {
-		// Reading the last Dir which was Imported
-		lastImportedDir = new File(PropertiesUtils.getProperty(GuiProperties.LASTIMPORTDIRMUSICFILE));
-		
-		if (!lastImportedDir.exists()) {
-			String userDirectoryString = System.getProperty("user.home");
-			lastImportedDir = new File(userDirectoryString);
-		}
-		
-		return lastImportedDir;
-	}
-
 }

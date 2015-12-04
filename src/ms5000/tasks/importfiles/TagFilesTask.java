@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -31,7 +32,7 @@ import ms5000.properties.library.LibraryProperties;
  * This class captures the main functionality of the process used to tag files without extracting them to
  * the users music library
  */
-public class TagFilesTask extends Task<Void> {
+public class TagFilesTask extends Task<Void>{
 	/**
 	 * The array list containing the files from the table
 	 */
@@ -63,11 +64,22 @@ public class TagFilesTask extends Task<Void> {
 	private static PrintWriter writer;
 	
 	/**
+	 * Message strings
+	 */
+	private String changingFiles = PropertiesUtils.getString("importfiles.text.task.message.changing");
+	private String taggingFiles = PropertiesUtils.getString("importfiles.text.task.message.tagging.file");
+	
+	/**
+	 * Arraylist that captures the files that were not deleted
+	 */
+	private ArrayList<String> deletionErrorFiles = new ArrayList<String>();
+	
+	/**
 	 * Initializing the writer
 	 */
 	static {
 		try {
-			writer = new PrintWriter("log.txt", "UTF-8");
+			writer = new PrintWriter("log.txt", PropertiesUtils.getString("util.config.encoding.utf8"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -104,7 +116,7 @@ public class TagFilesTask extends Task<Void> {
 		calculateProgressSteps();
 		
 		// Status message
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Tagging files");
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge(PropertiesUtils.getString("importfiles.text.task.message.tagging"));
 		
 		// Copy Files to temporary folder
 		// Tag the files and change the file name
@@ -113,12 +125,12 @@ public class TagFilesTask extends Task<Void> {
 		pause(200);
 		
 		// Status message
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Deleting original files");
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge(PropertiesUtils.getString("importfiles.text.task.message.deleting"));
 		
 		int index = 0;
 		for (int i = 0; i < originalFiles.size(); i++) {
 			Main_Frame.getBorderPaneBottom()
-					.setStatusTextSmall("Changing File " + index + " from " + tableFiles.size());
+					.setStatusTextSmall(MessageFormat.format(changingFiles, index, tableFiles.size()));
 
 			// Path to the parent dir of the file
 			String pathToParent = originalFiles.get(i).getParent();
@@ -127,8 +139,10 @@ public class TagFilesTask extends Task<Void> {
 			String newFileName = tableFiles.get(i).getNewFileName();
 
 			// Deleting the old file
-			originalFiles.get(i).delete();
-
+			if (!originalFiles.get(i).delete()) {
+				deletionErrorFiles.add(originalFiles.get(i).getAbsolutePath());
+			}
+			
 			// Pushing the new File to the directory
 			try {
 				MusicFileUtils.copyMusicFileToOther(tableFiles.get(i), pathToParent, newFileName);
@@ -146,7 +160,8 @@ public class TagFilesTask extends Task<Void> {
 		
 		// This box gets executed if the user wants to have a playlist exported
 		if (PropertiesUtils.getProfile().isPlayListExport()) {
-			Main_Frame.getBorderPaneBottom().setStatusTextLarge("Generating Playlist");
+			Main_Frame.getBorderPaneBottom()
+					.setStatusTextLarge(PropertiesUtils.getString("importfiles.text.task.message.generating.playlist"));
 			buildPlayList();
 			pause(200);
 		}
@@ -156,7 +171,7 @@ public class TagFilesTask extends Task<Void> {
 		closeLog();
 
 		// Updating the status messages
-		Main_Frame.getBorderPaneBottom().setStatusTextLarge("Tagging Files Complete");
+		Main_Frame.getBorderPaneBottom().setStatusTextLarge(PropertiesUtils.getString("importfiles.text.task.message.tagging.complete"));
 		pause(1000);
 		Main_Frame.getBorderPaneBottom().setStatusTextLarge("");
 		
@@ -207,7 +222,7 @@ public class TagFilesTask extends Task<Void> {
 	 */
 	private void calculateProgressSteps() {
 		progress = 0;
-		progressSteps = tableFiles.size()*3;
+		progressSteps = tableFiles.size()*2;
 		
 		if (PropertiesUtils.getProfile().isPlayListExport()) {
 			progressSteps += 10;
@@ -259,7 +274,7 @@ public class TagFilesTask extends Task<Void> {
 		int index = 1;
 		for (MusicFile file : tableFiles) {
 			// Updating the small status text
-			Main_Frame.getBorderPaneBottom().setStatusTextSmall("Tagging File " + index + " from " + tableFiles.size());
+			Main_Frame.getBorderPaneBottom().setStatusTextSmall(MessageFormat.format(taggingFiles, index, tableFiles.size()));
 			
 			try {
 				MusicFileUtils.copyMusicFileToOther(file, tmpDir.getAbsolutePath());
@@ -309,5 +324,9 @@ public class TagFilesTask extends Task<Void> {
 	 */
 	private void closeLog() {
 		writer.close();
+	}
+
+	public ArrayList<String> getDeletionErrorFiles() {
+		return deletionErrorFiles;
 	}
 }

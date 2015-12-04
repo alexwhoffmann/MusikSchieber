@@ -9,11 +9,22 @@ import javafx.scene.layout.VBox;
 import ms5000.gui.mainframe.Main_Frame;
 import ms5000.gui.mainframe.bottom.buttons.Button_Properties;
 import ms5000.gui.mainframe.bottom.buttons.Button_StartImport;
+import ms5000.properties.PropertiesUtils;
 
 /**
  * This class bundles all the elements in the bottom of the screen
  */
 public class BorderPane_Bottom extends BorderPane{
+	/**
+	 * The path to the css file
+	 */
+	private final String cssPath = PropertiesUtils.getString("bottom.section.config.border.pane.css.path");
+	
+	/**
+	 * CSS Id for the hbox
+	 */
+	private final String hBoxId = PropertiesUtils.getString("bottom.section.config.hbox.css.id"); 
+	
 	/**
 	 * the progress bar in the bottom
 	 */
@@ -56,13 +67,12 @@ public class BorderPane_Bottom extends BorderPane{
 	
 	public BorderPane_Bottom() {
 		// Setting the style sheet
-		this.getStylesheets().add(this.getClass().getResource("css/mainframetop_borderpane_bottom.css").toExternalForm());
-		this.setId("border-pane");
-		
-		// Binding the width to the mainfram width
+		this.getStylesheets().add(this.getClass().getResource(cssPath).toExternalForm());
+		this.setId(PropertiesUtils.getString("bottom.section.config.border.pane.css.id"));
+	
+		// Binding the width to the mainframe width
 		this.prefWidthProperty().bind(Main_Frame.getScene().widthProperty());
 		progressBar.prefWidthProperty().bind(Main_Frame.getScene().widthProperty());
-		
 		// Adding the progress bar
 		this.setTop(progressBar);
 		
@@ -77,26 +87,26 @@ public class BorderPane_Bottom extends BorderPane{
 		// The text field large
 		statusLarge = new TextField("");
 		statusLarge.setEditable(false);
-		statusLarge.setId("textfield_large");
+		statusLarge.setId(PropertiesUtils.getString("bottom.section.config.textfield.large.css.id"));
 		statusLarge.setAlignment(Pos.CENTER);
 		vbox_center.getChildren().add(statusLarge);
 		
 		// The text field small
 		statusSmall = new TextField("");
 		statusSmall.setEditable(false);
-		statusSmall.setId("textfield_small");
+		statusSmall.setId(PropertiesUtils.getString("bottom.section.config.textfield.small.css.id"));
 		vbox_center.getChildren().add(statusSmall);
 		
 		// Hbox left (empty)
 		hbox_left = new HBox();
 		hbox_left.prefWidthProperty().bind(Main_Frame.gethBox_Left().widthProperty());
-		hbox_left.setId("hbox");
+		hbox_left.setId(hBoxId);
 		
 		// Hbox right (Button start import, Button properties)
 		hbox_right = new HBox();
 		hbox_right.prefWidthProperty().bind(Main_Frame.gethBox_Right().widthProperty());
 		hbox_right.getChildren().addAll(buttonStartImport,buttonProperties);
-		hbox_right.setId("hbox");
+		hbox_right.setId(hBoxId);
 		
 		this.setRight(hbox_right);
 		this.setLeft(hbox_left);
